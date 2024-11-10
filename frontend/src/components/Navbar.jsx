@@ -1,37 +1,37 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { signIn, signOut, useSession } from "next-auth/react"
-import { Menu, X, ChevronDown } from "lucide-react"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { Menu, X, ChevronDown } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
-import webpLogoImage from "../../public/assets/organizapplogo.webp"
+import { LogoOrganiZapp } from "@/app/lib/image";
 
 export default function NavBar() {
-  const { data: session } = useSession()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { data: session } = useSession();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    const closeMenu = () => setIsMenuOpen(false)
-    window.addEventListener('resize', closeMenu)
-    return () => window.removeEventListener('resize', closeMenu)
-  }, [])
+    const closeMenu = () => setIsMenuOpen(false);
+    window.addEventListener("resize", closeMenu);
+    return () => window.removeEventListener("resize", closeMenu);
+  }, []);
 
   const navItems = [
     { name: "Inicio", href: "/" },
     { name: "Chat", href: "/chat" },
     { name: "Calendario", href: "/calendar" },
     { name: "Contacto", href: "/contact" },
-  ]
+  ];
 
   return (
     <nav className="bg-green-500 shadow-md">
@@ -39,15 +39,19 @@ export default function NavBar() {
         <div className="flex justify-between h-16 items-center">
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src={webpLogoImage}
+              src={LogoOrganiZapp}
               alt="OrganiZapp Logo"
-              width={50}
-              height={50}
-              className="h-8 w-auto"
+              width={200}
+              height={200}
+              quality={100}
+              className="w-12 h-12 md:w-16 md:h-16"
             />
-            <span className="text-xl font-semibold text-white">OrganiZapp</span>
+            <span className="text-xl font-semibold">
+              <span className="text-white">Organi</span>
+              <span className="text-yellow-100">Zapp</span>
+            </span>
           </Link>
-          
+
           <div className="hidden sm:flex space-x-8">
             {navItems.map((item) => (
               <Link
@@ -59,12 +63,15 @@ export default function NavBar() {
               </Link>
             ))}
           </div>
-          
+
           <div className="hidden sm:flex items-center space-x-4">
             {session?.user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center text-white">
+                  <Button
+                    variant="ghost"
+                    className="flex items-center text-white"
+                  >
                     <Image
                       src={session.user.image || "/placeholder.svg"}
                       alt={session.user.name || "Usuario"}
@@ -77,7 +84,9 @@ export default function NavBar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem>
-                    <span className="font-medium text-gray-800">{session.user.name}</span>
+                    <span className="font-medium text-gray-800">
+                      {session.user.name}
+                    </span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => signOut()}>
                     Cerrar sesión
@@ -86,19 +95,35 @@ export default function NavBar() {
               </DropdownMenu>
             ) : (
               <div className="space-x-2">
-                <Button variant="ghost" onClick={() => signIn()} className="text-white">Iniciar sesión</Button>
-                <Button className="bg-white text-green-500 hover:bg-gray-200">Registrarse</Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => signIn()}
+                  className="text-white"
+                >
+                  Iniciar sesión
+                </Button>
+                 <Link href="/auth/register">
+                <Button
+                  className="bg-white text-green-500 hover:bg-gray-200"
+                >
+                  Registrarse
+                </Button>
+                </Link>
               </div>
             )}
           </div>
-          
+
           <div className="flex sm:hidden">
             <Button
               variant="ghost"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-white hover:bg-green-600 p-2 rounded-md"
             >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </Button>
           </div>
         </div>
@@ -130,16 +155,20 @@ export default function NavBar() {
                     className="rounded-full"
                   />
                   <div className="ml-3">
-                    <div className="text-base font-medium text-white">{session.user.name}</div>
-                    <div className="text-sm font-medium text-gray-200">{session.user.email}</div>
+                    <div className="text-base font-medium text-white">
+                      {session.user.name}
+                    </div>
+                    <div className="text-sm font-medium text-gray-200">
+                      {session.user.email}
+                    </div>
                   </div>
                 </div>
                 <Button
                   variant="ghost"
                   className="block w-full text-left px-4 py-2 text-white hover:bg-green-600"
                   onClick={() => {
-                    signOut()
-                    setIsMenuOpen(false)
+                    signOut();
+                    setIsMenuOpen(false);
                   }}
                 >
                   Cerrar sesión
@@ -151,8 +180,8 @@ export default function NavBar() {
                   variant="ghost"
                   className="block w-full text-left px-4 py-2 text-white hover:bg-green-600"
                   onClick={() => {
-                    signIn()
-                    setIsMenuOpen(false)
+                    signIn();
+                    setIsMenuOpen(false);
                   }}
                 >
                   Iniciar sesión
@@ -169,5 +198,5 @@ export default function NavBar() {
         </div>
       )}
     </nav>
-  )
+  );
 }
