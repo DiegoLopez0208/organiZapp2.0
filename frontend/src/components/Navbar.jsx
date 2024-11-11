@@ -66,25 +66,25 @@ export default function NavBar() {
 
           <div className="hidden sm:flex items-center space-x-4">
             {session?.user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+              <DropdownMenu >
+                <DropdownMenuTrigger asChild >
                   <Button
-                    variant="ghost"
-                    className="flex items-center text-white"
+                    variant="outline"
+                    className="flex items-center text-white "
                   >
                     <Image
-                      src={session.user.image || "/placeholder.svg"}
+                      src={session.user.image || "/placeholder.svg" } 
                       alt={session.user.name || "Usuario"}
                       width={32}
                       height={32}
                       className="rounded-full"
                     />
-                    <ChevronDown className="ml-2 h-4 w-4 text-white" />
+                    <ChevronDown className="ml-2 h-4 w-4 text-green-500" />
                   </Button>
-                </DropdownMenuTrigger>
+                </DropdownMenuTrigger >
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem>
-                    <span className="font-medium text-gray-800">
+                    <span className="font-bold text-green-600">
                       {session.user.name}
                     </span>
                   </DropdownMenuItem>

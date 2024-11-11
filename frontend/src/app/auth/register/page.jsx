@@ -58,7 +58,7 @@ export default function Register() {
         throw new Error("Error al enviar el correo de registro");
 
       const registerResponse = await fetch(
-        "http://localhost:4000/api/auth/register",
+        `${process.env.BASE_URL}/api/auth/register`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

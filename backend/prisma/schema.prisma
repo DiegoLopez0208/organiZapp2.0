@@ -11,15 +11,18 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  username  String    @unique
-  password  String
-  email     String    @unique
-  birthDate DateTime  @map("birth_date")
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("update_at")
-  deletedAt DateTime? @map("delete_at")
-  tasks     Tasks[]
+  id              Int         @id @default(autoincrement())
+  username        String      @unique
+  password        String
+  email           String      @unique
+  birthDate       DateTime    @map("birth_date")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("update_at")
+  deletedAt       DateTime?   @map("delete_at")
+  tasks           Tasks[]     @relation("UserTasks")
+  sentMessages    Message[]   @relation("SentMessages")
+  receivedMessages Message[]  @relation("ReceivedMessages")
+  groups          Group[]     @relation("GroupMembers")
 
   @@map("user")
 }
@@ -34,7 +37,33 @@ model Tasks {
   updatedAt DateTime  @updatedAt @map("update_at")
   deletedAt DateTime? @map("deleted_at")
   userId    Int       @map("user_id")
-  user      User      @relation(fields: [userId], references: [id])
-
   @@map("task")
+  User User[] @relation("UserTasks")
 }
+
+model Message {
+  id        Int       @id @default(autoincrement())
+  content   String
+  senderId  Int       @map("sender_id")
+  receiverId Int?     @map("receiver_id")  // Para mensajes privados
+  groupId   Int?      @map("group_id")     // Si el mensaje pertenece a un grupo
+  sentAt    DateTime  @default(now()) @map("sent_at")
+  sender    User      @relation("SentMessages", fields: [senderId], references: [id])
+  receiver  User?     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  group     Group?    @relation(fields: [groupId], references: [id])
+
+  @@map("message")
+}
+
+model Group {
+  id              Int         @id @default(autoincrement())
+  name            String
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+  deletedAt       DateTime?   @map("deleted_at")
+  members         User[]      @relation("GroupMembers")
+  messages        Message[]
+
+  @@map("group")
+}
+
