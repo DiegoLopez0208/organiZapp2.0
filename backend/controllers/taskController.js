@@ -76,10 +76,10 @@ export const taskController = () => {
 
   const createTask = async (req, res, next) => {
     try {
-      const { tasKuserId, taskName, title, date, status } = req.body
+      const { taskUserId, taskName, title, date, status } = req.body
       const user = await prisma.user.create({
         data: {
-          tasKuserId,
+          taskUserId,
           taskName,
           title,
           date,

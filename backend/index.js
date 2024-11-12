@@ -12,18 +12,34 @@ import { groupRoutes } from './router/groupRouter.js' // Importamos las rutas de
 import { messageRoutes } from './router/messsageRouter.js' // Importamos las rutas de chats
 import { groupController } from './controllers/groupController.js' // Importamos controlador de grupos
 import { messageController } from './controllers/messageController.js' // Importamos controlador de chats
+import prisma from './database/prisma.js'
 
 dotenv.config()
 const PORT = process.env.PORT || 4000
+const corsOptions = {
+  origin: 'http://localhost:3000', // (https://your-client-app.com)
+  optionsSuccessStatus: 200
+}
 
 const app = express()
+let groups = []
+
+const loadGroupsFromDatabase = async () => {
+  const dbGroups = await prisma.group.findMany()
+  groups = [...dbGroups] // Reemplazamos el array global
+}
+
+// Llamamos a la función asincrónica de forma controlada
+const loadData = async () => {
+  await loadGroupsFromDatabase()
+}
+
+loadData()
+
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// Configuración CORS
-app.use(cors({ origin: 'http://localhost:3000' }))
-
-// Middleware de autenticación con JWT
 app.use(
   jwt({
     secret: process.env.SECRET_KEY,
@@ -48,14 +64,9 @@ const io = new Server(server, {
   }
 })
 
-// Almacenamiento de los grupos en memoria (esto debe sincronizarse con la base de datos)
-const groups = []
-
-// Conectar con Socket.io y gestionar las rooms y los chats
 io.on('connection', (socket) => {
   console.log('Un cliente se ha conectado: ', socket.id)
 
-  // Emitir los grupos existentes cuando un cliente se conecta
   socket.emit('groups_updated', groups)
 
   socket.on('create_group', async (groupData) => {
@@ -64,7 +75,13 @@ io.on('connection', (socket) => {
       return
     }
     try {
-      const group = await groupController().createGroup(groupData) // groupData ahora incluye `name` y `creatorName`
+      const req = { body: groupData }
+      const res = {
+        status: () => ({
+          json: (data) => console.log('Respuesta del controlador:', data)
+        })
+      }
+      const group = await groupController().createGroup(req, res)
       if (group) {
         groups.push(group)
         socket.join(group.id)
@@ -79,12 +96,28 @@ io.on('connection', (socket) => {
 
   // Unirse a un grupo - El cliente se une a la room
   socket.on('join_group', async (groupId) => {
+    console.log(groupId)
     if (!groupId) {
       console.log('ID del grupo no proporcionado')
       return
     }
     try {
-      const group = await groupController().getGroupById({ params: { id: groupId } }) // Obtenemos el grupo desde la base de datos
+      const req = {
+        params: { id: groupId } // Simulamos el objeto `req` correctamente
+      }
+
+      const res = {
+        status: (code) => ({
+          json: (data) => {
+            console.log(`Respuesta del controlador con código ${code}:`, data)
+            return data // Devuelve los datos para capturarlos en la variable group
+          }
+        })
+      }
+
+      // Llamamos al controlador pasando el objeto req (que ahora tiene params)
+      const group = await groupController().getGroupById(req, res) // Obtenemos el grupo desde la base de datos
+
       if (group) {
         socket.join(groupId) // El usuario entra al grupo
         console.log(`Usuario ${socket.id} se unió al grupo: ${group.name}`)
@@ -99,17 +132,48 @@ io.on('connection', (socket) => {
 
   // Enviar mensaje a un grupo
   socket.on('send_message', async (data) => {
+    console.log(data)
+
+    // Extraemos los datos del mensaje y del grupo
     const { groupId, message } = data
+
+    // Verificamos que los datos son válidos
     if (!groupId || !message) {
       console.log('Datos de mensaje no válidos')
       return
     }
+
+    // Creamos un objeto `req` con la estructura adecuada
+    const req = {
+      body: data,
+      params: { id: groupId } // `params` debe tener un objeto con el `groupId`
+    }
+    const messageData = {
+      content: data.message.text,
+      senderId: socket.id,
+      receiverId: null,
+      groupId: data.groupId
+    }
+    console.log(messageData)
+    // Creamos un objeto `res` para simular la respuesta
+    const res = {
+      status: (code) => ({
+        json: (data) => {
+          console.log(`Respuesta del controlador con código ${code}:`, data)
+          return data // Retornamos los datos para capturarlos en la variable `group`
+        }
+      })
+    }
+
     try {
-      const group = await groupController().getGroupById({ params: { id: groupId } }) // Verificamos que el grupo exista
+      // Llamamos al controlador para obtener el grupo por `groupId`
+      const group = await groupController().getGroupById(req, res)
       if (group) {
-        // Llamamos al chatController para guardar el mensaje en la base de datos
-        const newMessage = await messageController.saveMessage(groupId, socket.id, message)
-        io.to(groupId).emit('new_message', { userId: socket.id, message: newMessage }) // Emitimos el mensaje a todos los miembros del grupo
+        // Llamamos al controlador para guardar el mensaje en la base de datos
+        const newMessage = await messageController().sendMessage(socket, messageData, res)
+
+        // Emitimos el mensaje a todos los miembros del grupo
+        io.to(groupId).emit('new_message', { userId: socket.id, message: newMessage })
         console.log(`Mensaje enviado al grupo ${groupId}: ${message}`)
       } else {
         console.log('Grupo no encontrado para enviar el mensaje')

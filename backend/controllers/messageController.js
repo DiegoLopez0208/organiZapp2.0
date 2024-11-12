@@ -26,6 +26,7 @@ export const messageController = () => {
         socket.to(receiverId).emit('private_message', newMessage)
       }
 
+      // Responder con el mensaje creado
       return res.status(httpStatus.CREATED).json(newMessage)
     } catch (err) {
       console.error('Error al crear el mensaje', err)

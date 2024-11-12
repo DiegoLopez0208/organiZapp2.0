@@ -9,8 +9,8 @@ export const messageParamsSchema = Joi.object({
 
 export const messageSchema = Joi.object({
   content: Joi.string().min(1).required(),
-  senderId: Joi.number().integer().positive().required(),
-  receiverId: Joi.number().integer().positive().optional(),
-  groupId: Joi.number().integer().positive().optional(),
+  senderId: Joi.string().min(1).required(),
+  receiverId: Joi.string().min(1).optional(),
+  groupId: Joi.string().min(1).optional(),
   sentAt: Joi.date().iso().required()
 })

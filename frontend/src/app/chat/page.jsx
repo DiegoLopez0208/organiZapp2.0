@@ -12,7 +12,7 @@ import io from "socket.io-client";
 // Conexión con el servidor de WebSocket
 const socket = io("http://localhost:4000");
 
-export default function WhatsAppChat() {
+export default function Chat() {
   const { data: session } = useSession();
   const [contacts, setContacts] = useState([]);
   const [groups, setGroups] = useState([]);
@@ -20,12 +20,13 @@ export default function WhatsAppChat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [newGroupName, setNewGroupName] = useState("");
+  const [currentGroupId, setCurrentGroupId] = useState(null);
 
   useEffect(() => {
-    if (session?.userId) {
+    if (session?.user.name) {
       // Emitir evento para obtener contactos y grupos cuando el usuario se loguee
-      socket.emit("get_contacts", session.userId);
-      socket.emit("get_groups", session.userId);
+      socket.emit("get_contacts", session.user.name);
+      socket.emit("get_groups", session.user.name);
     }
 
     // Escuchar eventos del servidor para actualizar la lista de contactos y grupos
@@ -38,12 +39,11 @@ export default function WhatsAppChat() {
     });
 
     socket.on("message_received", (message) => {
-      if (message.senderId === currentContact?.id || message.recipientId === currentContact?.id) {
+      if (message.senderName === currentContact?.name || message.recipientName === currentContact?.name) {
         setMessages((prevMessages) => [...prevMessages, message]);
       }
     });
 
-    // Limpiar los listeners cuando el componente se desmonte
     return () => {
       socket.off("contacts_updated");
       socket.off("groups_updated");
@@ -52,36 +52,54 @@ export default function WhatsAppChat() {
   }, [session, currentContact]);
 
   const handleSendMessage = () => {
-    if (newMessage.trim() !== "") {
+    if (newMessage.trim() !== "" && currentGroupId) {
       const message = {
-        senderId: session.userId,
-        recipientId: currentContact?.id,
+        senderName: session.user.name,
+        recipientName: currentContact?.name,
         text: newMessage,
         time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
 
-      // Enviar el mensaje al servidor para que se propague a los demás usuarios
-      socket.emit("send_message", message);
+      const data = {
+        groupId: currentGroupId, 
+        message: message,
+      };
+
+      console.log("Enviando mensaje:", data);
+      socket.emit("send_message", data);
+
       setMessages((prevMessages) => [...prevMessages, message]);
       setNewMessage("");
     }
   };
 
+  const handleJoinGroup = (groupId) => {
+    if (!groupId) {
+      console.error("ID de grupo no válido");
+      return;
+    }
+
+    // Emitir el evento para unirse al grupo
+    socket.emit("join_group", groupId);
+
+    // Actualizar el estado con el grupo actual
+    setCurrentGroupId(groupId);
+    setCurrentContact({ id: groupId, name: `Grupo ${groupId}` });  // Actualizar el contacto actual al grupo
+  };
+
   const handleCreateGroup = () => {
     if (newGroupName.trim() !== "") {
-      // Emitir el evento al servidor para crear un grupo, pasando un objeto con el nombre del grupo y el nombre del usuario
       const groupData = {
         name: newGroupName,
         creatorName: session.user.name
       };
       console.log("Creating group:", groupData);
-      socket.emit("create_group", groupData); // Enviar un solo objeto al servidor
+      socket.emit("create_group", groupData);
       setNewGroupName("");
     }
   };
 
   const handleDeleteGroup = (groupName) => {
-    // Emitir el evento al servidor para eliminar el grupo
     socket.emit("delete_group", groupName);
   };
 
@@ -114,7 +132,7 @@ export default function WhatsAppChat() {
             <div
               key={group.id}
               className={`flex items-center p-3 cursor-pointer hover:bg-gray-700 ${currentContact?.id === group.id ? "bg-gray-500" : ""}`}
-              onClick={() => setCurrentContact(group)}
+              onClick={() => handleJoinGroup(group.id)} // Cambié para unirse al grupo al hacer clic
             >
               <Avatar className="h-12 w-12">
                 <AvatarImage src={group.avatar} alt={group.name} />
@@ -147,8 +165,8 @@ export default function WhatsAppChat() {
       <div className="w-2/3 p-4 flex flex-col">
         <ScrollArea className="flex-1">
           {messages.map((message) => (
-            <div key={message.id} className={`flex ${message.senderId === session.userId ? "justify-end" : "justify-start"}`}>
-              <div className={`rounded-lg p-2 m-1 ${message.senderId === session.userId ? "bg-green-500 text-white" : "bg-gray-700 text-gray-200"}`}>
+            <div key={message.id} className={`flex ${message.senderName === session.user.name ? "justify-end" : "justify-start"}`}>
+              <div className={`rounded-lg p-2 m-1 ${message.senderName === session.user.name ? "bg-green-500 text-white" : "bg-gray-700 text-gray-200"}`}>
                 <p>{message.text}</p>
                 <span className="text-xs text-gray-300">{message.time}</span>
               </div>

@@ -3,30 +3,31 @@
 
 generator client {
   provider = "prisma-client-js"
+   binaryTargets = ["windows"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+
 }
 
 model User {
-  id              Int         @id @default(autoincrement())
-  username        String      @unique
+  id              String     @id @default(uuid()) // Usar UUID en lugar de autoincremento
+  username        String     @unique
   password        String
-  email           String      @unique
-  birthDate       DateTime    @map("birth_date")
-  createdAt       DateTime    @default(now()) @map("created_at")
-  updatedAt       DateTime    @updatedAt @map("update_at")
-  deletedAt       DateTime?   @map("delete_at")
-  tasks           Tasks[]     @relation("UserTasks")
-  sentMessages    Message[]   @relation("SentMessages")
-  receivedMessages Message[]  @relation("ReceivedMessages")
-  groups          Group[]     @relation("GroupMembers")
+  email           String     @unique
+  birthDate       DateTime   @map("birth_date")
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @updatedAt @map("update_at")
+  deletedAt       DateTime?  @map("delete_at")
+  tasks           Tasks[]    @relation("UserTasks")
+  sentMessages    Message[]  @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+  groups          Group[]    @relation("GroupMembers")
 
   @@map("user")
 }
-
 model Tasks {
   id        Int       @id @default(autoincrement())
   taskName  String    @map("task_name")
@@ -44,9 +45,9 @@ model Tasks {
 model Message {
   id        Int       @id @default(autoincrement())
   content   String
-  senderId  Int       @map("sender_id")
-  receiverId Int?     @map("receiver_id")  // Para mensajes privados
-  groupId   Int?      @map("group_id")     // Si el mensaje pertenece a un grupo
+  senderId  String    @map("sender_id")  // Cambiar de Int a String
+  receiverId String?  @map("receiver_id")  // Cambiar de Int a String
+  groupId   Int?      @map("group_id")
   sentAt    DateTime  @default(now()) @map("sent_at")
   sender    User      @relation("SentMessages", fields: [senderId], references: [id])
   receiver  User?     @relation("ReceivedMessages", fields: [receiverId], references: [id])

@@ -61,7 +61,7 @@ export const groupController = () => {
     }
   }
 
-  const getGroupById = async (req, res, next) => {
+  const getGroupById = async (req, res) => {
     try {
       const { id } = req.params
       const group = await prisma.group.findUnique({
@@ -69,6 +69,7 @@ export const groupController = () => {
           id: Number(id)
         }
       })
+      console.log(group)
       return res.status(httpStatus.OK).json(group)
     } catch (error) {
       console.log(error)
@@ -79,7 +80,17 @@ export const groupController = () => {
 
   const createGroup = async (req, res, next) => {
     try {
+      console.log('Datos recibidos:', req.body) // Verifica si los datos llegan correctamente
       const { name, createdAt, updatedAt, deletedAt } = req.body || {}
+
+      // Verifica si 'name' es indefinido o nulo
+      if (!name) {
+        return res.status(httpStatus.BAD_REQUEST).json({
+          success: false,
+          message: 'El nombre del grupo es requerido'
+        })
+      }
+
       const newGroup = await prisma.group.create({
         data: {
           name,
@@ -88,6 +99,7 @@ export const groupController = () => {
           deletedAt
         }
       })
+
       return res.status(httpStatus.CREATED).json({
         success: true,
         message: 'Group Created',
@@ -95,6 +107,11 @@ export const groupController = () => {
       })
     } catch (error) {
       console.log(error)
+      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: 'Error al crear el grupo',
+        error: error.message
+      })
     } finally {
       await prisma.$disconnect()
     }
