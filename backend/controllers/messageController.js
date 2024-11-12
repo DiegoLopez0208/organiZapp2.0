@@ -1,5 +1,4 @@
 import prisma from '../database/prisma.js'
-import httpStatus from '../helpers/httpStatus.js'
 
 export const messageController = () => {
   // Enviar un mensaje
@@ -27,10 +26,9 @@ export const messageController = () => {
       }
 
       // Responder con el mensaje creado
-      return res.status(httpStatus.CREATED).json(newMessage)
-    } catch (err) {
-      console.error('Error al crear el mensaje', err)
-      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Error al enviar el mensaje' })
+      return newMessage
+    } catch (error) {
+      return error
     }
   }
 

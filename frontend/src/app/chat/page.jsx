@@ -9,8 +9,6 @@ import { Send, MoreVertical } from "lucide-react";
 import { useSession } from "next-auth/react";
 import io from "socket.io-client";
 
-// Conexión con el servidor de WebSocket
-const socket = io("http://localhost:4000");
 
 export default function Chat() {
   const { data: session } = useSession();
@@ -21,6 +19,9 @@ export default function Chat() {
   const [newMessage, setNewMessage] = useState("");
   const [newGroupName, setNewGroupName] = useState("");
   const [currentGroupId, setCurrentGroupId] = useState(null);
+  
+  // Conexión con el servidor de WebSocket
+  const socket = io(process.env.NEXT_PUBLIC_BASE_URL);
 
   useEffect(() => {
     if (session?.user.name) {
@@ -89,9 +90,10 @@ export default function Chat() {
 
   const handleCreateGroup = () => {
     if (newGroupName.trim() !== "") {
+      console.log(session);
       const groupData = {
         name: newGroupName,
-        creatorName: session.user.name
+        creatorName: session.user.username
       };
       console.log("Creating group:", groupData);
       socket.emit("create_group", groupData);
@@ -164,8 +166,8 @@ export default function Chat() {
       {/* Área de Chat */}
       <div className="w-2/3 p-4 flex flex-col">
         <ScrollArea className="flex-1">
-          {messages.map((message) => (
-            <div key={message.id} className={`flex ${message.senderName === session.user.name ? "justify-end" : "justify-start"}`}>
+          {messages.map((message, index) => (
+            <div key={index} className={`flex ${message.senderName === session.user.name ? "justify-end" : "justify-start"}`}>
               <div className={`rounded-lg p-2 m-1 ${message.senderName === session.user.name ? "bg-green-500 text-white" : "bg-gray-700 text-gray-200"}`}>
                 <p>{message.text}</p>
                 <span className="text-xs text-gray-300">{message.time}</span>

@@ -75,19 +75,11 @@ io.on('connection', (socket) => {
       return
     }
     try {
-      const req = { body: groupData }
-      const res = {
-        status: () => ({
-          json: (data) => console.log('Respuesta del controlador:', data)
-        })
-      }
-      const group = await groupController().createGroup(req, res)
-      if (group) {
-        groups.push(group)
-        socket.join(group.id)
+      const { data } = await groupController().createGroup(groupData)
+      if (data) {
+        groups.push(data)
+        socket.join(data.id)
         io.emit('groups_updated', groups)
-      } else {
-        console.log('Error al crear el grupo')
       }
     } catch (error) {
       console.error('Error al crear el grupo:', error)
@@ -143,38 +135,22 @@ io.on('connection', (socket) => {
       return
     }
 
-    // Creamos un objeto `req` con la estructura adecuada
-    const req = {
-      body: data,
-      params: { id: groupId } // `params` debe tener un objeto con el `groupId`
-    }
     const messageData = {
-      content: data.message.text,
+      content: message.text,
       senderId: socket.id,
-      receiverId: null,
-      groupId: data.groupId
-    }
-    console.log(messageData)
-    // Creamos un objeto `res` para simular la respuesta
-    const res = {
-      status: (code) => ({
-        json: (data) => {
-          console.log(`Respuesta del controlador con código ${code}:`, data)
-          return data // Retornamos los datos para capturarlos en la variable `group`
-        }
-      })
+      receiverId: null, // ????
+      groupId
     }
 
     try {
       // Llamamos al controlador para obtener el grupo por `groupId`
-      const group = await groupController().getGroupById(req, res)
+      const group = await groupController().getGroupById(groupId)
       if (group) {
         // Llamamos al controlador para guardar el mensaje en la base de datos
-        const newMessage = await messageController().sendMessage(socket, messageData, res)
+        const newMessage = await messageController().sendMessage(socket, messageData)
 
         // Emitimos el mensaje a todos los miembros del grupo
         io.to(groupId).emit('new_message', { userId: socket.id, message: newMessage })
-        console.log(`Mensaje enviado al grupo ${groupId}: ${message}`)
       } else {
         console.log('Grupo no encontrado para enviar el mensaje')
       }
