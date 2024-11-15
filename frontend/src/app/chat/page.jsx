@@ -19,8 +19,6 @@ export default function Chat() {
   const [newMessage, setNewMessage] = useState("");
   const [newGroupName, setNewGroupName] = useState("");
   const [currentGroupId, setCurrentGroupId] = useState(null);
-  
-  // Conexión con el servidor de WebSocket
   const socket = io(process.env.NEXT_PUBLIC_BASE_URL);
 
   useEffect(() => {
