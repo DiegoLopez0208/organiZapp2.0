@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
+import {defaultAvatar} from '@/app/lib/image'
 
 const handler = NextAuth({
   providers: [
@@ -27,12 +28,14 @@ const handler = NextAuth({
             },
             body: JSON.stringify(user),
           });
-          const logindata = JSON.stringify(user)
+          const logindata = user
           if (res.ok) {
-            console.log("Login:", logindata); 
+          
             const session = {
-              logindata,
+              name : logindata.username,
+              image : defaultAvatar
             };
+            
             return session;
           } else {
             return null;

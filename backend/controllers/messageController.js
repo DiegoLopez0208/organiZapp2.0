@@ -1,38 +1,72 @@
 import prisma from '../database/prisma.js'
+import logger from '../helpers/winston.js'
+import path from 'path'
+import chalk from 'chalk'
+
+const fullPath = import.meta.filename
+const fileName = path.basename(fullPath)
+const nameYellow = chalk.yellow(fileName)
 
 export const messageController = () => {
-  // Enviar un mensaje
-  const sendMessage = async (socket, data, res) => {
-    const { senderId, content, receiverId, groupId } = data
-
+  const getMessagesByGroup = async (groupId) => {
     try {
-      // Crear el mensaje en la base de datos
-      const newMessage = await prisma.message.create({
-        data: {
-          content,
-          senderId,
-          receiverId,
-          groupId
+      // Obtener todos los mensajes del grupo
+      const messageGroupInfo = await prisma.message.findMany({
+        where: {
+          groupId: Number(groupId)
+        },
+        include: {
+          sender: { select: { username: true } }
         }
       })
 
-      // Emitir el mensaje a la room correspondiente
+      const messagesWithSenderName = messageGroupInfo.map(message => ({
+        ...message,
+        senderName: message.sender ? message.sender.username : 'Desconocido'
+      }))
+      return messagesWithSenderName
+    } catch (error) {
+      logger.error(`Error al obtener mensajes: ${error.message}`)
+      throw error
+    } finally {
+      await prisma.$disconnect()
+    }
+  }
+
+  const sendMessage = async (socket, data) => {
+    const { senderName, content, receiverId, groupId } = data
+
+    const sender = await prisma.user.findUnique({
+      where: { username: senderName }
+    })
+    if (!sender) {
+      return logger.error('El usuario no existe: ', senderName)
+    }
+
+    try {
+      const newMessage = await prisma.message.create({
+        data: {
+          group: { connect: { id: groupId } },
+          content,
+          sender: {
+            connect: { id: sender.id }
+          }
+        }
+      })
+      logger.info(`Message Created by: ${JSON.stringify(newMessage)}. Archivo: ${nameYellow}`)
+
       if (groupId) {
-        // Si hay un groupId, lo emitimos a la room del grupo
         socket.to(groupId).emit('chat_message', newMessage)
       } else if (receiverId) {
-        // Si hay un receiverId, es un mensaje privado
         socket.to(receiverId).emit('private_message', newMessage)
       }
-
-      // Responder con el mensaje creado
       return newMessage
     } catch (error) {
       return error
     }
   }
-
   return {
-    sendMessage
+    sendMessage,
+    getMessagesByGroup
   }
 }

@@ -13,12 +13,47 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import { LogoOrganiZapp } from "@/app/lib/image";
 
-export default function NavBar() {
+export default  function NavBar() {
   const { data: session } = useSession();
+  const [error, setError] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (session ) {
+      const registerSession = async () => {
+        const dataSession = {
+          username: session.user.name,
+          email: session.user.email,
+          password: Math.random().toString(36).slice(-8),
+          birthDate: new Date().toISOString()
+        };
+
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/auth/register`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(dataSession),
+              isRegistered : true
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Error en el registro");
+          }
+        } catch (err) {
+          setError(
+            "Ocurrió un error durante el registro. Por favor, inténtalo de nuevo."
+          );
+        }
+      };
+
+      registerSession();
+    }
+  }, [session]); 
 
   useEffect(() => {
     const closeMenu = () => setIsMenuOpen(false);

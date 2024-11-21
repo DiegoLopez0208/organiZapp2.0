@@ -1,9 +1,16 @@
 import prisma from '../database/prisma.js'
 import addSoftDelete from '../middleware/softDelete.js'
 import httpStatus from '../helpers/httpStatus.js'
+import logger from '../helpers/winston.js'
+import path from 'path'
+import chalk from 'chalk'
+
+const fullPath = import.meta.filename
+const fileName = path.basename(fullPath)
+const nameYellow = chalk.yellow(fileName)
 
 export const groupController = () => {
-  const deleteGroup = async (req, res, next) => {
+  const deleteGroup = async (req, res) => {
     try {
       const { id } = req.params
       prisma.$use(addSoftDelete) // Usar el middleware para soft delete
@@ -18,13 +25,13 @@ export const groupController = () => {
         data: groupDeleted
       })
     } catch (error) {
-      console.log(error)
+      logger.error(error)
     } finally {
       await prisma.$disconnect()
     }
   }
 
-  const updateGroup = async (req, res, next) => {
+  const updateGroup = async (req, res) => {
     try {
       const { id } = req.params
       const { name, updatedAt, deletedAt } = req.body
@@ -44,18 +51,18 @@ export const groupController = () => {
         data: groupUpdated
       })
     } catch (error) {
-      console.log(error)
+      logger.error(error)
     } finally {
       await prisma.$disconnect()
     }
   }
 
-  const getGroups = async (_req, res, next) => {
+  const getGroups = async (_req, res) => {
     try {
       const groups = await prisma.group.findMany()
       return res.status(httpStatus.OK).json(groups)
     } catch (error) {
-      console.log(error)
+      logger.error(error)
     } finally {
       await prisma.$disconnect()
     }
@@ -70,16 +77,15 @@ export const groupController = () => {
       })
       return group
     } catch (error) {
-      console.log(error)
+      logger.error(error)
     } finally {
       await prisma.$disconnect()
     }
   }
 
   const createGroup = async (groupData) => {
-    console.log('GroupData:', groupData)
+    logger.info(`GroupData:${groupData}.Archivo: ${nameYellow}`)
     try {
-      // Verifica si 'name' es indefinido o nulo
       if (!groupData.name) {
         return ({
           success: false,
@@ -99,7 +105,7 @@ export const groupController = () => {
         data: newGroup
       })
     } catch (error) {
-      console.log(error)
+      logger.error(error)
       return {
         success: false,
         message: 'Error al crear el grupo',

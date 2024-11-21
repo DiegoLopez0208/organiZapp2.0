@@ -8,33 +8,41 @@ import errorHandler from './middleware/errorHandler.js'
 import { userRoutes } from './router/userRouter.js'
 import { taskRoutes } from './router/taskRouter.js'
 import { authRoutes } from './router/authRouter.js'
-import { groupRoutes } from './router/groupRouter.js' // Importamos las rutas de grupos
-import { messageRoutes } from './router/messsageRouter.js' // Importamos las rutas de chats
-import { groupController } from './controllers/groupController.js' // Importamos controlador de grupos
-import { messageController } from './controllers/messageController.js' // Importamos controlador de chats
+import { groupRoutes } from './router/groupRouter.js'
+import { messageRoutes } from './router/messsageRouter.js'
+import { groupController } from './controllers/groupController.js'
+import { messageController } from './controllers/messageController.js'
 import prisma from './database/prisma.js'
+import logger from './helpers/winston.js'
+import path from 'path'
+import chalk from 'chalk'
 
 dotenv.config()
 const PORT = process.env.PORT || 4000
 const corsOptions = {
-  origin: 'http://localhost:3000', // (https://your-client-app.com)
+  origin: 'http://localhost:3000',
   optionsSuccessStatus: 200
 }
+const fullPath = import.meta.filename
+const fileName = path.basename(fullPath)
+const nameYellow = chalk.yellow(fileName)
 
 const app = express()
 let groups = []
 
 const loadGroupsFromDatabase = async () => {
   const dbGroups = await prisma.group.findMany()
-  groups = [...dbGroups] // Reemplazamos el array global
+  groups = [...dbGroups]
 }
 
-// Llamamos a la función asincrónica de forma controlada
 const loadData = async () => {
   await loadGroupsFromDatabase()
+  return groups
 }
 
-loadData()
+loadData().then(groups => {
+  logger.info(`Grupos cargados correctamente: ${groups.length}`)
+})
 
 app.use(cors(corsOptions))
 app.use(express.json())
@@ -47,16 +55,12 @@ app.use(
   }).unless({ path: ['/api/auth/login', '/api/auth/refresh', '/api/auth/register', '/socket.io/'] })
 )
 
-// Rutas de la API
-app.use('/api', authRoutes(), userRoutes(), taskRoutes(), groupRoutes(), messageRoutes()) // Rutas de grupos y chats
+app.use('/api', authRoutes(), userRoutes(), taskRoutes(), groupRoutes(), messageRoutes())
 
-// Middleware de manejo de errores
 app.use(errorHandler)
 
-// Crear el servidor HTTP y configurar Socket.io
 const server = createServer(app)
 
-// Configuración del servidor de Socket.io
 const io = new Server(server, {
   cors: {
     origin: 'http://localhost:3000',
@@ -65,13 +69,12 @@ const io = new Server(server, {
 })
 
 io.on('connection', (socket) => {
-  console.log('Un cliente se ha conectado: ', socket.id)
-
-  socket.emit('groups_updated', groups)
+  logger.info(`Un cliente se ha conectado: ${socket.id}. Archivo: ${nameYellow}`)
+  socket.emit('get_groups', groups)
 
   socket.on('create_group', async (groupData) => {
     if (!groupData || !groupData.name) {
-      console.log('Datos del grupo inválidos')
+      logger.error(`Datos del grupo inválidos. Archivo: ${nameYellow}`)
       return
     }
     try {
@@ -82,91 +85,79 @@ io.on('connection', (socket) => {
         io.emit('groups_updated', groups)
       }
     } catch (error) {
-      console.error('Error al crear el grupo:', error)
+      console.error(`Error al crear el grupo: ${error}. Archivo: ${nameYellow}`)
     }
   })
 
-  // Unirse a un grupo - El cliente se une a la room
   socket.on('join_group', async (groupId) => {
-    console.log(groupId)
     if (!groupId) {
-      console.log('ID del grupo no proporcionado')
+      logger.info('ID del grupo no proporcionado.')
       return
     }
+
     try {
-      const req = {
-        params: { id: groupId } // Simulamos el objeto `req` correctamente
-      }
-
-      const res = {
-        status: (code) => ({
-          json: (data) => {
-            console.log(`Respuesta del controlador con código ${code}:`, data)
-            return data // Devuelve los datos para capturarlos en la variable group
-          }
-        })
-      }
-
-      // Llamamos al controlador pasando el objeto req (que ahora tiene params)
-      const group = await groupController().getGroupById(req, res) // Obtenemos el grupo desde la base de datos
-
+      const group = await groupController().getGroupById(groupId)
+      const messages = await messageController().getMessagesByGroup(groupId) // Asegúrate de que este método retorne un arreglo
       if (group) {
-        socket.join(groupId) // El usuario entra al grupo
-        console.log(`Usuario ${socket.id} se unió al grupo: ${group.name}`)
-        io.to(groupId).emit('new_member', { userId: socket.id, groupId }) // Notificamos a los miembros del grupo
+        socket.join(groupId)
+        logger.info(`Usuario ${socket.id} se unió al grupo: ${group.name}.`)
+
+        io.to(groupId).emit('new_member', { userId: socket.id, groupId: group.groupId })
+        io.to(groupId).emit('update_message', {
+          messagesIndex: messages.map((message) => ({
+            senderName: message.senderName,
+            text: message.content,
+            recipientName: null,
+            groupId,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          }))
+        })
       } else {
-        console.log('Grupo no encontrado')
+        logger.info('Grupo no encontrado.')
       }
     } catch (error) {
-      console.error('Error al unirse al grupo:', error)
+      logger.error(`Error al unirse al grupo: ${error}`)
     }
   })
 
-  // Enviar mensaje a un grupo
   socket.on('send_message', async (data) => {
-    console.log(data)
-
-    // Extraemos los datos del mensaje y del grupo
-    const { groupId, message } = data
-
-    // Verificamos que los datos son válidos
-    if (!groupId || !message) {
-      console.log('Datos de mensaje no válidos')
+    const { groupId, text, senderName } = data
+    if (!groupId || !text) {
+      logger.info(`Datos de mensaje no válidos. Archivo: ${nameYellow}`)
       return
     }
-
+    logger.info(data)
     const messageData = {
-      content: message.text,
-      senderId: socket.id,
+      content: text,
+      senderName,
       receiverId: null, // ????
       groupId
     }
-
     try {
-      // Llamamos al controlador para obtener el grupo por `groupId`
       const group = await groupController().getGroupById(groupId)
       if (group) {
-        // Llamamos al controlador para guardar el mensaje en la base de datos
         const newMessage = await messageController().sendMessage(socket, messageData)
-
-        // Emitimos el mensaje a todos los miembros del grupo
-        io.to(groupId).emit('new_message', { userId: socket.id, message: newMessage })
+        logger.info(` Mensaje: ${JSON.stringify(newMessage.content)}. Archivo: ${nameYellow}`)
+        io.to(groupId).emit('new_message', {
+          text: newMessage.content, // El contenido del mensaje
+          senderName, // Nombre del usuario que envió el mensaje
+          recipientName: null, // Deja este campo en `null` si es un grupo
+          groupId, // ID del grupo donde se envió el mensaje
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) // Hora en formato legible
+        })
       } else {
-        console.log('Grupo no encontrado para enviar el mensaje')
+        logger.info(`Grupo no encontrado para enviar el mensaje. Archivo: ${nameYellow}`)
       }
     } catch (error) {
-      console.error('Error al enviar el mensaje:', error)
+      console.error(`Error al enviar el mensaje: ${error}. Archivo: ${nameYellow}`)
     }
   })
 
-  // Escuchar los eventos de desconexión
   socket.on('disconnect', () => {
-    console.log('Un usuario se ha desconectado:', socket.id)
-    // Aquí podrías manejar la desconexión y eliminar al usuario de los grupos si lo deseas
+    logger.info(`Un usuario se ha desconectado: ${socket.id}. Archivo: ${nameYellow}`)
   })
 })
 
-// Iniciar el servidor
 server.listen(PORT, () => {
-  console.log(` [✅] Backend ejecutándose en el puerto ${PORT}`)
+  logger.info(`Backend ejecutándose en el puerto ${PORT}. Archivo: ${nameYellow}`)
 })
