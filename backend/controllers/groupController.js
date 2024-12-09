@@ -1,5 +1,4 @@
 import prisma from '../database/prisma.js'
-import addSoftDelete from '../middleware/softDelete.js'
 import httpStatus from '../helpers/httpStatus.js'
 import logger from '../helpers/winston.js'
 import path from 'path'
@@ -10,27 +9,6 @@ const fileName = path.basename(fullPath)
 const nameYellow = chalk.yellow(fileName)
 
 export const groupController = () => {
-  const deleteGroup = async (req, res) => {
-    try {
-      const { id } = req.params
-      prisma.$use(addSoftDelete) // Usar el middleware para soft delete
-      const groupDeleted = await prisma.group.delete({
-        where: {
-          id: Number(id)
-        }
-      })
-      res.status(httpStatus.OK).json({
-        success: true,
-        message: 'Group Deleted',
-        data: groupDeleted
-      })
-    } catch (error) {
-      logger.error(error)
-    } finally {
-      await prisma.$disconnect()
-    }
-  }
-
   const updateGroup = async (req, res) => {
     try {
       const { id } = req.params
@@ -82,17 +60,34 @@ export const groupController = () => {
       await prisma.$disconnect()
     }
   }
+  const deleteGroup = async (groupId) => {
+    try {
+      const messagesDeleted = await prisma.message.deleteMany({
+        where: {
+          groupId: Number(groupId)
+        }
+      })
+      if (messagesDeleted.count > 0) {
+        logger.info(`Messages deleted: ${messagesDeleted.count}`)
+      }
+      const groupDeleted = await prisma.group.delete({
+        where: {
+          id: Number(groupId)
+        }
+      })
+      if (groupDeleted) {
+        logger.info(`Group Deleted: ${JSON.stringify(groupDeleted)}`)
+      }
+    } catch (error) {
+      logger.error(`Error deleting group and messages: ${error.message}`)
+    } finally {
+      await prisma.$disconnect()
+    }
+  }
 
   const createGroup = async (groupData) => {
     logger.info(`GroupData:${groupData}.Archivo: ${nameYellow}`)
     try {
-      if (!groupData.name) {
-        return ({
-          success: false,
-          message: 'El nombre del grupo es requerido'
-        })
-      }
-
       const newGroup = await prisma.group.create({
         data: {
           name: groupData.name

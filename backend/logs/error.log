@@ -165,3 +165,223 @@ Invalid `prisma.message.create()` invocation:
 }
 
 Argument `content` is missing.
+2024-11-26T22:07:23.786Z [error] El usuario no existe: 
+2024-11-26T22:11:45.726Z [error] El usuario no existe: 
+2024-11-26T22:12:07.148Z [error] El usuario no existe: 
+2024-11-26T22:12:31.736Z [error] Error deleting group and messages: 
+Invalid `prisma.message.deleteMany()` invocation:
+
+{
+  where: {
+    group_id: 54,
+    ~~~~~~~~
+?   AND?: MessageWhereInput | MessageWhereInput[],
+?   OR?: MessageWhereInput[],
+?   NOT?: MessageWhereInput | MessageWhereInput[],
+?   id?: IntFilter | Int,
+?   content?: StringFilter | String,
+?   senderId?: IntFilter | Int,
+?   receiverId?: IntNullableFilter | Int | Null,
+?   groupId?: IntNullableFilter | Int | Null,
+?   sentAt?: DateTimeFilter | DateTime,
+?   sender?: UserRelationFilter | UserWhereInput,
+?   receiver?: UserNullableRelationFilter | UserWhereInput | Null,
+?   group?: GroupNullableRelationFilter | GroupWhereInput | Null
+  }
+}
+
+Unknown argument `group_id`. Did you mean `groupId`? Available options are marked with ?.
+2024-11-26T22:12:41.758Z [error] Error deleting group and messages: 
+Invalid `prisma.message.deleteMany()` invocation:
+
+{
+  where: {
+    group_id: 54,
+    ~~~~~~~~
+?   AND?: MessageWhereInput | MessageWhereInput[],
+?   OR?: MessageWhereInput[],
+?   NOT?: MessageWhereInput | MessageWhereInput[],
+?   id?: IntFilter | Int,
+?   content?: StringFilter | String,
+?   senderId?: IntFilter | Int,
+?   receiverId?: IntNullableFilter | Int | Null,
+?   groupId?: IntNullableFilter | Int | Null,
+?   sentAt?: DateTimeFilter | DateTime,
+?   sender?: UserRelationFilter | UserWhereInput,
+?   receiver?: UserNullableRelationFilter | UserWhereInput | Null,
+?   group?: GroupNullableRelationFilter | GroupWhereInput | Null
+  }
+}
+
+Unknown argument `group_id`. Did you mean `groupId`? Available options are marked with ?.
+2024-11-26T22:12:43.185Z [error] Error deleting group and messages: 
+Invalid `prisma.message.deleteMany()` invocation:
+
+{
+  where: {
+    group_id: 55,
+    ~~~~~~~~
+?   AND?: MessageWhereInput | MessageWhereInput[],
+?   OR?: MessageWhereInput[],
+?   NOT?: MessageWhereInput | MessageWhereInput[],
+?   id?: IntFilter | Int,
+?   content?: StringFilter | String,
+?   senderId?: IntFilter | Int,
+?   receiverId?: IntNullableFilter | Int | Null,
+?   groupId?: IntNullableFilter | Int | Null,
+?   sentAt?: DateTimeFilter | DateTime,
+?   sender?: UserRelationFilter | UserWhereInput,
+?   receiver?: UserNullableRelationFilter | UserWhereInput | Null,
+?   group?: GroupNullableRelationFilter | GroupWhereInput | Null
+  }
+}
+
+Unknown argument `group_id`. Did you mean `groupId`? Available options are marked with ?.
+2024-11-26T22:12:43.682Z [error] Error deleting group and messages: 
+Invalid `prisma.message.deleteMany()` invocation:
+
+{
+  where: {
+    group_id: 56,
+    ~~~~~~~~
+?   AND?: MessageWhereInput | MessageWhereInput[],
+?   OR?: MessageWhereInput[],
+?   NOT?: MessageWhereInput | MessageWhereInput[],
+?   id?: IntFilter | Int,
+?   content?: StringFilter | String,
+?   senderId?: IntFilter | Int,
+?   receiverId?: IntNullableFilter | Int | Null,
+?   groupId?: IntNullableFilter | Int | Null,
+?   sentAt?: DateTimeFilter | DateTime,
+?   sender?: UserRelationFilter | UserWhereInput,
+?   receiver?: UserNullableRelationFilter | UserWhereInput | Null,
+?   group?: GroupNullableRelationFilter | GroupWhereInput | Null
+  }
+}
+
+Unknown argument `group_id`. Did you mean `groupId`? Available options are marked with ?.
+2024-11-26T22:12:45.411Z [error] Error deleting group and messages: 
+Invalid `prisma.message.deleteMany()` invocation:
+
+{
+  where: {
+    group_id: 54,
+    ~~~~~~~~
+?   AND?: MessageWhereInput | MessageWhereInput[],
+?   OR?: MessageWhereInput[],
+?   NOT?: MessageWhereInput | MessageWhereInput[],
+?   id?: IntFilter | Int,
+?   content?: StringFilter | String,
+?   senderId?: IntFilter | Int,
+?   receiverId?: IntNullableFilter | Int | Null,
+?   groupId?: IntNullableFilter | Int | Null,
+?   sentAt?: DateTimeFilter | DateTime,
+?   sender?: UserRelationFilter | UserWhereInput,
+?   receiver?: UserNullableRelationFilter | UserWhereInput | Null,
+?   group?: GroupNullableRelationFilter | GroupWhereInput | Null
+  }
+}
+
+Unknown argument `group_id`. Did you mean `groupId`? Available options are marked with ?.
+2024-11-26T22:12:46.022Z [error] Error deleting group and messages: 
+Invalid `prisma.message.deleteMany()` invocation:
+
+{
+  where: {
+    group_id: 55,
+    ~~~~~~~~
+?   AND?: MessageWhereInput | MessageWhereInput[],
+?   OR?: MessageWhereInput[],
+?   NOT?: MessageWhereInput | MessageWhereInput[],
+?   id?: IntFilter | Int,
+?   content?: StringFilter | String,
+?   senderId?: IntFilter | Int,
+?   receiverId?: IntNullableFilter | Int | Null,
+?   groupId?: IntNullableFilter | Int | Null,
+?   sentAt?: DateTimeFilter | DateTime,
+?   sender?: UserRelationFilter | UserWhereInput,
+?   receiver?: UserNullableRelationFilter | UserWhereInput | Null,
+?   group?: GroupNullableRelationFilter | GroupWhereInput | Null
+  }
+}
+
+Unknown argument `group_id`. Did you mean `groupId`? Available options are marked with ?.
+2024-11-26T22:12:46.224Z [error] Error deleting group and messages: 
+Invalid `prisma.message.deleteMany()` invocation:
+
+{
+  where: {
+    group_id: 56,
+    ~~~~~~~~
+?   AND?: MessageWhereInput | MessageWhereInput[],
+?   OR?: MessageWhereInput[],
+?   NOT?: MessageWhereInput | MessageWhereInput[],
+?   id?: IntFilter | Int,
+?   content?: StringFilter | String,
+?   senderId?: IntFilter | Int,
+?   receiverId?: IntNullableFilter | Int | Null,
+?   groupId?: IntNullableFilter | Int | Null,
+?   sentAt?: DateTimeFilter | DateTime,
+?   sender?: UserRelationFilter | UserWhereInput,
+?   receiver?: UserNullableRelationFilter | UserWhereInput | Null,
+?   group?: GroupNullableRelationFilter | GroupWhereInput | Null
+  }
+}
+
+Unknown argument `group_id`. Did you mean `groupId`? Available options are marked with ?.
+2024-11-26T22:14:26.508Z [error] Error deleting group and messages: 
+Invalid `prisma.message.deleteMany()` invocation:
+
+{
+  where: {
+    group: {
+      connect: {
+      ~~~~~~~
+        id: 54
+      },
+?     is?: GroupWhereInput | Null,
+?     isNot?: GroupWhereInput | Null
+    }
+  }
+}
+
+Unknown argument `connect`. Available options are marked with ?.
+2024-11-26T22:15:19.526Z [error] Error deleting group and messages: 
+Invalid `prisma.message.deleteMany()` invocation:
+
+{
+  where: {
+    group_id: 54,
+    ~~~~~~~~
+?   AND?: MessageWhereInput | MessageWhereInput[],
+?   OR?: MessageWhereInput[],
+?   NOT?: MessageWhereInput | MessageWhereInput[],
+?   id?: IntFilter | Int,
+?   content?: StringFilter | String,
+?   senderId?: IntFilter | Int,
+?   receiverId?: IntNullableFilter | Int | Null,
+?   groupId?: IntNullableFilter | Int | Null,
+?   sentAt?: DateTimeFilter | DateTime,
+?   sender?: UserRelationFilter | UserWhereInput,
+?   receiver?: UserNullableRelationFilter | UserWhereInput | Null,
+?   group?: GroupNullableRelationFilter | GroupWhereInput | Null
+  }
+}
+
+Unknown argument `group_id`. Did you mean `groupId`? Available options are marked with ?.
+2024-11-26T22:24:54.036Z [error] Error deleting group and messages: 
+Invalid `prisma.group.delete()` invocation:
+
+
+An operation failed because it depends on one or more records that were required but not found. Record to delete does not exist.
+2024-11-26T22:24:54.527Z [error] Error deleting group and messages: 
+Invalid `prisma.group.delete()` invocation:
+
+
+An operation failed because it depends on one or more records that were required but not found. Record to delete does not exist.
+2024-11-26T22:24:54.822Z [error] Error deleting group and messages: 
+Invalid `prisma.group.delete()` invocation:
+
+
+An operation failed because it depends on one or more records that were required but not found. Record to delete does not exist.
+2024-11-27T00:24:18.820Z [error] El usuario no existe: 

@@ -88,7 +88,18 @@ io.on('connection', (socket) => {
       console.error(`Error al crear el grupo: ${error}. Archivo: ${nameYellow}`)
     }
   })
-
+  socket.on('delete_group', async (groupId) => {
+    try {
+      if (!groupId) {
+        logger.error('El ID del grupo no se proporcionó o es inválido.')
+        return
+      }
+      await groupController().deleteGroup(groupId)
+      logger.info(`Grupo con ID ${groupId} eliminado exitosamente.`)
+    } catch (error) {
+      logger.error(`Error al eliminar el grupo con ID ${groupId}: ${error.message}`)
+    }
+  })
   socket.on('join_group', async (groupId) => {
     if (!groupId) {
       logger.info('ID del grupo no proporcionado.')

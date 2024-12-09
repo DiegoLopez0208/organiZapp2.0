@@ -2,19 +2,25 @@
 
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
+import { useTheme } from "next-themes"
 import { socket } from "@/app/lib/socket"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { toast } from "@/hooks/use-toast"
-import { Send, Plus, Search, Users, UserPlus, Settings } from 'lucide-react'
+import { Send, Plus, Search, Users, Settings, Trash2, Moon, Sun } from 'lucide-react'
 
 export default function ModernChat() {
   const { data: session } = useSession()
-  const [contacts, setContacts] = useState([])
+  const { setTheme } = useTheme()
   const [groups, setGroups] = useState([])
   const [currentChat, setCurrentChat] = useState(null)
   const [messages, setMessages] = useState([])
@@ -23,33 +29,30 @@ export default function ModernChat() {
   const [searchTerm, setSearchTerm] = useState("")
 
   useEffect(() => {
-
-    socket.on('get_groups', (groups) => {
-      console.log(groups);  // Verifica qué datos llegan
-      setGroups(groups);
-    });
-    socket.on("new_message", handleNewMessage)
     socket.on("update_message", (information) => {
       if (information?.messagesIndex && Array.isArray(information.messagesIndex)) {
-        console.log(information)
-        setMessages((prevMessages) => [...prevMessages, ...information.messagesIndex])
+        setMessages((prevMessages) => {
+          const existingMessageIds = new Set(prevMessages.map((msg) => msg.id));
+          const newMessages = information.messagesIndex.filter(
+            (msg) => !existingMessageIds.has(msg.id)
+          );
+
+          return [...prevMessages, ...newMessages];
+        });
       } else {
-        console.error("Error: 'messages' no es un arreglo válido.");
+        console.error("Error: 'messagesIndex' no es un arreglo válido.");
       }
-    })
+    });
+    
+    socket.on("groups_updated", setGroups)
 
     return () => {
-      socket.off("contacts_updated")
       socket.off("groups_updated")
       socket.off("new_message")
       socket.off('get_groups')
     }
   }, [session])
-  
 
-  const handleNewMessage = (message) => {
-    setMessages((prevMessages) => [...prevMessages, message])
-  }
 
   const handleSendMessage = () => {
     if (newMessage.trim() !== "") {
@@ -57,13 +60,12 @@ export default function ModernChat() {
         senderName: session.user.name,
         text: newMessage,
         time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        groupId: currentChat?.isGroup ? currentChat.id : null,
-        recipientName: currentChat?.isGroup ? null : currentChat?.name,
+        groupId: currentChat?.id,
       }
 
       socket.emit("send_message", message)
+      setMessages((prevMessages) => [...prevMessages, message])
       setNewMessage("")
-      handleNewMessage(message)
     }
   }
 
@@ -84,25 +86,23 @@ export default function ModernChat() {
     }
   }
 
-  const filteredContacts = contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const handleDeleteGroup = (groupId) => {
+    socket.emit("delete_group", groupId)
+    if (currentChat?.id === groupId) {
+      setCurrentChat(null)
+    }
+    setGroups(groups.filter(group => group.id !== groupId))
+    toast({
+      title: "Group Deleted",
+      description: "The group has been successfully deleted",
+    })
+  }
 
   const filteredGroups = groups.filter((group) =>
     group.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  const filteredMessages = messages.filter((msg) => {
-    if (currentChat?.isGroup) {
-      return msg.groupId === currentChat.id
-    } else if (currentChat) {
-      return (
-        (msg.senderName === currentChat.name && msg.recipientName === session?.user.name) ||
-        (msg.senderName === session?.user.name && msg.recipientName === currentChat.name)
-      )
-    }
-    return false
-  })
+  const filteredMessages = messages.filter((msg) => msg.groupId === currentChat?.id)
 
   return (
     <div className="flex h-auto bg-gray-100 dark:bg-gray-900">
@@ -110,110 +110,83 @@ export default function ModernChat() {
       <div className="w-80 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-semibold text-green-600 dark:text-gray-200">Chats</h1>
-            <div className="flex space-x-2">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <UserPlus className="h-5 w-5 text-green-600 dark:text-gray-400" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Add Contact</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <Settings className="h-5 w-5 text-green-600 dark:text-gray-400" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Settings</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
+            <h1 className="text-xl font-semibold text-green-600 dark:text-gray-200">Groups</h1>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Settings className="h-5 w-5 text-green-600 dark:text-gray-400" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setTheme('light')}>
+                  <Sun className="mr-2 h-4 w-4" />
+                  <span>Light</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('dark')}>
+                  <Moon className="mr-2 h-4 w-4" />
+                  <span>Dark</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('system')}>
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>System</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <div className="relative">
             <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
             <Input
-              placeholder="Search chats"
+              placeholder="Search groups"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-9 bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-600"
             />
           </div>
         </div>
-        <Tabs defaultValue="contacts" className="w-full">
-          <TabsList className="w-full justify-start border-b border-gray-200 dark:border-gray-700 px-4">
-            <TabsTrigger value="contacts" className="data-[state=active]:border-b-2 data-[state=active]:border-green-500">Contacts</TabsTrigger>
-            <TabsTrigger value="groups" className="data-[state=active]:border-b-2 data-[state=active]:border-green-500">Groups</TabsTrigger>
-          </TabsList>
-          <TabsContent value="contacts" className="mt-0">
-            <ScrollArea className="h-[calc(100vh-180px)]">
-              {filteredContacts.map((contact) => (
-                <div
-                  key={contact.id}
-                  className={`flex items-center p-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                    currentChat?.id === contact.id ? "bg-gray-100 dark:bg-gray-700" : ""
-                  }`}
-                  onClick={() => setCurrentChat({ ...contact, isGroup: false })}
-                >
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={contact.avatar} alt={contact.name} />
-                    <AvatarFallback>{contact.name[0]}</AvatarFallback>
-                  </Avatar>
-                  <div className="ml-3 overflow-hidden">
-                    <p className="font-medium text-gray-800 dark:text-gray-200">{contact.name}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{contact.lastMessage}</p>
-                  </div>
-                  {contact.unreadCount > 0 && (
-                    <span className="ml-auto bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                      {contact.unreadCount}
-                    </span>
-                  )}
+        <ScrollArea className="h-[calc(100vh-230px)]">
+          {filteredGroups.map((group) => (
+            <div
+              key={group.id}
+              className={`flex items-center p-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                currentChat?.id === group.id ? "bg-gray-100 dark:bg-gray-700" : ""
+              }`}
+            >
+              <div className="flex-1" onClick={() => handleJoinGroup(group)}>
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src={group.avatar} alt={group.name} />
+                  <AvatarFallback><Users className="h-5 w-5" /></AvatarFallback>
+                </Avatar>
+                <div className="ml-3 overflow-hidden">
+                  <p className="font-medium text-gray-800 dark:text-gray-200">{group.name}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{group.lastMessage}</p>
                 </div>
-              ))}
-            </ScrollArea>
-          </TabsContent>
-          <TabsContent value="groups" className="mt-0">
-            <ScrollArea className="h-[calc(100vh-230px)]">
-              {filteredGroups.map((group) => (
-                <div
-                  key={group.id}
-                  className={`flex items-center p-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                    currentChat?.id === group.id ? "bg-gray-100 dark:bg-gray-700" : ""
-                  }`}
-                  onClick={() => handleJoinGroup(group)}
-                >
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={group.avatar} alt={group.name} />
-                    <AvatarFallback><Users className="h-5 w-5" /></AvatarFallback>
-                  </Avatar>
-                  <div className="ml-3 overflow-hidden">
-                    <p className="font-medium text-gray-800 dark:text-gray-200">{group.name}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{group.lastMessage}</p>
-                  </div>
-                </div>
-              ))}
-            </ScrollArea>
-            <div className=" border-t border-gray-200 dark:border-gray-700">
-              <Input
-                placeholder="New Group Name"
-                value={newGroupName}
-                onChange={(e) => setNewGroupName(e.target.value)}
-                className=""
-              />
-              <Button onClick={handleCreateGroup} className="w-full bg-green-500">
-                <Plus className="h-5 w-5 mr-2" /> Create Group
-              </Button>
+              </div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon" onClick={() => handleDeleteGroup(group.id)}>
+                      <Trash2 className="h-5 w-5 text-red-500" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Delete Group</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
-          </TabsContent>
-        </Tabs>
+          ))}
+        </ScrollArea>
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+          <Input
+            placeholder="New Group Name"
+            value={newGroupName}
+            onChange={(e) => setNewGroupName(e.target.value)}
+            className="mb-2"
+          />
+          <Button onClick={handleCreateGroup} className="w-full bg-green-500">
+            <Plus className="h-5 w-5 mr-2" /> Create Group
+          </Button>
+        </div>
       </div>
 
       {/* Chat Area */}
@@ -224,12 +197,12 @@ export default function ModernChat() {
               <div className="flex items-center">
                 <Avatar className="h-10 w-10">
                   <AvatarImage src={currentChat.avatar} alt={currentChat.name} />
-                  <AvatarFallback>{currentChat.isGroup ? <Users className="h-5 w-5" /> : currentChat.name[0]}</AvatarFallback>
+                  <AvatarFallback><Users className="h-5 w-5" /></AvatarFallback>
                 </Avatar>
                 <div className="ml-3">
                   <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{currentChat.name}</h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {currentChat.isGroup ? `${currentChat.membersCount || 0} members` : "Online"}
+                    {`${currentChat.membersCount || 0} members`}
                   </p>
                 </div>
               </div>
@@ -278,7 +251,7 @@ export default function ModernChat() {
             <div className="text-center">
               <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
               <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">Welcome to ModernChat</h2>
-              <p className="text-gray-500 dark:text-gray-400">Select a chat to start messaging</p>
+              <p className="text-gray-500 dark:text-gray-400">Select a group to start messaging</p>
             </div>
           </div>
         )}
@@ -286,3 +259,4 @@ export default function ModernChat() {
     </div>
   )
 }
+
