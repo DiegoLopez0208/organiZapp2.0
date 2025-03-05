@@ -1,6 +1,7 @@
 {
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "husky": "^9.1.7"
   },
   "scripts": {
     "start:frontend": "cd frontend/ && npm start",
@@ -8,7 +9,8 @@
     "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
     "dev:frontend": "cd frontend/ && npm run dev",
     "dev:backend": "cd backend && npm run dev",
-    "dev": "concurrently -n \"Backend,Frontend\" -c \"cyan,red\" \"npm run dev:backend\" \"npm run dev:frontend\""
+    "dev": "concurrently -n \"Backend,Frontend\" -c \"cyan,red\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "prepare": "husky"
   },
   "dependencies": {
     "styled-components": "^6.1.0"
