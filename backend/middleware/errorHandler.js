@@ -10,13 +10,11 @@ const ERROR_HANDLERS = {
     });
   },
   defaultError: ({ error, response }) => {
-    response
-      .status(httpStatus.INTERNAL_SERVER_ERROR)
-      .json({
-        success: false,
-        message: error.message,
-        isFromErrorHandler: true,
-      });
+    response.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: error.message,
+      isFromErrorHandler: true,
+    });
   },
 };
 
