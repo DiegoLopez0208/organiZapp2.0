@@ -10,7 +10,8 @@
     "dev:frontend": "cd frontend/ && npm run dev",
     "dev:backend": "cd backend && npm run dev",
     "dev": "concurrently -n \"Backend,Frontend\" -c \"cyan,red\" \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "prepare": "husky"
+    "prepare": "husky",
+     "test": "echo \"No tests configured\""
   },
   "dependencies": {
     "styled-components": "^6.1.0"
