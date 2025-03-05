@@ -7,7 +7,7 @@ const HTTP_STATUS = {
   NOT_FOUND: 404,
   TOO_MANY_REQUESTS: 429,
   INTERNAL_SERVER_ERROR: 500,
-  I_AM_A_TEAPOT: 418
-}
+  I_AM_A_TEAPOT: 418,
+};
 
-export default HTTP_STATUS
+export default HTTP_STATUS;

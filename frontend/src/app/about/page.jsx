@@ -1,11 +1,12 @@
-import { DollarSign, Phone, LayoutGrid, Lightbulb } from "lucide-react"
+import { DollarSign, Phone, LayoutGrid, Lightbulb } from "lucide-react";
 
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card";
 
 const features = [
   {
     icon: DollarSign,
-    description: "Queremos que las personas estén organizadas y mejoren su calidad de tiempo.",
+    description:
+      "Queremos que las personas estén organizadas y mejoren su calidad de tiempo.",
   },
   {
     icon: Phone,
@@ -13,23 +14,27 @@ const features = [
   },
   {
     icon: LayoutGrid,
-    description: "Tenemos una sección para escribir en un chat grupal y también un calendario para anotar tus necesidades.",
+    description:
+      "Tenemos una sección para escribir en un chat grupal y también un calendario para anotar tus necesidades.",
   },
   {
     icon: Lightbulb,
-    description: "No buscamos innovar, sino mejorar las cosas básicas necesarias para poder organizarse mejor.",
+    description:
+      "No buscamos innovar, sino mejorar las cosas básicas necesarias para poder organizarse mejor.",
   },
-]
+];
 
 export default function About() {
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-green-500 mb-6 text-center">OrganiZapp</h1>
+        <h1 className="text-4xl font-bold text-green-500 mb-6 text-center">
+          OrganiZapp
+        </h1>
         <p className="text-xl mb-12 text-center">
           La clave del éxito está en la organización.
         </p>
-        
+
         <div className="grid gap-8 md:grid-cols-2">
           {features.map((feature, index) => (
             <Card key={index} className="bg-gray-800 border-green-500">
@@ -44,5 +49,5 @@ export default function About() {
         </div>
       </div>
     </div>
-  )
+  );
 }

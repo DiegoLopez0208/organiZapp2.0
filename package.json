@@ -3,6 +3,9 @@
     "concurrently": "^8.2.2",
     "husky": "^9.1.7"
   },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,css,html}": "prettier --write"
+  },
   "scripts": {
     "start:frontend": "cd frontend/ && npm start",
     "start:backend": "cd backend && npm start",
@@ -10,8 +13,8 @@
     "dev:frontend": "cd frontend/ && npm run dev",
     "dev:backend": "cd backend && npm run dev",
     "dev": "concurrently -n \"Backend,Frontend\" -c \"cyan,red\" \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "prepare": "husky",
-     "test": "echo \"No tests configured\""
+     "prepare": "husky",
+                          "test": "echo \"No tests configured\""
   },
   "dependencies": {
     "styled-components": "^6.1.0"

@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Calendar } from "@/components/ui/calendar"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -14,35 +14,34 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Plus } from "lucide-react"
+} from "@/components/ui/dialog";
+import { Plus } from "lucide-react";
 
 export default function CalendarComponent() {
-  const [date, setDate] = useState(new Date())
-  const [events, setEvents] = useState([])
+  const [date, setDate] = useState(new Date());
+  const [events, setEvents] = useState([]);
   const [newEvent, setNewEvent] = useState({
-    title: '',
-    description: '',
+    title: "",
+    description: "",
     date: new Date(),
-    startTime: '',
-    endTime: ''
-  })
+    startTime: "",
+    endTime: "",
+  });
 
   const handleAddEvent = () => {
     const event = {
       ...newEvent,
-      id: Math.random().toString(36).substr(2, 9)
-    }
-    setEvents([...events, event])
+      id: Math.random().toString(36).substr(2, 9),
+    };
+    setEvents([...events, event]);
     setNewEvent({
-      title: '',
-      description: '',
+      title: "",
+      description: "",
       date: new Date(),
-      startTime: '',
-      endTime: ''
-    })
-   
-  }
+      startTime: "",
+      endTime: "",
+    });
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-900 text-gray-100 p-4">
@@ -55,13 +54,16 @@ export default function CalendarComponent() {
               onSelect={setDate}
               className="rounded-md border border-gray-700"
               classNames={{
-                day_selected: "bg-green-600 text-white hover:bg-green-700 focus:bg-green-700",
+                day_selected:
+                  "bg-green-600 text-white hover:bg-green-700 focus:bg-green-700",
                 day_today: "bg-gray-700 text-white",
               }}
             />
           </div>
           <div className="lg:w-1/2 p-6 border-t lg:border-t-0 lg:border-l border-gray-700">
-            <h2 className="text-3xl font-bold mb-6">Eventos para {date?.toLocaleDateString()}</h2>
+            <h2 className="text-3xl font-bold mb-6">
+              Eventos para {date?.toLocaleDateString()}
+            </h2>
             <Dialog>
               <DialogTrigger asChild>
                 <Button className="mb-6 w-full">
@@ -72,7 +74,8 @@ export default function CalendarComponent() {
                 <DialogHeader>
                   <DialogTitle>Agregar Nuevo Evento</DialogTitle>
                   <DialogDescription>
-                    Ingresa los detalles del evento aquí. Haz clic en guardar cuando hayas terminado.
+                    Ingresa los detalles del evento aquí. Haz clic en guardar
+                    cuando hayas terminado.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -83,7 +86,9 @@ export default function CalendarComponent() {
                     <Input
                       id="title"
                       value={newEvent.title}
-                      onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
+                      onChange={(e) =>
+                        setNewEvent({ ...newEvent, title: e.target.value })
+                      }
                       className="col-span-3"
                     />
                   </div>
@@ -94,7 +99,12 @@ export default function CalendarComponent() {
                     <Textarea
                       id="description"
                       value={newEvent.description}
-                      onChange={(e) => setNewEvent({...newEvent, description: e.target.value})}
+                      onChange={(e) =>
+                        setNewEvent({
+                          ...newEvent,
+                          description: e.target.value,
+                        })
+                      }
                       className="col-span-3"
                     />
                   </div>
@@ -106,7 +116,9 @@ export default function CalendarComponent() {
                       id="start-time"
                       type="time"
                       value={newEvent.startTime}
-                      onChange={(e) => setNewEvent({...newEvent, startTime: e.target.value})}
+                      onChange={(e) =>
+                        setNewEvent({ ...newEvent, startTime: e.target.value })
+                      }
                       className="col-span-3"
                     />
                   </div>
@@ -118,20 +130,26 @@ export default function CalendarComponent() {
                       id="end-time"
                       type="time"
                       value={newEvent.endTime}
-                      onChange={(e) => setNewEvent({...newEvent, endTime: e.target.value})}
+                      onChange={(e) =>
+                        setNewEvent({ ...newEvent, endTime: e.target.value })
+                      }
                       className="col-span-3"
                     />
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button type="submit" onClick={handleAddEvent}>Guardar evento</Button>
+                  <Button type="submit" onClick={handleAddEvent}>
+                    Guardar evento
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
             <div className="space-y-4 max-h-[calc(100vh-400px)] overflow-y-auto pr-4">
               {events
-                .filter(event => event.date.toDateString() === date?.toDateString())
-                .map(event => (
+                .filter(
+                  (event) => event.date.toDateString() === date?.toDateString(),
+                )
+                .map((event) => (
                   <div key={event.id} className="bg-gray-700 p-4 rounded-md">
                     <h3 className="text-xl font-semibold">{event.title}</h3>
                     <p className="text-gray-300">{event.description}</p>
@@ -145,5 +163,5 @@ export default function CalendarComponent() {
         </div>
       </div>
     </div>
-  )
+  );
 }

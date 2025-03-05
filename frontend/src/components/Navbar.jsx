@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LogoOrganiZapp } from "@/app/lib/image";
 
-export default  function NavBar() {
+export default function NavBar() {
   const { data: session } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
@@ -26,14 +26,14 @@ export default  function NavBar() {
         console.log("Datos de sesión incompletos o sesion ya registrada.");
         return;
       }
-  
+
       const dataSession = {
         username: session.user.name,
         email: session.user.email,
         password: Math.random().toString(36).slice(-8), // Contraseña aleatoria
         birthDate: new Date().toISOString(), // Ajustar si es necesario
       };
-  
+
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}api/auth/register`,
@@ -41,28 +41,27 @@ export default  function NavBar() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(dataSession),
-          }
+          },
         );
-  
+
         if (!response.ok) {
           throw new Error(`Error en el registro: ${response.statusText}`);
         }
-  
-        setIsRegistered(true); 
+
+        setIsRegistered(true);
       } catch (error) {
         console.log(
           "Ocurrió un error durante el registro. Por favor, inténtalo de nuevo.",
-          error.message || error
+          error.message || error,
         );
-        setIsRegistered(true)
+        setIsRegistered(true);
       }
     };
-  
+
     if (session && !isRegistered) {
       registerSession();
     }
   }, [session, isRegistered]);
-  
 
   useEffect(() => {
     const closeMenu = () => setIsMenuOpen(false);
@@ -110,14 +109,14 @@ export default  function NavBar() {
 
           <div className="hidden sm:flex items-center space-x-4 bg-white">
             {session?.user ? (
-              <DropdownMenu >
-                <DropdownMenuTrigger asChild >
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
                     className="flex items-center text-white "
                   >
                     <Image
-                      src={session.user.image || "/placeholder.svg" } 
+                      src={session.user.image || "/placeholder.svg"}
                       alt={session.user.name || "Usuario"}
                       width={32}
                       height={32}
@@ -125,7 +124,7 @@ export default  function NavBar() {
                     />
                     <ChevronDown className="ml-2 h-4 w-4 text-green-500" />
                   </Button>
-                </DropdownMenuTrigger >
+                </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem>
                     <span className="font-bold text-green-600">
@@ -146,12 +145,10 @@ export default  function NavBar() {
                 >
                   Iniciar sesión
                 </Button>
-                 <Link href="/auth/register">
-                <Button
-                  className="bg-white text-green-500 hover:bg-gray-200"
-                >
-                  Registrarse
-                </Button>
+                <Link href="/auth/register">
+                  <Button className="bg-white text-green-500 hover:bg-gray-200">
+                    Registrarse
+                  </Button>
                 </Link>
               </div>
             )}

@@ -1,10 +1,17 @@
+import Image from "next/image";
+import {
+  MessageCircle,
+  Calendar,
+  Users,
+  Clock,
+  Facebook,
+  Github,
+  Mail,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
-import Image from "next/image"
-import { MessageCircle, Calendar, Users, Clock, Facebook, Github, Mail } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card , CardContent } from "@/components/ui/card"
-
-import { Man, Woman } from "@/app/lib/image"
+import { Man, Woman } from "@/app/lib/image";
 
 export default function Home() {
   const FeatureItem = ({ icon: Icon, children }) => (
@@ -12,9 +19,9 @@ export default function Home() {
       <Icon className="text-green-500 h-5 w-5" />
       <span>{children}</span>
     </li>
-  )
+  );
 
-const TeamMember = ({ name, role, image }) => (
+  const TeamMember = ({ name, role, image }) => (
     <Card className="bg-gray-800 border-gray-700">
       <CardContent className="p-6  text-white text-center">
         <Image
@@ -39,19 +46,23 @@ const TeamMember = ({ name, role, image }) => (
         </div>
       </CardContent>
     </Card>
-  )
+  );
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <main className="container mx-auto px-4 py-12 space-y-24">
-        
         {/* Section 1: Main Intro */}
         <section className="text-center space-y-6">
-          <h2 className="text-3xl md:text-5xl text-green-500 font-bold">Organiza tu vida con facilidad</h2>
+          <h2 className="text-3xl md:text-5xl text-green-500 font-bold">
+            Organiza tu vida con facilidad
+          </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Te proporcionamos un chat y un calendario para mantenerte organizado y conectado.
+            Te proporcionamos un chat y un calendario para mantenerte organizado
+            y conectado.
           </p>
-          <Button size="lg" className="bg-green-500 hover:bg-green-600">Comenzar</Button>
+          <Button size="lg" className="bg-green-500 hover:bg-green-600">
+            Comenzar
+          </Button>
         </section>
 
         {/* Section 2: Comunicación sin problemas */}
@@ -66,11 +77,19 @@ const TeamMember = ({ name, role, image }) => (
             />
           </div>
           <div className="space-y-6">
-            <h3 className="text-2xl md:text-3xl font-semibold text-green-500">Comunicación sin problemas</h3>
+            <h3 className="text-2xl md:text-3xl font-semibold text-green-500">
+              Comunicación sin problemas
+            </h3>
             <ul className="space-y-4">
-              <FeatureItem icon={MessageCircle}>Contacta con tus amigos en tiempo real</FeatureItem>
-              <FeatureItem icon={Users}>Crea grupos y envía información variada</FeatureItem>
-              <FeatureItem icon={Clock}>Hecho con Socket.io para comunicación en tiempo real</FeatureItem>
+              <FeatureItem icon={MessageCircle}>
+                Contacta con tus amigos en tiempo real
+              </FeatureItem>
+              <FeatureItem icon={Users}>
+                Crea grupos y envía información variada
+              </FeatureItem>
+              <FeatureItem icon={Clock}>
+                Hecho con Socket.io para comunicación en tiempo real
+              </FeatureItem>
             </ul>
           </div>
         </section>
@@ -78,11 +97,15 @@ const TeamMember = ({ name, role, image }) => (
         {/* Section 3: Programación sin esfuerzo */}
         <section className="grid md:grid-cols-2 gap-12 items-center">
           <div className="order-2 md:order-1 space-y-6">
-            <h3 className="text-2xl md:text-3xl font-semibold text-green-500">Programa tu vida</h3>
+            <h3 className="text-2xl md:text-3xl font-semibold text-green-500">
+              Programa tu vida
+            </h3>
             <ul className="space-y-4">
               <FeatureItem icon={Calendar}>Organiza tus fechas</FeatureItem>
               <FeatureItem icon={Clock}>Anota eventos importantes</FeatureItem>
-              <FeatureItem icon={Users}>Establece límites de tiempo para completar tus tareas</FeatureItem>
+              <FeatureItem icon={Users}>
+                Establece límites de tiempo para completar tus tareas
+              </FeatureItem>
             </ul>
           </div>
           <div className="order-1 md:order-2">
@@ -100,11 +123,15 @@ const TeamMember = ({ name, role, image }) => (
         <section className="text-center space-y-12">
           <h3 className="text-3xl md:text-4xl font-semibold">Nuestro Equipo</h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[ 
+            {[
               { name: "Agustin Gercek", role: "Desarrollador Web", image: Man },
               { name: "Diego Lopez", role: "Desarrollador Web", image: Man },
               { name: "Facundo Burgos", role: "Desarrollador Web", image: Man },
-              { name: "Gricelda Canaza", role: "Desarrolladora Web", image: Woman },
+              {
+                name: "Gricelda Canaza",
+                role: "Desarrolladora Web",
+                image: Woman,
+              },
             ].map((member) => (
               <TeamMember key={member.name} {...member} />
             ))}
@@ -112,5 +139,5 @@ const TeamMember = ({ name, role, image }) => (
         </section>
       </main>
     </div>
-  )
+  );
 }

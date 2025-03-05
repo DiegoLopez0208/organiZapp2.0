@@ -1,7 +1,7 @@
-import Link from "next/link"
-import { CheckCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import Link from "next/link";
+import { CheckCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 export default function SuccessfulRegistration() {
   return (
@@ -27,5 +27,5 @@ export default function SuccessfulRegistration() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }

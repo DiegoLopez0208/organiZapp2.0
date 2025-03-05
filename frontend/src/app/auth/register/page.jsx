@@ -63,7 +63,7 @@ export default function Register() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
-        }
+        },
       );
 
       if (!registerResponse.ok) throw new Error("Error en el registro");
@@ -71,7 +71,7 @@ export default function Register() {
       router.push("/auth/register/successful");
     } catch (err) {
       setError(
-        "Ocurrió un error durante el registro. Por favor, inténtalo de nuevo."
+        "Ocurrió un error durante el registro. Por favor, inténtalo de nuevo.",
       );
     }
   };

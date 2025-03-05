@@ -1,13 +1,12 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import Link from "next/link"
-import { Facebook, Twitter, Instagram } from "lucide-react"
+import Image from "next/image";
+import Link from "next/link";
+import { Facebook, Twitter, Instagram } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
-
-import { LogoOrganiZapp }from "@/app/lib/image"
+import { LogoOrganiZapp } from "@/app/lib/image";
 
 function Footer() {
   return (
@@ -30,22 +29,34 @@ function Footer() {
           <nav>
             <ul className="flex flex-wrap justify-center md:justify-end space-x-6 text-sm font-medium text-gray-300">
               <li>
-                <Link href="/about" className="hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 rounded">
+                <Link
+                  href="/about"
+                  className="hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 rounded"
+                >
                   Sobre Nosotros
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 rounded">
+                <Link
+                  href="/privacy"
+                  className="hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 rounded"
+                >
                   Política de Privacidad
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 rounded">
+                <Link
+                  href="/contact"
+                  className="hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 rounded"
+                >
                   Contacto
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 rounded">
+                <Link
+                  href="/contact"
+                  className="hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 rounded"
+                >
                   Nuestro Equipo
                 </Link>
               </li>
@@ -58,20 +69,35 @@ function Footer() {
             © 2024 OrganiZapp. Todos los derechos reservados.
           </p>
           <div className="flex justify-center md:justify-end space-x-4">
-            <Button variant="ghost" size="icon" className="text-blue-400 hover:bg-green-500 hover:text-white" aria-label="Facebook">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-blue-400 hover:bg-green-500 hover:text-white"
+              aria-label="Facebook"
+            >
               <Facebook className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="text-blue-500 hover:bg-green-500 hover:text-white" aria-label="Twitter">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-blue-500 hover:bg-green-500 hover:text-white"
+              aria-label="Twitter"
+            >
               <Twitter className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="text-red-500 hover:bg-green-500 hover:text-white" aria-label="Instagram">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-red-500 hover:bg-green-500 hover:text-white"
+              aria-label="Instagram"
+            >
               <Instagram className="h-5 w-5" />
             </Button>
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }
 
-export default Footer
+export default Footer;

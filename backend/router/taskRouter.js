@@ -1,19 +1,27 @@
-import { Router } from 'express'
-import { taskController } from '../controllers/taskController.js'
-import { taskValidation, taskParamsValidation, userValidation, userParamsValidation } from '../middleware/validations.js'
+import { Router } from "express";
+import { taskController } from "../controllers/taskController.js";
+import {
+  taskValidation,
+  taskParamsValidation,
+  userValidation,
+  userParamsValidation,
+} from "../middleware/validations.js";
 
 export const taskRoutes = () => {
-  const taskRouter = Router()
-  const { getTask, getTaskById, createTask, updateTask, deleteTask } = taskController()
+  const taskRouter = Router();
+  const { getTask, getTaskById, createTask, updateTask, deleteTask } =
+    taskController();
 
-  taskRouter.route('/task')
+  taskRouter
+    .route("/task")
     .get(getTask)
-    .post(userParamsValidation, userValidation, createTask)
+    .post(userParamsValidation, userValidation, createTask);
 
-  taskRouter.route('/task/:id')
+  taskRouter
+    .route("/task/:id")
     .get(getTaskById)
     .put(taskParamsValidation, taskValidation, updateTask)
-    .delete(deleteTask)
+    .delete(deleteTask);
 
-  return taskRouter
-}
+  return taskRouter;
+};

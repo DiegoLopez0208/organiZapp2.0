@@ -1,7 +1,6 @@
-
 .required-input:focus:invalid {
-    border: 2px solid red; 
-    background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg") no-repeat 95% 50% #1f2937;
-    background-size: 25px;
-
-  }
+  border: 2px solid red;
+  background: url("https://assets.digitalocean.com/labs/icons/exclamation-triangle-fill.svg")
+    no-repeat 95% 50% #1f2937;
+  background-size: 25px;
+}

@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import GitHubProvider from "next-auth/providers/github";
-import { defaultAvatar } from '@/app/lib/image';
+import { defaultAvatar } from "@/app/lib/image";
 
 export const authOptions = {
   providers: [
@@ -19,16 +19,19 @@ export const authOptions = {
             throw new Error("Missing username or password");
           }
 
-          const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                username: credentials.username,
+                password: credentials.password,
+              }),
             },
-            body: JSON.stringify({
-              username: credentials.username,
-              password: credentials.password,
-            }),
-          });
+          );
 
           if (!res.ok) {
             const errorText = await res.text();

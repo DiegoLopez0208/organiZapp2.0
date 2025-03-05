@@ -1,4 +1,3 @@
-export { default } from "next-auth/middleware"
+export { default } from "next-auth/middleware";
 
-
-  export const config = { matcher: ["/chat", "/calendar"] }
+export const config = { matcher: ["/chat", "/calendar"] };
