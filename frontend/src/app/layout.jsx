@@ -1,12 +1,19 @@
-import { ThemeProvider } from "next-themes"; 
-import { SessionProvider } from "next-auth/react"; 
+import Providers from "./providers/providers"; // Asegúrate de que la ruta sea correcta
+import "./globals.css";
+import NavBar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
-export function Providers({ children }) {
+export default function RootLayout({ children }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-      <SessionProvider>
-        {children}
-      </SessionProvider>
-    </ThemeProvider>
+    <html lang="en">
+      <body>  
+        <Providers>
+        <NavBar />     
+
+          {children}
+          <Footer />
+        </Providers>
+      </body>
+    </html>
   );
 }

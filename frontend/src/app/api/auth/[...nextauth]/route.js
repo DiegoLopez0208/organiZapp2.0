@@ -1,73 +1,76 @@
 import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import GitHubProvider from "next-auth/providers/github";
-import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
-import {defaultAvatar} from '@/app/lib/image'
+import GoogleProvider from "next-auth/providers/google";
+import FacebookProvider from "next-auth/providers/facebook";
+import GitHubProvider from "next-auth/providers/github";
+import { defaultAvatar } from '@/app/lib/image';
 
-const handler = NextAuth({
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
-
       credentials: {
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const user = {
-          username: credentials?.username,
-          password: credentials?.password,
-        };
-    
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}api/auth/login`, {
+          if (!credentials?.username || !credentials?.password) {
+            throw new Error("Missing username or password");
+          }
+
+          const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(user),
+            body: JSON.stringify({
+              username: credentials.username,
+              password: credentials.password,
+            }),
           });
-          const logindata = user
-          if (res.ok) {
-          
-            const session = {
-              name : logindata.username,
-              image : defaultAvatar
-            };
-            
-            return session;
-          } else {
-            return null;
-          }
-        } catch (error) {
-          console.error("Authentication failed:", error);
-          return null;
-        } 
 
+          if (!res.ok) {
+            const errorText = await res.text();
+            console.error("Login failed:", errorText);
+            throw new Error("Invalid credentials");
+          }
+
+          const logindata = await res.json();
+
+          return {
+            id: logindata.id?.toString() || "1",
+            name: logindata.username || credentials.username,
+            email: logindata.email || `${credentials.username}@example.com`,
+            image: logindata.image || defaultAvatar,
+          };
+        } catch (error) {
+          console.error("Authentication error:", error);
+          return null;
+        }
       },
     }),
-
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
     FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      clientId: process.env.FACEBOOK_CLIENT_ID || "",
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET || "",
     }),
     GitHubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
+      clientId: process.env.GITHUB_ID || "",
+      clientSecret: process.env.GITHUB_SECRET || "",
     }),
   ],
   pages: {
     signIn: "/auth/login",
   },
   session: {
-    strategy: "jwt"
+    strategy: "jwt",
   },
-  secret: process.env.NEXTAUTH_SECRET,
-});
+  secret: process.env.NEXTAUTH_SECRET || "default_secret",
+};
 
-export { handler as GET, handler as POST };
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST }; // Para Next.js 13+ (App Router)
