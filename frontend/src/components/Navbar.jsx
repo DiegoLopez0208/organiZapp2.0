@@ -30,8 +30,8 @@ export default function NavBar() {
       const dataSession = {
         username: session.user.name,
         email: session.user.email,
-        password: Math.random().toString(36).slice(-8), 
-        birthDate: new Date().toISOString(), 
+        password: Math.random().toString(36).slice(-8),
+        birthDate: new Date().toISOString(),
       };
 
       try {
