@@ -9,7 +9,6 @@ import {
   Facebook,
   Github,
   Mail,
-
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,8 +16,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Man, Woman, callendary, ChatImage } from "@/app/lib/image";
 
 export default function Home() {
-
-
   const FeatureItem = ({ icon: Icon, children }) => (
     <li className="flex items-center space-x-3">
       <Icon className="text-green-500 h-5 w-5" />
@@ -60,7 +57,6 @@ export default function Home() {
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <main className="container mx-auto px-4 py-12 space-y-24">
         {/* Botón para cambiar el tema */}
-
 
         <section className="text-center space-y-6">
           <h2 className="text-3xl md:text-5xl text-green-500 font-bold">
