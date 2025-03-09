@@ -44,7 +44,10 @@ export default function Home() {
           <a href="#" className="text-blue-400 hover:text-blue-600">
             <Facebook className="h-5 w-5" />
           </a>
-          <a href="#" className="text-gray-500 hover:text-gray-700 dark:hover:text-white">
+          <a
+            href="#"
+            className="text-gray-500 hover:text-gray-700 dark:hover:text-white"
+          >
             <Github className="h-5 w-5" />
           </a>
           <a href="#" className="text-red-500 hover:text-red-600">
@@ -58,14 +61,17 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <main className="container mx-auto px-4 py-12 space-y-24">
-        
         {/* Botón para cambiar el tema */}
         <div className="flex justify-end">
           <Button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             variant="outline"
           >
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            {theme === "dark" ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
           </Button>
         </div>
 
@@ -74,7 +80,8 @@ export default function Home() {
             Organiza tu vida con facilidad
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Te proporcionamos un chat y un calendario para mantenerte organizado y conectado.
+            Te proporcionamos un chat y un calendario para mantenerte organizado
+            y conectado.
           </p>
           <Button size="lg" className="bg-green-500 hover:bg-green-600">
             Comenzar
@@ -96,9 +103,15 @@ export default function Home() {
               Comunicación sin problemas
             </h3>
             <ul className="space-y-4">
-              <FeatureItem icon={MessageCircle}>Contacta con tus amigos en tiempo real</FeatureItem>
-              <FeatureItem icon={Users}>Crea grupos y envía información variada</FeatureItem>
-              <FeatureItem icon={Clock}>Hecho con Socket.io para comunicación en tiempo real</FeatureItem>
+              <FeatureItem icon={MessageCircle}>
+                Contacta con tus amigos en tiempo real
+              </FeatureItem>
+              <FeatureItem icon={Users}>
+                Crea grupos y envía información variada
+              </FeatureItem>
+              <FeatureItem icon={Clock}>
+                Hecho con Socket.io para comunicación en tiempo real
+              </FeatureItem>
             </ul>
           </div>
         </section>
@@ -111,7 +124,9 @@ export default function Home() {
             <ul className="space-y-4">
               <FeatureItem icon={Calendar}>Organiza tus fechas</FeatureItem>
               <FeatureItem icon={Clock}>Anota eventos importantes</FeatureItem>
-              <FeatureItem icon={Users}>Establece límites de tiempo para completar tus tareas</FeatureItem>
+              <FeatureItem icon={Users}>
+                Establece límites de tiempo para completar tus tareas
+              </FeatureItem>
             </ul>
           </div>
           <div className="order-1 md:order-2">
@@ -132,7 +147,11 @@ export default function Home() {
               { name: "Agustin Gercek", role: "Desarrollador Web", image: Man },
               { name: "Diego Lopez", role: "Desarrollador Web", image: Man },
               { name: "Facundo Burgos", role: "Desarrollador Web", image: Man },
-              { name: "Gricelda Canaza", role: "Desarrolladora Web", image: Woman },
+              {
+                name: "Gricelda Canaza",
+                role: "Desarrolladora Web",
+                image: Woman,
+              },
             ].map((member) => (
               <TeamMember key={member.name} {...member} />
             ))}
