@@ -42,6 +42,7 @@ export default function ModernChat() {
   const [newGroupName, setNewGroupName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
+
   useEffect(() => {
     socket.on("update_message", (information) => {
       if (
