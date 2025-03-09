@@ -3670,3 +3670,32 @@ An operation failed because it depends on one or more records that were required
 2025-03-09T01:55:04.449Z [info] Grupos cargados correctamente: 1
 2025-03-09T02:04:46.056Z [info] Backend ejecutándose en el puerto 4000. Archivo: [33mindex.js[39m
 2025-03-09T02:04:46.225Z [info] Grupos cargados correctamente: 1
+2025-03-09T02:50:17.259Z [info] Grupos cargados correctamente: 2
+2025-03-09T02:50:38.075Z [info] Grupos cargados correctamente: 2
+2025-03-09T02:56:07.252Z [info] Backend ejecutándose en el puerto 4000. Archivo: [33mindex.js[39m
+2025-03-09T02:56:07.335Z [info] Grupos cargados correctamente: 2
+2025-03-09T02:56:07.339Z [info] Grupos cargados correctamente: 2
+2025-03-09T02:56:07.770Z [info] Un cliente se ha conectado: Ju2GodOcFXxySn1fAAAB. Archivo: [33mindex.js[39m
+2025-03-09T02:56:09.596Z [info] Un cliente se ha conectado: m8weWOFGboBLClnsAAAD. Archivo: [33mindex.js[39m
+2025-03-09T02:56:50.773Z [info] Backend ejecutándose en el puerto 4000. Archivo: [33mindex.js[39m
+2025-03-09T02:56:50.838Z [info] Grupos cargados correctamente: 2
+2025-03-09T02:58:57.215Z [info] Backend ejecutándose en el puerto 4000. Archivo: [33mindex.js[39m
+2025-03-09T02:58:57.511Z [info] Grupos cargados correctamente: 2
+2025-03-09T03:00:06.225Z [info] Un cliente se ha conectado: 88MthxOkrZWN31wCAAAB. Archivo: [33mindex.js[39m
+2025-03-09T03:00:13.852Z [info] GroupData:[object Object].Archivo: [33mgroupController.js[39m
+2025-03-09T03:00:16.541Z [info] Usuario 88MthxOkrZWN31wCAAAB se unió al grupo: fsaf.
+2025-03-09T03:00:18.936Z [info] [object Object]
+2025-03-09T03:00:19.179Z [info] Message Created by: {"id":3,"content":"fsafsa","senderId":1,"receiverId":null,"groupId":3,"sentAt":"2025-03-09T03:00:19.164Z"}. Archivo: [33mmessageController.js[39m
+2025-03-09T03:00:19.179Z [info]  Mensaje: "fsafsa". Archivo: [33mindex.js[39m
+2025-03-09T03:00:42.909Z [info] Messages deleted: 1
+2025-03-09T03:00:42.919Z [info] Group Deleted: {"id":1,"name":"asd","createdAt":"2025-03-09T00:25:43.062Z","updatedAt":"2025-03-09T00:25:43.062Z","deletedAt":null}
+2025-03-09T03:00:42.940Z [info] Grupo con ID 1 eliminado exitosamente.
+2025-03-09T03:00:43.405Z [info] Messages deleted: 1
+2025-03-09T03:00:43.409Z [info] Group Deleted: {"id":2,"name":"xd","createdAt":"2025-03-09T02:22:42.389Z","updatedAt":"2025-03-09T02:22:42.389Z","deletedAt":null}
+2025-03-09T03:00:43.428Z [info] Grupo con ID 2 eliminado exitosamente.
+2025-03-09T03:01:01.930Z [info] [object Object]
+2025-03-09T03:01:02.176Z [info] Message Created by: {"id":4,"content":"fsafsafassfaasffs","senderId":1,"receiverId":null,"groupId":3,"sentAt":"2025-03-09T03:01:02.169Z"}. Archivo: [33mmessageController.js[39m
+2025-03-09T03:01:02.177Z [info]  Mensaje: "fsafsafassfaasffs". Archivo: [33mindex.js[39m
+2025-03-09T03:03:05.595Z [info] Backend ejecutándose en el puerto 4000. Archivo: [33mindex.js[39m
+2025-03-09T03:03:05.652Z [info] Grupos cargados correctamente: 1
+2025-03-09T03:03:05.833Z [info] Un cliente se ha conectado: wW6cjMb6_CGPb-7QAAAB. Archivo: [33mindex.js[39m

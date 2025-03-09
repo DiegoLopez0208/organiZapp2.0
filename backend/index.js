@@ -167,7 +167,7 @@ io.on("connection", (socket) => {
     const messageData = {
       content: text,
       senderName,
-      receiverId: null, // ????
+      receiverId: null,
       groupId,
     };
     try {
@@ -181,14 +181,14 @@ io.on("connection", (socket) => {
           ` Mensaje: ${JSON.stringify(newMessage.content)}. Archivo: ${nameYellow}`,
         );
         io.to(groupId).emit("new_message", {
-          text: newMessage.content, // El contenido del mensaje
-          senderName, // Nombre del usuario que envió el mensaje
-          recipientName: null, // Deja este campo en `null` si es un grupo
-          groupId, // ID del grupo donde se envió el mensaje
+          text: newMessage.content, 
+          senderName, 
+          recipientName: null, 
+          groupId, 
           time: new Date().toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
-          }), // Hora en formato legible
+          }),
         });
       } else {
         logger.info(
