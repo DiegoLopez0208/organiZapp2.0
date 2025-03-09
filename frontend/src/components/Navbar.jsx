@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +20,7 @@ export default function NavBar() {
   const { data: session } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const registerSession = async () => {
@@ -107,13 +109,13 @@ export default function NavBar() {
             ))}
           </div>
 
-          <div className="hidden sm:flex items-center space-x-4 bg-white">
+          <div className="hidden sm:flex items-center space-x-4 bg-white dark:bg-gray-900 rounded">
             {session?.user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
-                    className="flex items-center text-white "
+                    className="flex items-center text-white  dark:bg-gray-900 "
                   >
                     <Image
                       src={session.user.image || "/placeholder.svg"}
@@ -122,12 +124,12 @@ export default function NavBar() {
                       height={32}
                       className="rounded-full"
                     />
-                    <ChevronDown className="ml-2 h-4 w-4 text-green-500" />
+                    <ChevronDown className="ml-2 h-4 w-4 text-green-500  " />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="dark:bg-gray-900 ">
                   <DropdownMenuItem>
-                    <span className="font-bold text-green-600">
+                    <span className="font-bold text-green-600  pointer-events-none">
                       {session.user.name}
                     </span>
                   </DropdownMenuItem>
@@ -153,6 +155,16 @@ export default function NavBar() {
               </div>
             )}
           </div>
+          <Button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            variant="outline"
+          >
+            {theme === "dark" ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
+          </Button>
 
           <div className="flex sm:hidden">
             <Button

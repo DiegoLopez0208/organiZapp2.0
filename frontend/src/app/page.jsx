@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useTheme } from "next-themes";
 import {
   MessageCircle,
   Calendar,
@@ -10,8 +9,7 @@ import {
   Facebook,
   Github,
   Mail,
-  Sun,
-  Moon,
+
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,7 +17,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Man, Woman, callendary, ChatImage } from "@/app/lib/image";
 
 export default function Home() {
-  const { theme, setTheme } = useTheme();
+
 
   const FeatureItem = ({ icon: Icon, children }) => (
     <li className="flex items-center space-x-3">
@@ -62,18 +60,7 @@ export default function Home() {
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <main className="container mx-auto px-4 py-12 space-y-24">
         {/* Botón para cambiar el tema */}
-        <div className="flex justify-end">
-          <Button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            variant="outline"
-          >
-            {theme === "dark" ? (
-              <Sun className="h-5 w-5" />
-            ) : (
-              <Moon className="h-5 w-5" />
-            )}
-          </Button>
-        </div>
+
 
         <section className="text-center space-y-6">
           <h2 className="text-3xl md:text-5xl text-green-500 font-bold">
