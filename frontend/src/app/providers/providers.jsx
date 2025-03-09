@@ -1,7 +1,12 @@
-"use client"; // Esto es opcional, pero puedes dejarlo si prefieres marcar explícitamente este archivo como del lado del cliente.
+"use client";
 
 import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "next-themes";
 
 export default function Providers({ children, session }) {
-  return <SessionProvider session={session}>{children}</SessionProvider>;
+  return (
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <SessionProvider session={session}>{children}</SessionProvider>
+    </ThemeProvider>
+  );
 }

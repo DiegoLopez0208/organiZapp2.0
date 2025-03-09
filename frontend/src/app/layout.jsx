@@ -1,11 +1,11 @@
-import Providers from "./providers/providers"; // Asegúrate de que la ruta sea correcta
+import Providers from "./providers/providers"; 
 import "./globals.css";
 import NavBar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang='en' suppressHydrationWarning>
       <body>
         <Providers>
           <NavBar />
