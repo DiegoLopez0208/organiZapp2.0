@@ -181,10 +181,10 @@ io.on("connection", (socket) => {
           ` Mensaje: ${JSON.stringify(newMessage.content)}. Archivo: ${nameYellow}`,
         );
         io.to(groupId).emit("new_message", {
-          text: newMessage.content, 
-          senderName, 
-          recipientName: null, 
-          groupId, 
+          text: newMessage.content,
+          senderName,
+          recipientName: null,
+          groupId,
           time: new Date().toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
