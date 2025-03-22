@@ -30,17 +30,16 @@ const nameYellow = chalk.yellow(fileName);
 const app = express();
 let groups = [];
 
-const loadGroupsFromDatabase = async () => {
-  const dbGroups = await prisma.group.findMany();
-  groups = [...dbGroups];
+const fetchGroups = async () => {
+  groups = await prisma.group.findMany();
+  io.emit("groups_updated", groups);
 };
 
 const loadData = async () => {
-  await loadGroupsFromDatabase();
-  return groups;
+  await fetchGroups();
 };
 
-loadData().then((groups) => {
+loadData().then(() => {
   logger.info(`Grupos cargados correctamente: ${groups.length}`);
 });
 
@@ -74,7 +73,6 @@ app.use(
 app.use(errorHandler);
 
 const server = createServer(app);
-
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
@@ -83,13 +81,11 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  logger.info(
-    `Un cliente se ha conectado: ${socket.id}. Archivo: ${nameYellow}`,
-  );
+  logger.info(`Cliente conectado: ${socket.id}. Archivo: ${nameYellow}`);
   socket.emit("get_groups", groups);
 
   socket.on("create_group", async (groupData) => {
-    if (!groupData || !groupData.name) {
+    if (!groupData?.name) {
       logger.error(`Datos del grupo inválidos. Archivo: ${nameYellow}`);
       return;
     }
@@ -98,59 +94,33 @@ io.on("connection", (socket) => {
       if (data) {
         groups.push(data);
         socket.join(data.id);
-        io.emit("groups_updated", groups);
+        fetchGroups();
       }
     } catch (error) {
-      console.error(
-        `Error al crear el grupo: ${error}. Archivo: ${nameYellow}`,
-      );
+      console.error(`Error al crear el grupo: ${error}. Archivo: ${nameYellow}`);
     }
   });
-  socket.on("delete_group", async (groupId) => {
-    try {
-      if (!groupId) {
-        logger.error("El ID del grupo no se proporcionó o es inválido.");
-        return;
-      }
-      await groupController().deleteGroup(groupId);
-      logger.info(`Grupo con ID ${groupId} eliminado exitosamente.`);
-    } catch (error) {
-      logger.error(
-        `Error al eliminar el grupo con ID ${groupId}: ${error.message}`,
-      );
-    }
-  });
-  socket.on("join_group", async (groupId) => {
-    if (!groupId) {
-      logger.info("ID del grupo no proporcionado.");
-      return;
-    }
 
+  socket.on("delete_group", async (groupId) => {
+    if (!groupId) return logger.error("ID del grupo inválido.");
+    try {
+      await groupController().deleteGroup(groupId);
+      groups = groups.filter((group) => group.id !== groupId);
+      fetchGroups();
+    } catch (error) {
+      logger.error(`Error al eliminar el grupo: ${error.message}`);
+    }
+  });
+
+  socket.on("join_group", async (groupId) => {
+    if (!groupId) return;
     try {
       const group = await groupController().getGroupById(groupId);
-      const messages = await messageController().getMessagesByGroup(groupId); // Asegúrate de que este método retorne un arreglo
+      const messages = await messageController().getMessagesByGroup(groupId);
       if (group) {
         socket.join(groupId);
-        logger.info(`Usuario ${socket.id} se unió al grupo: ${group.name}.`);
-
-        io.to(groupId).emit("new_member", {
-          userId: socket.id,
-          groupId: group.groupId,
-        });
-        io.to(groupId).emit("update_message", {
-          messagesIndex: messages.map((message) => ({
-            senderName: message.senderName,
-            text: message.content,
-            recipientName: null,
-            groupId,
-            time: new Date().toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-          })),
-        });
-      } else {
-        logger.info("Grupo no encontrado.");
+        io.to(groupId).emit("new_member", { userId: socket.id, groupId });
+        io.to(groupId).emit("update_message", { messagesIndex: messages });
       }
     } catch (error) {
       logger.error(`Error al unirse al grupo: ${error}`);
@@ -159,11 +129,8 @@ io.on("connection", (socket) => {
 
   socket.on("send_message", async (data) => {
     const { groupId, text, senderName } = data;
-    if (!groupId || !text) {
-      logger.info(`Datos de mensaje no válidos. Archivo: ${nameYellow}`);
-      return;
-    }
-    logger.info(data);
+    if (!groupId || !text) return;
+
     const messageData = {
       content: text,
       senderName,
@@ -171,46 +138,21 @@ io.on("connection", (socket) => {
       groupId,
     };
     try {
-      const group = await groupController().getGroupById(groupId);
-      if (group) {
-        const newMessage = await messageController().sendMessage(
-          socket,
-          messageData,
-        );
-        logger.info(
-          ` Mensaje: ${JSON.stringify(newMessage.content)}. Archivo: ${nameYellow}`,
-        );
-        io.to(groupId).emit("new_message", {
-          text: newMessage.content,
-          senderName,
-          recipientName: null,
-          groupId,
-          time: new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-        });
-      } else {
-        logger.info(
-          `Grupo no encontrado para enviar el mensaje. Archivo: ${nameYellow}`,
-        );
+      const newMessage = await messageController().sendMessage(socket, messageData);
+      if (newMessage) {
+        const messages = await messageController().getMessagesByGroup(groupId);
+        io.to(groupId).emit("update_message", { messagesIndex: messages });
       }
     } catch (error) {
-      console.error(
-        `Error al enviar el mensaje: ${error}. Archivo: ${nameYellow}`,
-      );
+      logger.error(`Error al enviar mensaje: ${error.message}`);
     }
   });
 
   socket.on("disconnect", () => {
-    logger.info(
-      `Un usuario se ha desconectado: ${socket.id}. Archivo: ${nameYellow}`,
-    );
+    logger.info(`Usuario desconectado: ${socket.id}. Archivo: ${nameYellow}`);
   });
 });
 
 server.listen(PORT, () => {
-  logger.info(
-    `Backend ejecutándose en el puerto ${PORT}. Archivo: ${nameYellow}`,
-  );
+  logger.info(`Backend ejecutándose en el puerto ${PORT}. Archivo: ${nameYellow}`);
 });
