@@ -86,14 +86,12 @@ io.on("connection", (socket) => {
   socket.on("get_groups", async () => {
     try {
       const dbGroups = await prisma.group.findMany();
-      groups = [...dbGroups]; 
+      groups = [...dbGroups];
       socket.emit("groups_updated", groups);
     } catch (error) {
       console.error("Error al obtener grupos:", error);
     }
   });
-
-
 
   socket.on("create_group", async (groupData) => {
     if (!groupData?.name) {
@@ -108,7 +106,9 @@ io.on("connection", (socket) => {
         fetchGroups();
       }
     } catch (error) {
-      console.error(`Error al crear el grupo: ${error}. Archivo: ${nameYellow}`);
+      console.error(
+        `Error al crear el grupo: ${error}. Archivo: ${nameYellow}`,
+      );
     }
   });
 
@@ -149,7 +149,10 @@ io.on("connection", (socket) => {
       groupId,
     };
     try {
-      const newMessage = await messageController().sendMessage(socket, messageData);
+      const newMessage = await messageController().sendMessage(
+        socket,
+        messageData,
+      );
       if (newMessage) {
         const messages = await messageController().getMessagesByGroup(groupId);
         io.to(groupId).emit("update_message", { messagesIndex: messages });
@@ -165,5 +168,7 @@ io.on("connection", (socket) => {
 });
 
 server.listen(PORT, () => {
-  logger.info(`Backend ejecutándose en el puerto ${PORT}. Archivo: ${nameYellow}`);
+  logger.info(
+    `Backend ejecutándose en el puerto ${PORT}. Archivo: ${nameYellow}`,
+  );
 });
