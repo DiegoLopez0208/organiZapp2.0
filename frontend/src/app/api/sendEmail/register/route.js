@@ -7,9 +7,8 @@ const currentDate = new Date().toString();
 
 export async function POST(request) {
   try {
-    const { username, email, password, birthDate } =
-      await request.json();
-    
+    const { username, email, password, birthDate } = await request.json();
+
     const safeBirthDate = birthDate || "Not provided";
 
     const transporter = nodemailer.createTransport({
@@ -79,13 +78,13 @@ export async function POST(request) {
 
     return NextResponse.json(
       { message: "Email Sent Successfully" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error processing request:", error);
     return NextResponse.json(
       { message: "Failed to Send Email" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
