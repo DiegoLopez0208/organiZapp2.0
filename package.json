@@ -15,7 +15,6 @@
     "test": "echo \"No tests configured\""
   },
   "dependencies": {
-    "nodemailer": "^6.10.0",
     "prettier": "^3.5.3",
     "styled-components": "^6.1.0"
   },
