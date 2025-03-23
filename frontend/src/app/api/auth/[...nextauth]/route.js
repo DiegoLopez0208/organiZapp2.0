@@ -18,39 +18,45 @@ export const authOptions = {
           if (!credentials?.username || !credentials?.password) {
             throw new Error("Missing username or password");
           }
-
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                username: credentials.username,
-                password: credentials.password,
-              }),
+        
+          const res = await fetch( `${process.env.NEXT_PUBLIC_BASE_URL}api/auth/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
             },
-          );
-
+            body: JSON.stringify({
+              username: credentials.username,
+              password: credentials.password,
+            }),
+          });
+        
           if (!res.ok) {
             const errorText = await res.text();
             console.error("Login failed:", errorText);
             throw new Error("Invalid credentials");
           }
-
+        
           const logindata = await res.json();
-
+        
+          if (!logindata.token) {
+            console.error("No token received from backend");
+            throw new Error("Authentication failed: No token provided");
+          }
+        
+          console.log("Token recibido:", logindata.token);
+        
           return {
             id: logindata.id?.toString() || "1",
             name: logindata.username || credentials.username,
             email: logindata.email || `${credentials.username}@example.com`,
             image: logindata.image || defaultAvatar,
+            accessToken: logindata.token, // ✅ Usa el token del backend
           };
         } catch (error) {
-          console.error("Authentication error:", error);
+          console.error("Authentication error:", error.message);
           return null;
         }
+        
       },
     }),
     GoogleProvider({
@@ -76,4 +82,4 @@ export const authOptions = {
 };
 
 const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST }; // Para Next.js 13+ (App Router)
+export { handler as GET, handler as POST }; 
