@@ -1,16 +1,18 @@
 {
   "devDependencies": {
-    "husky": "^9.1.7",
     "turbo": "^2.4.4"
+  },
+  "optionalDependencies": {
+    "husky": "^9.1.7"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css,html}": "prettier --write"
   },
   "scripts": {
     "check-types": "tsc --noEmit",
+    "prepare": "npx husky install",
     "dev": "turbo dev",
     "build": "turbo build",
-    "prepare": "husky",
     "test": "echo \"No tests configured\""
   },
   "dependencies": {
