@@ -1,18 +1,16 @@
 {
   "devDependencies": {
     "concurrently": "^8.2.2",
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "turbo": "^2.4.4"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css,html}": "prettier --write"
   },
   "scripts": {
-    "start:frontend": "cd frontend/ && npm start",
-    "start:backend": "cd backend && npm start",
-    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
-    "dev:frontend": "cd frontend/ && npm run dev",
-    "dev:backend": "cd backend && npm run dev",
-    "dev": "concurrently -n \"Backend,Frontend\" -c \"cyan,red\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "check-types": "tsc --noEmit",
+    "dev": "turbo dev",
+    "build": "turbo build",
     "prepare": "husky",
     "test": "echo \"No tests configured\""
   },
@@ -20,5 +18,10 @@
     "nodemailer": "^6.10.0",
     "prettier": "^3.5.3",
     "styled-components": "^6.1.0"
-  }
+  },
+  "workspaces": [
+    "apps/*"
+  ],
+   "packageManager": "npm@8.5.0"
+
 }
