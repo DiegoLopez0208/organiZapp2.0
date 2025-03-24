@@ -139,20 +139,20 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", async (data) => {
+    console.log("Mensaje recibido en el backend:", data);
+  
     const { groupId, text, senderName } = data;
     if (!groupId || !text) return;
-
+  
     const messageData = {
       content: text,
       senderName,
       receiverId: null,
       groupId,
     };
+  
     try {
-      const newMessage = await messageController().sendMessage(
-        socket,
-        messageData,
-      );
+      const newMessage = await messageController().sendMessage(socket, messageData);
       if (newMessage) {
         const messages = await messageController().getMessagesByGroup(groupId);
         io.to(groupId).emit("update_message", { messagesIndex: messages });
@@ -161,7 +161,7 @@ io.on("connection", (socket) => {
       logger.error(`Error al enviar mensaje: ${error.message}`);
     }
   });
-
+  
   socket.on("disconnect", () => {
     logger.info(`Usuario desconectado: ${socket.id}. Archivo: ${nameYellow}`);
   });

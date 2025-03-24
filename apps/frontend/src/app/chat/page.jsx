@@ -45,22 +45,17 @@ export default function ModernChat() {
   useEffect(() => {
     socket.emit("get_groups");
     socket.on("update_message", (information) => {
-      if (
-        information?.messagesIndex &&
-        Array.isArray(information.messagesIndex)
-      ) {
-        setMessages((prevMessages) => {
-          const existingMessageIds = new Set(prevMessages.map((msg) => msg.id));
-          const newMessages = information.messagesIndex.filter(
-            (msg) => !existingMessageIds.has(msg.id),
-          );
-
-          return [...prevMessages, ...newMessages];
-        });
+      console.log("Mensajes recibidos del backend:", information);
+    
+      if (information?.messagesIndex && Array.isArray(information.messagesIndex)) {
+        const newMessages = information.messagesIndex.filter(msg => msg.content?.trim() !== ""); // Filtra mensajes vacíos
+        console.log("Mensajes después de filtrar:", newMessages);
+        setMessages(newMessages);
       } else {
         console.error("Error: 'messagesIndex' no es un arreglo válido.");
       }
     });
+    
 
     socket.on("groups_updated", setGroups);
 
@@ -251,34 +246,27 @@ export default function ModernChat() {
               </div>
             </div>
             <ScrollArea className="flex-1 p-4 bg-gray-50 dark:bg-gray-900">
-              {filteredMessages.map((message, index) => (
-                <div
-                  key={index}
-                  className={`flex mb-4 ${
-                    message.senderName === session?.user.name
-                      ? "justify-end"
-                      : "justify-start"
-                  }`}
-                >
-                  <div
-                    className={`max-w-[70%] p-3 rounded-lg ${
-                      message.senderName === session?.user.name
-                        ? "bg-green-500 text-white"
-                        : "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
-                    }`}
-                  >
-                    {message.senderName !== session?.user.name && (
-                      <p className="text-xs font-medium mb-1">
-                        {message.senderName}
-                      </p>
-                    )}
-                    <p className="text-sm">{message.text}</p>
-                    <p className="text-xs text-right mt-1 opacity-70">
-                      {message.time}
-                    </p>
-                  </div>
-                </div>
-              ))}
+            {filteredMessages.length > 0 ? (
+  filteredMessages.map((message, index) => (
+    <div key={index} className={`flex mb-4 ${
+      message.senderName === session?.user.name ? "justify-end" : "justify-start"
+    }`}>
+      <div className={`max-w-[70%] p-3 rounded-lg ${
+        message.senderName === session?.user.name
+          ? "bg-green-500 text-white"
+          : "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+      }`}>
+        {message.senderName !== session?.user.name && (
+          <p className="text-xs font-medium mb-1">{message.senderName}</p>
+        )}
+        <p className="text-sm">{message.content}</p> {/* <-- Asegúrate de usar message.content */}
+        <p className="text-xs text-right mt-1 opacity-70">{message.time}</p>
+      </div>
+    </div>
+  ))
+) : (
+  <p className="text-center text-gray-500">No messages yet.</p>
+)}
             </ScrollArea>
             <div className="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
               <div className="flex items-center">
