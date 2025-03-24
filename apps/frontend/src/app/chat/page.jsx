@@ -44,16 +44,15 @@ export default function ModernChat() {
 
   useEffect(() => {
     socket.emit("get_groups");
-    socket.on("update_message", (information) => {
-      console.log("Mensajes recibidos del backend:", information);
 
+    socket.on("update_message", (information) => {
       if (
         information?.messagesIndex &&
         Array.isArray(information.messagesIndex)
       ) {
         const newMessages = information.messagesIndex.filter(
           (msg) => msg.content?.trim() !== "",
-        ); // Filtra mensajes vacíos
+        );
         console.log("Mensajes después de filtrar:", newMessages);
         setMessages(newMessages);
       } else {
@@ -124,6 +123,7 @@ export default function ModernChat() {
   const filteredMessages = messages.filter(
     (msg) => msg.groupId === currentChat?.id,
   );
+
 
   return (
     <div className="flex h-auto bg-gray-100 dark:bg-gray-900">
@@ -211,7 +211,7 @@ export default function ModernChat() {
             </div>
           ))}
         </ScrollArea>
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700 ">
           <Input
             placeholder="New Group Name"
             value={newGroupName}
@@ -249,7 +249,7 @@ export default function ModernChat() {
                 </div>
               </div>
             </div>
-            <ScrollArea className="flex-1 p-4 bg-gray-50 dark:bg-gray-900">
+            <ScrollArea className="flex-1 p-4 bg-gray-50 dark:bg-gray-900 overflow-y-auto max-h-[700px]">
               {filteredMessages.length > 0 ? (
                 filteredMessages.map((message, index) => (
                   <div
