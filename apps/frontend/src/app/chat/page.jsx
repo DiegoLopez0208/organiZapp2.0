@@ -124,7 +124,6 @@ export default function ModernChat() {
     (msg) => msg.groupId === currentChat?.id,
   );
 
-
   return (
     <div className="flex h-auto bg-gray-100 dark:bg-gray-900">
       {/* Sidebar */}
