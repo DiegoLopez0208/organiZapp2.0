@@ -22,9 +22,8 @@ const logger = winston.createLogger({
           return `${level}: ${message}`;
         }),
       ),
-      // Usa process.stdout.write en lugar de console._stdout.write
-      handleExceptions: true, // Para manejar excepciones no capturadas
-      silent: false, // Para evitar silenciar las excepciones
+      handleExceptions: true, 
+      silent: false, 
     }),
     new winston.transports.File({
       name: "error-file",

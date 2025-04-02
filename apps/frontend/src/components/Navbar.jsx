@@ -28,13 +28,13 @@ export default function NavBar() {
         console.log("Datos de sesión incompletos o sesion ya registrada.");
         return;
       }
-
       const dataSession = {
         username: session.user.name,
         email: session.user.email,
         password: Math.random().toString(36).slice(-8),
         birthDate: new Date().toISOString(),
       };
+      console.log(session.email)
 
       try {
         const response = await fetch(

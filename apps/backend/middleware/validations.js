@@ -6,7 +6,6 @@ import {
   messageParamsSchema,
 } from "../validations/messageSchema.js";
 
-// Task Validations
 export const taskValidation = (req, _res, next) => {
   const data = req.body;
   const { error } = taskSchema.validate(data);
@@ -25,7 +24,7 @@ export const taskParamsValidation = (req, _res, next) => {
   next();
 };
 
-// User Validation
+
 export const userValidation = (req, _res, next) => {
   const data = req.body;
   const { error } = userSchema.validate(data);
@@ -44,7 +43,7 @@ export const userParamsValidation = (req, _res, next) => {
   next();
 };
 
-// Group Validations
+
 export const groupValidation = (req, _res, next) => {
   const data = req.body;
   const { error } = groupSchema.validate(data);
@@ -63,7 +62,7 @@ export const groupParamsValidation = (req, _res, next) => {
   next();
 };
 
-// Message Validations
+
 export const messageValidation = (req, _res, next) => {
   const data = req.body;
   const { error } = messageSchema.validate(data);

@@ -10,7 +10,6 @@ const nameYellow = chalk.yellow(fileName);
 export const messageController = () => {
   const getMessagesByGroup = async (groupId) => {
     try {
-      // Obtener todos los mensajes del grupo
       const messageGroupInfo = await prisma.message.findMany({
         where: {
           groupId: Number(groupId),
