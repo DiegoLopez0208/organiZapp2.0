@@ -48,7 +48,7 @@ export default function Contact() {
         throw new Error("Error al enviar el mensaje");
       }
 
-      router.push("/contact/successful");
+      router.push("/contact/succesful");
     } catch (err) {
       setError(
         "Ocurrió un error al enviar el mensaje. Por favor, inténtalo de nuevo.",

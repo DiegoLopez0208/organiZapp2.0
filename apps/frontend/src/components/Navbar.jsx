@@ -34,8 +34,6 @@ export default function NavBar() {
         password: Math.random().toString(36).slice(-8),
         birthDate: new Date().toISOString(),
       };
-      console.log(session.email);
-
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}api/auth/register`,
