@@ -61,7 +61,7 @@ export default function CalendarComponent() {
             />
           </div>
           <div className="lg:w-1/2 p-6 border-t lg:border-t-0 lg:border-l border-gray-700">
-            <h2 className="text-3xl font-bold mb-6">
+            <h2 className="text-3xl font-bold mb-6 text-green-500">
               Eventos para {date?.toLocaleDateString()}
             </h2>
             <Dialog>
@@ -70,9 +70,9 @@ export default function CalendarComponent() {
                   <Plus className="mr-2 h-5 w-5" /> Agregar Evento
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] bg-gray-800 text-gray-100">
+              <DialogContent className="sm:max-w-[425px] dark:bg-gray-800 dark:text-gray-100">
                 <DialogHeader>
-                  <DialogTitle>Agregar Nuevo Evento</DialogTitle>
+                  <DialogTitle className="dark:text-white text-black">Agregar Nuevo Evento</DialogTitle>
                   <DialogDescription>
                     Ingresa los detalles del evento aquí. Haz clic en guardar
                     cuando hayas terminado.
@@ -80,7 +80,7 @@ export default function CalendarComponent() {
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="title" className="text-right">
+                    <Label htmlFor="title" className="text-right border-green-500">
                       Título
                     </Label>
                     <Input
@@ -89,7 +89,7 @@ export default function CalendarComponent() {
                       onChange={(e) =>
                         setNewEvent({ ...newEvent, title: e.target.value })
                       }
-                      className="col-span-3"
+                      className="col-span-3 border-gray-700 hover:border-green-600  dark:border-gray-100 dark:hover:border-green-500"
                     />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
@@ -105,7 +105,7 @@ export default function CalendarComponent() {
                           description: e.target.value,
                         })
                       }
-                      className="col-span-3"
+                      className="col-span-3 border-gray-700 hover:border-green-600 dark:border-gray-100 dark:hover:border-green-500"
                     />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
@@ -119,7 +119,7 @@ export default function CalendarComponent() {
                       onChange={(e) =>
                         setNewEvent({ ...newEvent, startTime: e.target.value })
                       }
-                      className="col-span-3"
+                      className="col-span-3 border-gray-700 hover:border-green-600 dark:border-gray-100 dark:hover:border-green-500"
                     />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
@@ -133,7 +133,7 @@ export default function CalendarComponent() {
                       onChange={(e) =>
                         setNewEvent({ ...newEvent, endTime: e.target.value })
                       }
-                      className="col-span-3"
+                      className="col-span-3 border-gray-700 hover:border-green-600 dark:border-gray-100 dark:hover:border-green-500"
                     />
                   </div>
                 </div>
