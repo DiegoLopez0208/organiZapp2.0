@@ -54,7 +54,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <main className="container mx-auto px-4 py-12 space-y-24">
-        {/* Botón para cambiar el tema */}
+
 
         <section className="text-center space-y-6">
           <h2 className="text-3xl md:text-5xl text-green-500 font-bold">
