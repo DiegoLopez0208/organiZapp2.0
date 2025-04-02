@@ -72,7 +72,9 @@ export default function CalendarComponent() {
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px] dark:bg-gray-800 dark:text-gray-100">
                 <DialogHeader>
-                  <DialogTitle className="dark:text-white text-black">Agregar Nuevo Evento</DialogTitle>
+                  <DialogTitle className="dark:text-white text-black">
+                    Agregar Nuevo Evento
+                  </DialogTitle>
                   <DialogDescription>
                     Ingresa los detalles del evento aquí. Haz clic en guardar
                     cuando hayas terminado.
@@ -80,7 +82,10 @@ export default function CalendarComponent() {
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="title" className="text-right border-green-500">
+                    <Label
+                      htmlFor="title"
+                      className="text-right border-green-500"
+                    >
                       Título
                     </Label>
                     <Input
