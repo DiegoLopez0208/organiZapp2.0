@@ -58,7 +58,10 @@ export default function Socials() {
         </h1>
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {teamMembers.map((member) => (
-            <Card key={member.name} className="dark:bg-gray-800 border-green-500">
+            <Card
+              key={member.name}
+              className="dark:bg-gray-800 border-green-500"
+            >
               <CardContent className="p-6">
                 <div className="flex flex-col items-center">
                   <Image
@@ -71,7 +74,9 @@ export default function Socials() {
                   <h2 className="text-xl font-semibold text-green-400 mb-1">
                     {member.name}
                   </h2>
-                  <p className="dark:text-gray-400  text-gray-700 mb-4">{member.role}</p>
+                  <p className="dark:text-gray-400  text-gray-700 mb-4">
+                    {member.role}
+                  </p>
                   <div className="flex space-x-2 mb-4">
                     <SocialLink
                       href={member.github}
