@@ -34,7 +34,7 @@ export default function NavBar() {
         password: Math.random().toString(36).slice(-8),
         birthDate: new Date().toISOString(),
       };
-      console.log(session.email)
+      console.log(session.email);
 
       try {
         const response = await fetch(

@@ -22,8 +22,8 @@ const logger = winston.createLogger({
           return `${level}: ${message}`;
         }),
       ),
-      handleExceptions: true, 
-      silent: false, 
+      handleExceptions: true,
+      silent: false,
     }),
     new winston.transports.File({
       name: "error-file",
