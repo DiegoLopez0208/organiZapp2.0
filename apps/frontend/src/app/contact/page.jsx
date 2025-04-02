@@ -57,14 +57,14 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen text-black bg-white dark:bg-gray-900 dark:text-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-center text-green-500 mb-12">
           Contacto
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Card className="bg-gray-800 border-green-500">
+          <Card className="dark:bg-gray-800 border-green-500">
             <CardHeader>
               <CardTitle className="text-2xl font-semibold text-green-400">
                 Nuestras Redes Sociales
@@ -73,14 +73,14 @@ export default function Contact() {
             <CardContent className="space-y-4">
               <Link
                 href="/contact/socials/"
-                className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-green-600 p-3 rounded-md transition duration-200"
+                className="flex items-center  space-x-3 dark:text-white text-gray-800 hover:text-white hover:bg-green-600 p-3 rounded-md transition duration-200"
               >
                 <Github className="h-6 w-6" />
                 <span>Github</span>
               </Link>
               <Link
                 href="/contact/socials/"
-                className="flex items-center space-x-3 text-gray-300 hover:text-white hover:bg-green-600 p-3 rounded-md transition duration-200"
+                className="flex items-center space-x-3 dark:text-white text-gray-800 hover:text-white hover:bg-green-600 p-3 rounded-md transition duration-200"
               >
                 <Linkedin className="h-6 w-6" />
                 <span>LinkedIn</span>
@@ -88,7 +88,7 @@ export default function Contact() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-800 border-green-500">
+          <Card className="dark:bg-gray-800  border-green-500">
             <CardHeader>
               <CardTitle className="text-2xl font-semibold text-green-400">
                 Enviar Mensaje
@@ -109,7 +109,7 @@ export default function Contact() {
                     placeholder="Nombre"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="bg-gray-700 border-gray-600 text-gray-100 focus:border-green-500"
+                    className="dark:bg-gray-700 border-gray-600  text-black dark:text-gray-100 focus:border-green-500"
                   />
                 </div>
                 <div>
@@ -120,7 +120,7 @@ export default function Contact() {
                     placeholder="Email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="bg-gray-700 border-gray-600 text-gray-100 focus:border-green-500"
+                    className="dark:bg-gray-700 border-gray-600  text-black dark:text-gray-100 focus:border-green-500"
                   />
                 </div>
                 <div>
@@ -131,7 +131,7 @@ export default function Contact() {
                     placeholder="Asunto"
                     value={formData.subject}
                     onChange={handleInputChange}
-                    className="bg-gray-700 border-gray-600 text-gray-100 focus:border-green-500"
+                    className="dark:bg-gray-700 border-gray-600  text-black dark:text-gray-100 focus:border-green-500"
                   />
                 </div>
                 <div>
@@ -142,7 +142,7 @@ export default function Contact() {
                     rows={4}
                     value={formData.message}
                     onChange={handleInputChange}
-                    className="bg-gray-700 border-gray-600 text-gray-100 focus:border-green-500"
+                    className="dark:bg-gray-700 border-gray-600  text-black dark:text-gray-100 focus:border-green-500"
                   />
                 </div>
                 <Button

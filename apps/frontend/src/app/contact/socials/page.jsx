@@ -51,14 +51,14 @@ const teamMembers = [
 
 export default function Socials() {
   return (
-    <div className="bg-gray-900 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div className="dark:bg-gray-900 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-center text-green-500 mb-12">
           Nuestro Equipo
         </h1>
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {teamMembers.map((member) => (
-            <Card key={member.name} className="bg-gray-800 border-green-500">
+            <Card key={member.name} className="dark:bg-gray-800 border-green-500">
               <CardContent className="p-6">
                 <div className="flex flex-col items-center">
                   <Image
@@ -71,12 +71,13 @@ export default function Socials() {
                   <h2 className="text-xl font-semibold text-green-400 mb-1">
                     {member.name}
                   </h2>
-                  <p className="text-gray-400 mb-4">{member.role}</p>
+                  <p className="dark:text-gray-400  text-gray-700 mb-4">{member.role}</p>
                   <div className="flex space-x-2 mb-4">
                     <SocialLink
                       href={member.github}
                       icon={Github}
                       label="GitHub"
+                      className="text-blue-400"
                     />
                     <SocialLink
                       href={member.linkedin}
@@ -90,7 +91,7 @@ export default function Socials() {
                     />
                   </div>
                   <Button variant="outline" className="w-full">
-                    <MessageCircle className="mr-2 h-4 w-4" />
+                    <MessageCircle className="mr-2 h-4 w-4 " />
                     Contactar
                   </Button>
                 </div>

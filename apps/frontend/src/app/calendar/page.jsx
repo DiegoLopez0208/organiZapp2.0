@@ -44,15 +44,15 @@ export default function CalendarComponent() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-900 text-gray-100 p-4">
-      <div className="w-full max-w-6xl bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+    <div className="flex justify-center items-center min-h-screen dark:bg-gray-900 text-black dark:text-gray-100 p-4">
+      <div className="w-full max-w-6xl dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
         <div className="flex flex-col lg:flex-row">
           <div className="lg:w-1/2 p-6">
             <Calendar
               mode="single"
               selected={date}
               onSelect={setDate}
-              className="rounded-md border border-gray-700"
+              className="rounded-md border border-gray-600"
               classNames={{
                 day_selected:
                   "bg-green-600 text-white hover:bg-green-700 focus:bg-green-700",
