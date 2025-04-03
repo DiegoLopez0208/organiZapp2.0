@@ -16,6 +16,7 @@
     "test": "echo \"No tests configured\""
   },
   "dependencies": {
+    "framer-motion": "^12.6.3",
     "prettier": "^3.5.3",
     "styled-components": "^6.1.0"
   },

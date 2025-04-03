@@ -7,7 +7,7 @@ export const taskController = () => {
     try {
       const { id } = req.params;
       prisma.$use(addSoftDelete);
-      const taskDeleted = await prisma.user.delete({
+      const taskDeleted = await prisma.tasks.delete({
         where: {
           id: Number(id),
         },
@@ -27,10 +27,12 @@ export const taskController = () => {
   const updateTask = async (req, res, next) => {
     try {
       const { id } = req.params;
-      const taskUpdated = await prisma.user.update({
+      const { taskName, title, date, status } = req.body;
+      const taskUpdated = await prisma.tasks.update({
         where: {
           id: Number(id),
         },
+        data: { taskName, title, date, status },
       });
       res.status(httpStatus.OK).json({
         success: true,
@@ -44,10 +46,10 @@ export const taskController = () => {
     }
   };
 
-  const getTask = async (_req, res, next) => {
+  const getTasks = async (_req, res, next) => {
     try {
-      const users = await prisma.user.findMany();
-      return res.status(httpStatus.OK).json(users);
+      const tasks = await prisma.tasks.findMany();
+      return res.status(httpStatus.OK).json(tasks);
     } catch (error) {
       next(error);
     } finally {
@@ -58,15 +60,12 @@ export const taskController = () => {
   const getTaskById = async (req, res, next) => {
     try {
       const { id } = req.params;
-      const user = await prisma.user.findUnique({
+      const task = await prisma.tasks.findUnique({
         where: {
           id: Number(id),
         },
-        include: {
-          user: true,
-        },
       });
-      return res.status(httpStatus.OK).json(user);
+      return res.status(httpStatus.OK).json(task);
     } catch (error) {
       next(error);
     } finally {
@@ -76,18 +75,18 @@ export const taskController = () => {
 
   const createTask = async (req, res, next) => {
     try {
-      const { taskUserId, taskName, title, date, status } = req.body;
-      const user = await prisma.user.create({
+      const { userId, taskName, title, date, status } = req.body;
+      const task = await prisma.tasks.create({
         data: {
-          taskUserId,
+          userId,
           taskName,
           title,
-          date,
+          date: new Date(date),
           status,
         },
       });
 
-      return res.status(httpStatus.CREATED).json(user);
+      return res.status(httpStatus.CREATED).json(task);
     } catch (error) {
       next(error);
     } finally {
@@ -98,7 +97,7 @@ export const taskController = () => {
   return {
     updateTask,
     deleteTask,
-    getTask,
+    getTasks,
     getTaskById,
     createTask,
   };

@@ -9,10 +9,10 @@ export const messageRoutes = () => {
   const messageRouter = Router();
   const { sendMessage } = messageController();
 
-  // Ruta para enviar un mensaje
+
   messageRouter
     .route("/message")
-    .post(messageValidation, messageParamsValidation, sendMessage); // Validaciones para crear un mensaje
+    .post(messageValidation, messageParamsValidation, sendMessage); 
 
   return messageRouter;
 };

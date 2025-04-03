@@ -9,13 +9,13 @@ import {
 
 export const taskRoutes = () => {
   const taskRouter = Router();
-  const { getTask, getTaskById, createTask, updateTask, deleteTask } =
+  const { createTask, deleteTask, getTaskById, getTasks, updateTask } =
     taskController();
 
   taskRouter
     .route("/task")
-    .get(getTask)
-    .post(userParamsValidation, userValidation, createTask);
+    .get(getTasks)
+    .post(taskParamsValidation, taskValidation, createTask);
 
   taskRouter
     .route("/task/:id")
