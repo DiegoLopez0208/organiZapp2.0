@@ -6,11 +6,20 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
+enum AuthProvider {
+  credentials
+  google
+  github
+  facebook
+}
 model User {
   id              Int        @id @default(autoincrement())
   username        String     @unique
   password        String
+  name            String?     
+  provider         AuthProvider @default(credentials)
+  emailVerified   DateTime?   @map("email_verified")
+  image           String?
   email           String     @unique
   birthDate       DateTime?  @map("birth_date")
   createdAt       DateTime   @default(now()) @map("created_at")
@@ -25,25 +34,29 @@ model User {
 }
 
 model Tasks {
-  id        Int       @id @default(autoincrement())
-  taskName  String    @map("task_name")
-  title     String
-  date      DateTime
-  status    String
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("update_at")
-  deletedAt DateTime? @map("deleted_at")
-  userId    Int       @map("user_id")
-  user      User      @relation("UserTasks", fields: [userId], references: [id])
+  id          Int       @id @default(autoincrement())
+  taskName    String    @map("task_name")
+  title       String
+  description String?   
+  date        DateTime
+  startTime   DateTime? 
+  endTime     DateTime? 
+  status      String
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("update_at")
+  deletedAt   DateTime? @map("deleted_at")
+  userId      Int       @map("user_id")
+  user        User      @relation("UserTasks", fields: [userId], references: [id])
 
   @@map("task")
 }
 
+
 model Message {
   id        Int       @id @default(autoincrement())
   content   String
-  senderId  Int       @map("sender_id")  // Cambiado a Int
-  receiverId Int?     @map("receiver_id")  // Cambiado a Int
+  senderId  Int       @map("sender_id") 
+  receiverId Int?     @map("receiver_id")  
   groupId   Int?      @map("group_id")
   sentAt    DateTime  @default(now()) @map("sent_at")
   sender    User      @relation("SentMessages", fields: [senderId], references: [id])

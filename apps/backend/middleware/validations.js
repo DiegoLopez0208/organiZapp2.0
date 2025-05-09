@@ -1,4 +1,4 @@
-import { taskSchema, taskParamsSchema } from "../validations/taskSchema.js";
+import { taskSchema, taskParamsSchema, updateTaskSchema } from "../validations/taskSchema.js";
 import { userSchema, userParamsSchema } from "../validations/userSchema.js";
 import { groupSchema, groupParamsSchema } from "../validations/groupSchema.js";
 import {
@@ -14,13 +14,21 @@ export const taskValidation = (req, _res, next) => {
   }
   next();
 };
+export const createTaskValidation = (req, _res, next) => {
+  const { error } = createTaskSchema.validate(req.body);
+  if (error) return next(error);
+  next();
+};
+
+export const updateTaskValidation = (req, _res, next) => {
+  const { error } = updateTaskSchema.validate(req.body);
+  if (error) return next(error);
+  next();
+};
 
 export const taskParamsValidation = (req, _res, next) => {
-  const { id } = req.params;
-  const { error } = taskParamsSchema.validate(id);
-  if (error) {
-    next(error);
-  }
+  const { error } = taskParamsSchema.validate(req.params);
+  if (error) return next(error);
   next();
 };
 

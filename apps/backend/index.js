@@ -49,14 +49,22 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   jwt({
-    secret: process.env.SECRET_KEY,
+    secret: process.env.JWT_SECRET,
     algorithms: ["HS256"],
+    requestProperty: "auth",
+    getToken: (req) => {
+      if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+        return req.headers.authorization.split(" ")[1];
+      }
+      return null;
+    },
   }).unless({
     path: [
       "/api/auth/login",
       "/api/auth/refresh",
       "/api/auth/register",
       "/socket.io/",
+      "/api/auth/oauth-login",
     ],
   }),
 );

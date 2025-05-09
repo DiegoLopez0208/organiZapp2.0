@@ -1,23 +1,35 @@
 import Joi from "joi";
+
 export const taskParamsSchema = Joi.object({
   id: Joi.string()
     .pattern(/^[0-9]+$/, "numbers")
-    .required()
-    .min(0),
+    .required(),
 });
 
 export const taskSchema = Joi.object({
-  task_user_id: Joi.string()
-    .pattern(/^[0-9]+$/, "numbers")
-    .required()
-    .min(0)
-    .max(1000),
+  userId: Joi.number().integer().min(1).required(),
 
-  task_name: Joi.string().required().min(10).max(500),
+  taskName: Joi.string().required().min(1).max(500),
 
-  title: Joi.string().required().min(20).max(500),
+  title: Joi.string().required().min(1).max(500),
 
-  date: Joi.date().timestamp().required(),
+  description: Joi.string().allow('').optional().max(1000), 
 
-  status: Joi.string().required().min(20).max(30),
+  date: Joi.date().timestamp('javascript'),
+
+  startTime: Joi.date().timestamp().allow(null).optional(),
+
+  endTime: Joi.date().timestamp().allow(null).optional(),
+
+  status: Joi.string().required().min(1).max(30),
+});
+
+export const updateTaskSchema = Joi.object({
+  taskName: Joi.string().required().min(1).max(500),
+  title: Joi.string().required().min(1).max(500),
+  description: Joi.string().allow('').optional().max(1000),
+  date: Joi.date().timestamp('javascript'),
+  startTime: Joi.date().timestamp().allow(null).optional(),
+  endTime: Joi.date().timestamp().allow(null).optional(),
+  status: Joi.string().required().min(1).max(30),
 });

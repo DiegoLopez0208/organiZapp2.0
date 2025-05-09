@@ -3,8 +3,7 @@ import { taskController } from "../controllers/taskController.js";
 import {
   taskValidation,
   taskParamsValidation,
-  userValidation,
-  userParamsValidation,
+  updateTaskValidation,
 } from "../middleware/validations.js";
 
 export const taskRoutes = () => {
@@ -15,12 +14,12 @@ export const taskRoutes = () => {
   taskRouter
     .route("/task")
     .get(getTasks)
-    .post(taskParamsValidation, taskValidation, createTask);
+    .post(taskValidation, createTask);
 
   taskRouter
     .route("/task/:id")
     .get(getTaskById)
-    .put(taskParamsValidation, taskValidation, updateTask)
+    .put(taskParamsValidation, updateTaskValidation, updateTask)
     .delete(deleteTask);
 
   return taskRouter;
