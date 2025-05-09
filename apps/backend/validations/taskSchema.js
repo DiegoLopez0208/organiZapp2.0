@@ -13,9 +13,9 @@ export const taskSchema = Joi.object({
 
   title: Joi.string().required().min(1).max(500),
 
-  description: Joi.string().allow('').optional().max(1000), 
+  description: Joi.string().allow("").optional().max(1000),
 
-  date: Joi.date().timestamp('javascript'),
+  date: Joi.date().timestamp("javascript"),
 
   startTime: Joi.date().timestamp().allow(null).optional(),
 
@@ -27,8 +27,8 @@ export const taskSchema = Joi.object({
 export const updateTaskSchema = Joi.object({
   taskName: Joi.string().required().min(1).max(500),
   title: Joi.string().required().min(1).max(500),
-  description: Joi.string().allow('').optional().max(1000),
-  date: Joi.date().timestamp('javascript'),
+  description: Joi.string().allow("").optional().max(1000),
+  date: Joi.date().timestamp("javascript"),
   startTime: Joi.date().timestamp().allow(null).optional(),
   endTime: Joi.date().timestamp().allow(null).optional(),
   status: Joi.string().required().min(1).max(30),

@@ -12,13 +12,13 @@ export const taskController = () => {
         date,
         status,
         startTime,
-        endTime
+        endTime,
       } = req.body;
 
       if (!userId || !title || !status || !taskName) {
         return res.status(httpStatus.BAD_REQUEST).json({
           success: false,
-          message: "userId, taskName, title and status are required"
+          message: "userId, taskName, title and status are required",
         });
       }
 
@@ -26,9 +26,9 @@ export const taskController = () => {
         userId: Number(userId),
         taskName,
         title,
-        description: description || '',
+        description: description || "",
         date: date ? new Date(date) : new Date(),
-        status
+        status,
       };
 
       if (startTime) taskData.startTime = new Date(startTime);
@@ -39,72 +39,64 @@ export const taskController = () => {
       res.status(httpStatus.CREATED).json({
         success: true,
         message: "Task created successfully",
-        data: task
+        data: task,
       });
     } catch (error) {
-      if (error.code === 'P2003') {
+      if (error.code === "P2003") {
         return res.status(httpStatus.BAD_REQUEST).json({
           success: false,
-          message: "Invalid user ID"
+          message: "Invalid user ID",
         });
       }
       next(error);
     }
   };
 
-const updateTask = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const {
-      taskName,
-      title,
-      description,
-      date,
-      status,
-      startTime,
-      endTime
-    } = req.body;
+  const updateTask = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const { taskName, title, description, date, status, startTime, endTime } =
+        req.body;
 
-    if (!title || !status || !taskName) {
-      return res.status(httpStatus.BAD_REQUEST).json({
-        success: false,
-        message: "taskName, title, and status are required"
+      if (!title || !status || !taskName) {
+        return res.status(httpStatus.BAD_REQUEST).json({
+          success: false,
+          message: "taskName, title, and status are required",
+        });
+      }
+
+      const updateData = {
+        taskName,
+        title,
+        description: description || "",
+        status,
+      };
+
+      if (date) updateData.date = new Date(date);
+      if (startTime) updateData.startTime = new Date(startTime);
+      if (endTime) updateData.endTime = new Date(endTime);
+
+      const taskUpdated = await prisma.tasks.update({
+        where: { id: Number(id) },
+        data: updateData,
       });
-    }
 
-    const updateData = {
-      taskName,
-      title,
-      description: description || '',
-      status,
-    };
-
-    if (date) updateData.date = new Date(date);
-    if (startTime) updateData.startTime = new Date(startTime);
-    if (endTime) updateData.endTime = new Date(endTime);
-
-    const taskUpdated = await prisma.tasks.update({
-      where: { id: Number(id) },
-      data: updateData
-    });
-
-    res.status(httpStatus.OK).json({
-      success: true,
-      message: "Task updated successfully",
-      data: taskUpdated
-    });
-  } catch (error) {
-
-    if (error.code === 'P2025') {
-      return res.status(httpStatus.NOT_FOUND).json({
-        success: false,
-        message: "Task not found"
+      res.status(httpStatus.OK).json({
+        success: true,
+        message: "Task updated successfully",
+        data: taskUpdated,
       });
-    }
+    } catch (error) {
+      if (error.code === "P2025") {
+        return res.status(httpStatus.NOT_FOUND).json({
+          success: false,
+          message: "Task not found",
+        });
+      }
 
-    next(error);
-  }
-};
+      next(error);
+    }
+  };
 
   const deleteTask = async (req, res, next) => {
     try {
@@ -112,19 +104,19 @@ const updateTask = async (req, res, next) => {
 
       const task = await prisma.tasks.update({
         where: { id: Number(id) },
-        data: { deletedAt: new Date() }
+        data: { deletedAt: new Date() },
       });
 
       res.status(httpStatus.OK).json({
         success: true,
         message: "Task deleted successfully",
-        data: task
+        data: task,
       });
     } catch (error) {
-      if (error.code === 'P2025') {
+      if (error.code === "P2025") {
         return res.status(httpStatus.NOT_FOUND).json({
           success: false,
-          message: "Task not found"
+          message: "Task not found",
         });
       }
       next(error);
@@ -138,27 +130,27 @@ const updateTask = async (req, res, next) => {
       if (!userId) {
         return res.status(httpStatus.BAD_REQUEST).json({
           success: false,
-          message: "userId is required"
+          message: "userId is required",
         });
       }
 
       const tasks = await prisma.tasks.findMany({
         where: {
           deletedAt: null,
-          userId: Number(userId)
+          userId: Number(userId),
         },
-        orderBy: { date: 'asc' }
+        orderBy: { date: "asc" },
       });
 
       res.status(httpStatus.OK).json({
         success: true,
-        data: tasks
+        data: tasks,
       });
     } catch (error) {
       res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
         success: false,
         message: "Error interno en getTasks",
-        error: error.message
+        error: error.message,
       });
     }
   };
@@ -170,20 +162,20 @@ const updateTask = async (req, res, next) => {
       const task = await prisma.tasks.findFirst({
         where: {
           id: Number(id),
-          deletedAt: null
-        }
+          deletedAt: null,
+        },
       });
 
       if (!task) {
         return res.status(httpStatus.NOT_FOUND).json({
           success: false,
-          message: "Task not found"
+          message: "Task not found",
         });
       }
 
       res.status(httpStatus.OK).json({
         success: true,
-        data: task
+        data: task,
       });
     } catch (error) {
       next(error);
@@ -195,6 +187,6 @@ const updateTask = async (req, res, next) => {
     updateTask,
     deleteTask,
     getTasks,
-    getTaskById
+    getTaskById,
   };
 };

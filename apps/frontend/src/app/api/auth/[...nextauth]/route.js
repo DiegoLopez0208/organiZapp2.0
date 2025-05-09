@@ -31,7 +31,7 @@ export const authOptions = {
                 username: credentials.username,
                 password: credentials.password,
               }),
-            }
+            },
           );
 
           if (!res.ok) {
@@ -48,7 +48,8 @@ export const authOptions = {
           return {
             id: loginData.user?.id || "",
             name: loginData.user?.username || credentials.username,
-            email: loginData.user?.email || `${credentials.username}@example.com`,
+            email:
+              loginData.user?.email || `${credentials.username}@example.com`,
             image: loginData.user?.image || defaultAvatar,
             accessToken: loginData.token,
             refreshToken: loginData.refreshToken,
@@ -66,18 +67,21 @@ export const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       async profile(profile) {
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/oauth-login`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/oauth-login`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: profile.email,
+                name: profile.name,
+                image: profile.picture,
+                provider: "google",
+              }),
             },
-            body: JSON.stringify({
-              email: profile.email,
-              name: profile.name,
-              image: profile.picture,
-              provider: "google",
-            }),
-          });
+          );
 
           if (!res.ok) {
             const errorData = await res.json();
@@ -105,18 +109,21 @@ export const authOptions = {
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
       async profile(profile) {
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}api/auth/oauth-login`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/auth/oauth-login`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: profile.email,
+                name: profile.name,
+                image: profile.picture?.data?.url || null,
+                provider: "facebook",
+              }),
             },
-            body: JSON.stringify({
-              email: profile.email,
-              name: profile.name,
-              image: profile.picture?.data?.url || null,
-              provider: "facebook",
-            }),
-          });
+          );
 
           if (!res.ok) {
             const errorData = await res.json();
@@ -144,19 +151,21 @@ export const authOptions = {
       clientSecret: process.env.GITHUB_SECRET,
       async profile(profile) {
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}api/auth/oauth-login`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/auth/oauth-login`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: profile.email,
+                name: profile.name || profile.login,
+                image: profile.avatar_url,
+                provider: "github",
+              }),
             },
-            body: JSON.stringify({
-              email: profile.email,
-              name: profile.name || profile.login,
-              image: profile.avatar_url,
-              provider: "github",
-            }),
-          });
-     
+          );
 
           if (!res.ok) {
             const errorData = await res.json();
@@ -164,7 +173,6 @@ export const authOptions = {
           }
 
           const data = await res.json();
- 
 
           return {
             id: data.user?.id || profile.id.toString(),
@@ -207,7 +215,7 @@ export const authOptions = {
 
   session: {
     strategy: "jwt",
-    maxAge: 24 * 60 * 60, 
+    maxAge: 24 * 60 * 60,
   },
 
   debug: process.env.NODE_ENV === "development",

@@ -53,7 +53,10 @@ app.use(
     algorithms: ["HS256"],
     requestProperty: "auth",
     getToken: (req) => {
-      if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+      if (
+        req.headers.authorization &&
+        req.headers.authorization.startsWith("Bearer")
+      ) {
         return req.headers.authorization.split(" ")[1];
       }
       return null;

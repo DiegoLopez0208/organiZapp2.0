@@ -10,7 +10,7 @@ export const authController = () => {
       const user = await prisma.user.findFirst({
         where: {
           username,
-          deletedAt: null 
+          deletedAt: null,
         },
         select: {
           id: true,
@@ -20,50 +20,48 @@ export const authController = () => {
           birthDate: true,
           createdAt: true,
           image: true,
-          provider: true 
-        }
+          provider: true,
+        },
       });
-  
+
       if (!user) {
         return res.status(httpStatus.UNAUTHORIZED).json({
           success: false,
-          message: "Usuario no encontrado"
+          message: "Usuario no encontrado",
         });
       }
-  
+
       if (user.provider !== "credentials") {
         return res.status(httpStatus.UNAUTHORIZED).json({
           success: false,
-          message: `Este usuario debe iniciar sesión con ${user.provider}`
+          message: `Este usuario debe iniciar sesión con ${user.provider}`,
         });
       }
-  
+
       const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) {
         return res.status(httpStatus.UNAUTHORIZED).json({
           success: false,
-          message: "Contraseña incorrecta"
+          message: "Contraseña incorrecta",
         });
       }
-  
+
       const tokenPayload = {
         userId: user.id,
         username: user.username,
-        email: user.email
+        email: user.email,
       };
-  
-      const token = jwt.sign(
-        tokenPayload,
-        process.env.JWT_SECRET,
-        { expiresIn: '15m' }
-      );
-  
+
+      const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
+        expiresIn: "15m",
+      });
+
       const refreshToken = jwt.sign(
         { userId: user.id },
         process.env.JWT_REFRESH_SECRET,
-        { expiresIn: '7d' }
+        { expiresIn: "7d" },
       );
-  
+
       res.status(httpStatus.OK).json({
         success: true,
         message: "Login exitoso",
@@ -75,8 +73,8 @@ export const authController = () => {
           email: user.email,
           birthDate: user.birthDate,
           createdAt: user.createdAt,
-          image: user.image || null
-        }
+          image: user.image || null,
+        },
       });
     } catch (error) {
       next(error);
@@ -89,43 +87,40 @@ export const authController = () => {
 
       const existingUser = await prisma.user.findFirst({
         where: {
-          OR: [
-            { username },
-            { email }
-          ]
-        }
+          OR: [{ username }, { email }],
+        },
       });
 
       if (existingUser) {
         return res.status(httpStatus.CONFLICT).json({
           success: false,
-          message: "El usuario o email ya existe"
+          message: "El usuario o email ya existe",
         });
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      
+
       const newUser = await prisma.user.create({
         data: {
           username,
           password: hashedPassword,
           email,
           birthDate: birthDate ? new Date(birthDate) : null,
-          provider: "credentials"
+          provider: "credentials",
         },
         select: {
           id: true,
           username: true,
           email: true,
           birthDate: true,
-          createdAt: true
-        }
+          createdAt: true,
+        },
       });
 
       res.status(httpStatus.CREATED).json({
         success: true,
         message: "Usuario registrado exitosamente",
-        user: newUser
+        user: newUser,
       });
     } catch (error) {
       next(error);
@@ -139,21 +134,21 @@ export const authController = () => {
       const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
       const user = await prisma.user.findUnique({
-        where: { 
+        where: {
           id: decoded.userId,
-          deletedAt: null 
+          deletedAt: null,
         },
         select: {
           id: true,
           username: true,
-          email: true
-        }
+          email: true,
+        },
       });
 
       if (!user) {
         return res.status(httpStatus.NOT_FOUND).json({
           success: false,
-          message: "Usuario no encontrado"
+          message: "Usuario no encontrado",
         });
       }
 
@@ -161,22 +156,22 @@ export const authController = () => {
         {
           userId: user.id,
           username: user.username,
-          email: user.email
+          email: user.email,
         },
         process.env.JWT_SECRET,
-        { expiresIn: '15m' }
+        { expiresIn: "15m" },
       );
 
       res.status(httpStatus.OK).json({
         success: true,
         message: "Token actualizado",
-        token: newToken
+        token: newToken,
       });
     } catch (error) {
-      if (error.name === 'JsonWebTokenError') {
+      if (error.name === "JsonWebTokenError") {
         return res.status(httpStatus.UNAUTHORIZED).json({
           success: false,
-          message: "Token de refresco inválido"
+          message: "Token de refresco inválido",
         });
       }
       next(error);
@@ -187,40 +182,47 @@ export const authController = () => {
     try {
       console.log("OAuth login request body:", req.body);
       const { email, name, image, provider } = req.body;
-  
+
       if (!email) {
-        return res.status(httpStatus.BAD_REQUEST).json({ 
-          success: false, 
-          message: "Email es requerido" 
+        return res.status(httpStatus.BAD_REQUEST).json({
+          success: false,
+          message: "Email es requerido",
         });
       }
-  
-      let user = await prisma.user.findUnique({ 
+
+      let user = await prisma.user.findUnique({
         where: { email },
         select: {
           id: true,
           username: true,
           email: true,
           image: true,
-          provider: true
-        }
+          provider: true,
+        },
       });
-  
-      if (!user) {
 
-        let username = (name || email.split('@')[0]).toLowerCase().replace(/\s+/g, '');
-        let usernameExists = await prisma.user.findUnique({ where: { username } });
-        
+      if (!user) {
+        let username = (name || email.split("@")[0])
+          .toLowerCase()
+          .replace(/\s+/g, "");
+        let usernameExists = await prisma.user.findUnique({
+          where: { username },
+        });
 
         let suffix = 1;
         while (usernameExists) {
           username = `${username}${suffix}`;
-          usernameExists = await prisma.user.findUnique({ where: { username } });
+          usernameExists = await prisma.user.findUnique({
+            where: { username },
+          });
           suffix++;
         }
 
-        const dummyPassword = await bcrypt.hash(`oauth-${provider}-${Date.now()}`, 10);
-  
+        const dummyPassword = await bcrypt.hash(
+          `oauth-${provider}-${Date.now()}`,
+          10,
+        );
+
         user = await prisma.user.create({
           data: {
             username,
@@ -229,30 +231,30 @@ export const authController = () => {
             image: image || null,
             password: dummyPassword,
             provider: provider,
-            emailVerified: new Date()
+            emailVerified: new Date(),
           },
           select: {
             id: true,
             username: true,
             email: true,
             image: true,
-            provider: true
-          }
+            provider: true,
+          },
         });
       } else if (user.provider !== provider) {
         return res.status(httpStatus.CONFLICT).json({
           success: false,
-          message: `Esta cuenta ya está registrada con ${user.provider}. Por favor inicia sesión con ese método.`
+          message: `Esta cuenta ya está registrada con ${user.provider}. Por favor inicia sesión con ese método.`,
         });
       }
-  
+
       const token = jwt.sign(
         { userId: user.id, username: user.username, email: user.email },
         process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "1h" },
       );
       console.log("Generated token:", token);
-  
+
       return res.status(httpStatus.OK).json({
         success: true,
         message: "OAuth login exitoso",
@@ -262,8 +264,8 @@ export const authController = () => {
           username: user.username,
           email: user.email,
           image: user.image,
-          provider: user.provider
-        }
+          provider: user.provider,
+        },
       });
     } catch (error) {
       console.error("OAuth login error:", error);
@@ -275,6 +277,6 @@ export const authController = () => {
     login,
     register,
     refresh,
-    oauthLogin
+    oauthLogin,
   };
 };

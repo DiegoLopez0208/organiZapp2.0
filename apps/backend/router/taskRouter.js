@@ -11,10 +11,7 @@ export const taskRoutes = () => {
   const { createTask, deleteTask, getTaskById, getTasks, updateTask } =
     taskController();
 
-  taskRouter
-    .route("/task")
-    .get(getTasks)
-    .post(taskValidation, createTask);
+  taskRouter.route("/task").get(getTasks).post(taskValidation, createTask);
 
   taskRouter
     .route("/task/:id")
