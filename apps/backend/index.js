@@ -14,8 +14,8 @@ import { groupController } from "./controllers/groupController.js";
 import { messageController } from "./controllers/messageController.js";
 import prisma from "./database/prisma.js";
 import logger from "./helpers/winston.js";
-import { fileURLToPath } from 'url';
-import path from 'path';
+import { fileURLToPath } from "url";
+import path from "path";
 
 import chalk from "chalk";
 
