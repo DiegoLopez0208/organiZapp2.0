@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useCallback } from "react"
-import { format, isToday, isBefore, startOfDay, addHours } from "date-fns"
-import { es } from "date-fns/locale"
-import { motion, AnimatePresence } from "framer-motion"
-import { useSession } from "next-auth/react"
-import DatePicker, { registerLocale } from "react-datepicker"
-import "react-datepicker/dist/react-datepicker.css"
+import { useState, useEffect, useCallback } from "react";
+import { format, isToday, isBefore, startOfDay, addHours } from "date-fns";
+import { es } from "date-fns/locale";
+import { motion, AnimatePresence } from "framer-motion";
+import { useSession } from "next-auth/react";
+import DatePicker, { registerLocale } from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -20,12 +20,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Skeleton } from "@/components/ui/skeleton"
-import { toast } from "@/components/ui/use-toast"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/dialog";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "@/components/ui/use-toast";
+import { cn } from "@/lib/utils";
 
 import {
   CalendarIcon,
@@ -38,24 +50,24 @@ import {
   Pencil,
   ChevronLeft,
   ChevronRight,
-} from "lucide-react"
+} from "lucide-react";
 
 // Registrar el locale español para DatePicker
-registerLocale("es", es)
+registerLocale("es", es);
 
 export default function CalendarComponent() {
-  const { data: session } = useSession()
-  const [date, setDate] = useState(new Date())
-  const [events, setEvents] = useState([])
-  const [filteredEvents, setFilteredEvents] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [isOpen, setIsOpen] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [editingEvent, setEditingEvent] = useState(null)
-  const [currentMonth, setCurrentMonth] = useState(new Date())
+  const { data: session } = useSession();
+  const [date, setDate] = useState(new Date());
+  const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingEvent, setEditingEvent] = useState(null);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  const currentHour = format(new Date(), "HH")
-  const currentMinute = format(new Date(), "mm")
+  const currentHour = format(new Date(), "HH");
+  const currentMinute = format(new Date(), "mm");
 
   const [newEvent, setNewEvent] = useState({
     userId: session?.user?.id || "",
@@ -66,63 +78,102 @@ export default function CalendarComponent() {
     status: "pendiente",
     startDate: new Date(),
     endDate: addHours(new Date(), 1),
-  })
+  });
 
-  const showNotification = useCallback((title, description, variant = "default") => {
-    toast({
-      title,
-      description,
-      variant,
-    })
-  }, [])
+  const showNotification = useCallback(
+    (title, description, variant = "default") => {
+      toast({
+        title,
+        description,
+        variant,
+      });
+    },
+    [],
+  );
 
   const handleStatusChange = async (eventId, newStatus) => {
     try {
-      const eventToUpdate = events.find((e) => e.id === eventId)
-      const { id, createdAt, updatedAt, deletedAt, userId, ...updatedEventWithoutId } = {
+      const eventToUpdate = events.find((e) => e.id === eventId);
+      const {
+        id,
+        createdAt,
+        updatedAt,
+        deletedAt,
+        userId,
+        ...updatedEventWithoutId
+      } = {
         ...eventToUpdate,
         status: newStatus,
         date: new Date(eventToUpdate.date).getTime(),
-        startTime: eventToUpdate.startTime ? new Date(eventToUpdate.startTime).getTime() : null,
-        endTime: eventToUpdate.endTime ? new Date(eventToUpdate.endTime).getTime() : null,
-      }
+        startTime: eventToUpdate.startTime
+          ? new Date(eventToUpdate.startTime).getTime()
+          : null,
+        endTime: eventToUpdate.endTime
+          ? new Date(eventToUpdate.endTime).getTime()
+          : null,
+      };
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}api/task/${eventId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: session?.accessToken ? `Bearer ${session.accessToken}` : "",
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/task/${eventId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: session?.accessToken
+              ? `Bearer ${session.accessToken}`
+              : "",
+          },
+          body: JSON.stringify(updatedEventWithoutId),
         },
-        body: JSON.stringify(updatedEventWithoutId),
-      })
+      );
 
       if (!response.ok) {
-        setEvents((prev) => prev.map((e) => (e.id === eventId ? eventToUpdate : e)))
-        showNotification("Error", "No se pudo actualizar el estado", "destructive")
+        setEvents((prev) =>
+          prev.map((e) => (e.id === eventId ? eventToUpdate : e)),
+        );
+        showNotification(
+          "Error",
+          "No se pudo actualizar el estado",
+          "destructive",
+        );
       } else {
-        const result = await response.json()
-        setEvents((prev) => prev.map((e) => (e.id === eventId ? result.data : e)))
-        showNotification("Éxito", "Estado actualizado correctamente", "success")
+        const result = await response.json();
+        setEvents((prev) =>
+          prev.map((e) => (e.id === eventId ? result.data : e)),
+        );
+        showNotification(
+          "Éxito",
+          "Estado actualizado correctamente",
+          "success",
+        );
       }
     } catch (error) {
-      console.error("Error al actualizar estado:", error)
-      showNotification("Error", "Ocurrió un problema al actualizar el estado", "destructive")
-      fetchEvents()
+      console.error("Error al actualizar estado:", error);
+      showNotification(
+        "Error",
+        "Ocurrió un problema al actualizar el estado",
+        "destructive",
+      );
+      fetchEvents();
     }
-  }
+  };
 
   const handleAddEvent = async () => {
     if (!newEvent.title.trim()) {
-      showNotification("Error", "El título del evento es obligatorio", "destructive")
-      return
+      showNotification(
+        "Error",
+        "El título del evento es obligatorio",
+        "destructive",
+      );
+      return;
     }
 
     try {
-      setIsSubmitting(true)
+      setIsSubmitting(true);
 
       // Usar la fecha seleccionada en el calendario para la fecha base
-      const eventDate = new Date(date)
-      eventDate.setHours(0, 0, 0, 0)
+      const eventDate = new Date(date);
+      eventDate.setHours(0, 0, 0, 0);
 
       const eventToAdd = {
         userId: session?.user.id,
@@ -133,19 +184,19 @@ export default function CalendarComponent() {
         status: newEvent.status || "pendiente",
         startTime: newEvent.startDate.getTime(),
         endTime: newEvent.endDate.getTime(),
-      }
+      };
 
-      const tempId = `temp-${Date.now()}`
+      const tempId = `temp-${Date.now()}`;
       const tempEvent = {
         ...eventToAdd,
         id: tempId,
         date: new Date(eventToAdd.date),
         startTime: eventToAdd.startTime ? new Date(eventToAdd.startTime) : null,
         endTime: eventToAdd.endTime ? new Date(eventToAdd.endTime) : null,
-      }
+      };
 
-      setEvents((prev) => [...prev, tempEvent])
-      setIsOpen(false)
+      setEvents((prev) => [...prev, tempEvent]);
+      setIsOpen(false);
 
       setNewEvent({
         userId: session?.user.id || "",
@@ -156,55 +207,74 @@ export default function CalendarComponent() {
         status: "pendiente",
         startDate: new Date(),
         endDate: addHours(new Date(), 1),
-      })
+      });
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}api/task`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: session?.accessToken ? `Bearer ${session.accessToken}` : "",
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/task`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: session?.accessToken
+              ? `Bearer ${session.accessToken}`
+              : "",
+          },
+          body: JSON.stringify(eventToAdd),
         },
-        body: JSON.stringify(eventToAdd),
-      })
+      );
 
       if (response.ok) {
-        const result = await response.json()
-        const savedEvent = result.data
+        const result = await response.json();
+        const savedEvent = result.data;
 
         setEvents((prev) => [
           ...prev.filter((e) => e.id !== tempId),
           {
             ...savedEvent,
             date: new Date(savedEvent.date),
-            startTime: savedEvent.startTime ? new Date(savedEvent.startTime) : null,
+            startTime: savedEvent.startTime
+              ? new Date(savedEvent.startTime)
+              : null,
             endTime: savedEvent.endTime ? new Date(savedEvent.endTime) : null,
           },
-        ])
+        ]);
 
-        showNotification("Éxito", "Evento agregado correctamente", "success")
+        showNotification("Éxito", "Evento agregado correctamente", "success");
       } else {
-        setEvents((prev) => prev.filter((e) => e.id !== tempId))
-        showNotification("Error", "No se pudo guardar el evento", "destructive")
+        setEvents((prev) => prev.filter((e) => e.id !== tempId));
+        showNotification(
+          "Error",
+          "No se pudo guardar el evento",
+          "destructive",
+        );
       }
     } catch (error) {
-      console.error("Error al agregar evento:", error)
-      showNotification("Error", "Ocurrió un problema al agregar el evento", "destructive")
+      console.error("Error al agregar evento:", error);
+      showNotification(
+        "Error",
+        "Ocurrió un problema al agregar el evento",
+        "destructive",
+      );
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleUpdateEvent = async () => {
     if (!editingEvent || !newEvent.title.trim()) {
-      showNotification("Error", "El título del evento es obligatorio", "destructive")
-      return
+      showNotification(
+        "Error",
+        "El título del evento es obligatorio",
+        "destructive",
+      );
+      return;
     }
 
     try {
-      setIsSubmitting(true)
+      setIsSubmitting(true);
 
-      const eventDate = new Date(date)
-      eventDate.setHours(0, 0, 0, 0)
+      const eventDate = new Date(date);
+      eventDate.setHours(0, 0, 0, 0);
 
       const eventToUpdate = {
         taskName: newEvent.taskName,
@@ -214,20 +284,25 @@ export default function CalendarComponent() {
         status: newEvent.status || "pendiente",
         startTime: newEvent.startDate.getTime(),
         endTime: newEvent.endDate.getTime(),
-      }
+      };
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}api/task/${editingEvent.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: session?.accessToken ? `Bearer ${session.accessToken}` : "",
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/task/${editingEvent.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: session?.accessToken
+              ? `Bearer ${session.accessToken}`
+              : "",
+          },
+          body: JSON.stringify(eventToUpdate),
         },
-        body: JSON.stringify(eventToUpdate),
-      })
+      );
 
       if (response.ok) {
-        const result = await response.json()
-        const savedEvent = result.data
+        const result = await response.json();
+        const savedEvent = result.data;
 
         setEvents((prev) =>
           prev.map((e) =>
@@ -235,15 +310,19 @@ export default function CalendarComponent() {
               ? {
                   ...savedEvent,
                   date: new Date(savedEvent.date),
-                  startTime: savedEvent.startTime ? new Date(savedEvent.startTime) : null,
-                  endTime: savedEvent.endTime ? new Date(savedEvent.endTime) : null,
+                  startTime: savedEvent.startTime
+                    ? new Date(savedEvent.startTime)
+                    : null,
+                  endTime: savedEvent.endTime
+                    ? new Date(savedEvent.endTime)
+                    : null,
                 }
               : e,
           ),
-        )
+        );
 
-        setIsOpen(false)
-        setEditingEvent(null)
+        setIsOpen(false);
+        setEditingEvent(null);
         setNewEvent({
           userId: session?.user.id || "",
           taskName: "Nueva Tarea",
@@ -253,28 +332,44 @@ export default function CalendarComponent() {
           status: "pendiente",
           startDate: new Date(),
           endDate: addHours(new Date(), 1),
-        })
+        });
 
-        showNotification("Éxito", "Evento actualizado correctamente", "success")
+        showNotification(
+          "Éxito",
+          "Evento actualizado correctamente",
+          "success",
+        );
       } else {
-        showNotification("Error", "No se pudo actualizar el evento", "destructive")
-        fetchEvents()
+        showNotification(
+          "Error",
+          "No se pudo actualizar el evento",
+          "destructive",
+        );
+        fetchEvents();
       }
     } catch (error) {
-      console.error("Error al actualizar evento:", error)
-      showNotification("Error", "Ocurrió un problema al actualizar el evento", "destructive")
-      fetchEvents()
+      console.error("Error al actualizar evento:", error);
+      showNotification(
+        "Error",
+        "Ocurrió un problema al actualizar el evento",
+        "destructive",
+      );
+      fetchEvents();
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleEditEvent = (event) => {
-    setEditingEvent(event)
+    setEditingEvent(event);
 
     // Extraer fecha y hora del startTime y endTime
-    const startDate = event.startTime ? new Date(event.startTime) : new Date(event.date)
-    const endDate = event.endTime ? new Date(event.endTime) : addHours(new Date(event.date), 1)
+    const startDate = event.startTime
+      ? new Date(event.startTime)
+      : new Date(event.date);
+    const endDate = event.endTime
+      ? new Date(event.endTime)
+      : addHours(new Date(event.date), 1);
 
     setNewEvent({
       userId: event.userId,
@@ -285,173 +380,203 @@ export default function CalendarComponent() {
       status: event.status,
       startDate: startDate,
       endDate: endDate,
-    })
-    setIsOpen(true)
-  }
+    });
+    setIsOpen(true);
+  };
 
   const handleDeleteEvent = async (id) => {
     try {
-      const eventToDelete = events.find((e) => e.id === id)
-      setEvents((prev) => prev.filter((e) => e.id !== id))
+      const eventToDelete = events.find((e) => e.id === id);
+      setEvents((prev) => prev.filter((e) => e.id !== id));
 
-      showNotification("Evento eliminado", "El evento ha sido eliminado")
+      showNotification("Evento eliminado", "El evento ha sido eliminado");
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}api/task/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: session?.accessToken ? `Bearer ${session.accessToken}` : "",
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/task/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: session?.accessToken
+              ? `Bearer ${session.accessToken}`
+              : "",
+          },
         },
-      })
+      );
 
       if (!response.ok) {
-        setEvents((prev) => [...prev, eventToDelete])
-        showNotification("Error", "No se pudo eliminar el evento", "destructive")
+        setEvents((prev) => [...prev, eventToDelete]);
+        showNotification(
+          "Error",
+          "No se pudo eliminar el evento",
+          "destructive",
+        );
       }
     } catch (error) {
-      console.error("Error al eliminar evento:", error)
-      showNotification("Error", "Ocurrió un problema al eliminar el evento", "destructive")
-      fetchEvents()
+      console.error("Error al eliminar evento:", error);
+      showNotification(
+        "Error",
+        "Ocurrió un problema al eliminar el evento",
+        "destructive",
+      );
+      fetchEvents();
     }
-  }
+  };
 
   const fetchEvents = useCallback(async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}api/task?userId=${session?.user.id}`, {
-        headers: {
-          Authorization: session?.accessToken ? `Bearer ${session.accessToken}` : "",
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}api/task?userId=${session?.user.id}`,
+        {
+          headers: {
+            Authorization: session?.accessToken
+              ? `Bearer ${session.accessToken}`
+              : "",
+          },
         },
-      })
+      );
 
       if (response.ok) {
-        const data = await response.json()
+        const data = await response.json();
         const formattedEvents = data.data.map((event) => ({
           ...event,
           date: new Date(event.date),
           startTime: event.startTime ? new Date(event.startTime) : null,
           endTime: event.endTime ? new Date(event.endTime) : null,
-        }))
-        setEvents(formattedEvents)
+        }));
+        setEvents(formattedEvents);
       } else {
-        showNotification("Error", "No se pudieron cargar los eventos", "destructive")
-        setEvents([])
+        showNotification(
+          "Error",
+          "No se pudieron cargar los eventos",
+          "destructive",
+        );
+        setEvents([]);
       }
     } catch (error) {
-      console.error("Error al obtener eventos:", error)
-      showNotification("Error", "Ocurrió un problema al cargar los eventos", "destructive")
-      setEvents([])
+      console.error("Error al obtener eventos:", error);
+      showNotification(
+        "Error",
+        "Ocurrió un problema al cargar los eventos",
+        "destructive",
+      );
+      setEvents([]);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [session?.user?.id, session?.accessToken, showNotification])
+  }, [session?.user?.id, session?.accessToken, showNotification]);
 
   useEffect(() => {
     if (session) {
-      fetchEvents()
+      fetchEvents();
     }
-  }, [session, fetchEvents])
+  }, [session, fetchEvents]);
 
   useEffect(() => {
     if (date && Array.isArray(events)) {
-      const selectedDate = new Date(date)
-      selectedDate.setHours(0, 0, 0, 0)
+      const selectedDate = new Date(date);
+      selectedDate.setHours(0, 0, 0, 0);
 
       const filtered = events.filter((event) => {
-        if (!event.date || isNaN(new Date(event.date).getTime())) return false
+        if (!event.date || isNaN(new Date(event.date).getTime())) return false;
 
-        const eventDate = new Date(event.date)
-        eventDate.setHours(0, 0, 0, 0)
+        const eventDate = new Date(event.date);
+        eventDate.setHours(0, 0, 0, 0);
 
-        return eventDate.getTime() === selectedDate.getTime()
-      })
+        return eventDate.getTime() === selectedDate.getTime();
+      });
 
-      setFilteredEvents(filtered)
+      setFilteredEvents(filtered);
     } else {
-      setFilteredEvents([])
+      setFilteredEvents([]);
     }
-  }, [date, events])
+  }, [date, events]);
 
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
       case "completado":
-        return "bg-emerald-500 hover:bg-emerald-600"
+        return "bg-emerald-500 hover:bg-emerald-600";
       case "en progreso":
-        return "bg-green-500 hover:bg-green-600"
+        return "bg-green-500 hover:bg-green-600";
       case "pendiente":
       default:
-        return "bg-amber-500 hover:bg-amber-600"
+        return "bg-amber-500 hover:bg-amber-600";
     }
-  }
+  };
 
   const getStatusIcon = (status) => {
     switch (status.toLowerCase()) {
       case "completado":
-        return <CheckCircle2 className="h-4 w-4 mr-1" />
+        return <CheckCircle2 className="h-4 w-4 mr-1" />;
       case "en progreso":
-        return <Clock3 className="h-4 w-4 mr-1" />
+        return <Clock3 className="h-4 w-4 mr-1" />;
       case "pendiente":
       default:
-        return <AlertCircle className="h-4 w-4 mr-1" />
+        return <AlertCircle className="h-4 w-4 mr-1" />;
     }
-  }
+  };
 
   const formatTime = (date) => {
-    if (!date || isNaN(new Date(date).getTime())) return "--:--"
-    return format(new Date(date), "HH:mm")
-  }
+    if (!date || isNaN(new Date(date).getTime())) return "--:--";
+    return format(new Date(date), "HH:mm");
+  };
 
   // Función para navegar al mes anterior
   const goToPreviousMonth = () => {
-    const newDate = new Date(currentMonth)
-    newDate.setMonth(newDate.getMonth() - 1)
-    setCurrentMonth(newDate)
-  }
+    const newDate = new Date(currentMonth);
+    newDate.setMonth(newDate.getMonth() - 1);
+    setCurrentMonth(newDate);
+  };
 
   // Función para navegar al mes siguiente
   const goToNextMonth = () => {
-    const newDate = new Date(currentMonth)
-    newDate.setMonth(newDate.getMonth() + 1)
-    setCurrentMonth(newDate)
-  }
+    const newDate = new Date(currentMonth);
+    newDate.setMonth(newDate.getMonth() + 1);
+    setCurrentMonth(newDate);
+  };
 
   // Función para renderizar los días del calendario
   const getDayEvents = (day) => {
     return events.filter((event) => {
-      if (!event.date || isNaN(new Date(event.date).getTime())) return false
+      if (!event.date || isNaN(new Date(event.date).getTime())) return false;
 
-      const eventDate = new Date(event.date)
+      const eventDate = new Date(event.date);
       return (
         eventDate.getFullYear() === day.getFullYear() &&
         eventDate.getMonth() === day.getMonth() &&
         eventDate.getDate() === day.getDate()
-      )
-    })
-  }
+      );
+    });
+  };
 
   // Modificar la función isPastDay para que solo considere días pasados si todos los eventos están completados
   const isPastDay = (day) => {
     // Si es un día anterior a hoy, verificamos si todos los eventos están completados
     if (isBefore(day, startOfDay(new Date())) && !isToday(day)) {
-      const dayEvents = getDayEvents(day)
+      const dayEvents = getDayEvents(day);
 
       // Si no hay eventos, no lo marcamos como pasado
-      if (dayEvents.length === 0) return false
+      if (dayEvents.length === 0) return false;
 
       // Solo marcamos como pasado si TODOS los eventos están completados
-      return dayEvents.every((event) => event.status === "completado")
+      return dayEvents.every((event) => event.status === "completado");
     }
-    return false
-  }
+    return false;
+  };
 
   // Actualizar la función renderCalendarDays para mostrar correctamente los días
   const renderDayContent = (day) => {
-    const dayEvents = getDayEvents(day)
-    const isPast = isPastDay(day)
-    const hasInProgressEvent = dayEvents.some((event) => event.status === "en progreso")
+    const dayEvents = getDayEvents(day);
+    const isPast = isPastDay(day);
+    const hasInProgressEvent = dayEvents.some(
+      (event) => event.status === "en progreso",
+    );
 
     return (
       <div className="relative w-full h-full flex items-center justify-center">
-        <span className={isPast ? "text-gray-400 line-through" : ""}>{day.getDate()}</span>
+        <span className={isPast ? "text-gray-400 line-through" : ""}>
+          {day.getDate()}
+        </span>
         {dayEvents.length > 0 && (
           <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-0.5">
             {dayEvents.map((event, index) => (
@@ -469,78 +594,112 @@ export default function CalendarComponent() {
           </div>
         )}
       </div>
-    )
-  }
+    );
+  };
 
   // Actualizar la función renderCalendarDays para aplicar el estilo correcto
   const renderCalendarDays = () => {
-    const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate()
-    const firstDayOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay()
-    const daysFromPrevMonth = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1 // Ajuste para que la semana comience en lunes (0 = domingo)
+    const daysInMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() + 1,
+      0,
+    ).getDate();
+    const firstDayOfMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
+      1,
+    ).getDay();
+    const daysFromPrevMonth = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1; // Ajuste para que la semana comience en lunes (0 = domingo)
 
-    const days = []
+    const days = [];
 
     // Días del mes anterior
-    const prevMonth = new Date(currentMonth)
-    prevMonth.setMonth(prevMonth.getMonth() - 1)
-    const daysInPrevMonth = new Date(prevMonth.getFullYear(), prevMonth.getMonth() + 1, 0).getDate()
+    const prevMonth = new Date(currentMonth);
+    prevMonth.setMonth(prevMonth.getMonth() - 1);
+    const daysInPrevMonth = new Date(
+      prevMonth.getFullYear(),
+      prevMonth.getMonth() + 1,
+      0,
+    ).getDate();
 
-    for (let i = daysInPrevMonth - daysFromPrevMonth + 1; i <= daysInPrevMonth; i++) {
-      const dayDate = new Date(prevMonth.getFullYear(), prevMonth.getMonth(), i)
-      days.push({ day: i, date: dayDate, isCurrentMonth: false })
+    for (
+      let i = daysInPrevMonth - daysFromPrevMonth + 1;
+      i <= daysInPrevMonth;
+      i++
+    ) {
+      const dayDate = new Date(
+        prevMonth.getFullYear(),
+        prevMonth.getMonth(),
+        i,
+      );
+      days.push({ day: i, date: dayDate, isCurrentMonth: false });
     }
 
     // Modificar la parte donde se renderizan los días
     for (let i = 1; i <= daysInMonth; i++) {
-      const dayDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), i)
-      const dayEvents = getDayEvents(dayDate)
-      const allEventsCompleted = dayEvents.length > 0 && dayEvents.every((event) => event.status === "completado")
+      const dayDate = new Date(
+        currentMonth.getFullYear(),
+        currentMonth.getMonth(),
+        i,
+      );
+      const dayEvents = getDayEvents(dayDate);
+      const allEventsCompleted =
+        dayEvents.length > 0 &&
+        dayEvents.every((event) => event.status === "completado");
 
       days.push({
         day: i,
         date: dayDate,
         isCurrentMonth: true,
         allEventsCompleted: allEventsCompleted,
-      })
+      });
     }
 
     // Días del mes siguiente para completar la última semana
-    const totalDaysDisplayed = Math.ceil((daysFromPrevMonth + daysInMonth) / 7) * 7
-    const daysFromNextMonth = totalDaysDisplayed - (daysFromPrevMonth + daysInMonth)
+    const totalDaysDisplayed =
+      Math.ceil((daysFromPrevMonth + daysInMonth) / 7) * 7;
+    const daysFromNextMonth =
+      totalDaysDisplayed - (daysFromPrevMonth + daysInMonth);
 
-    const nextMonth = new Date(currentMonth)
-    nextMonth.setMonth(nextMonth.getMonth() + 1)
+    const nextMonth = new Date(currentMonth);
+    nextMonth.setMonth(nextMonth.getMonth() + 1);
 
     for (let i = 1; i <= daysFromNextMonth; i++) {
-      const dayDate = new Date(nextMonth.getFullYear(), nextMonth.getMonth(), i)
-      days.push({ day: i, date: dayDate, isCurrentMonth: false })
+      const dayDate = new Date(
+        nextMonth.getFullYear(),
+        nextMonth.getMonth(),
+        i,
+      );
+      days.push({ day: i, date: dayDate, isCurrentMonth: false });
     }
 
-    return days
-  }
+    return days;
+  };
 
   // Función para verificar si un día tiene eventos en progreso
   const hasInProgressEvents = (day) => {
-    const dayEvents = getDayEvents(day)
-    return dayEvents.some((event) => event.status === "en progreso")
-  }
+    const dayEvents = getDayEvents(day);
+    return dayEvents.some((event) => event.status === "en progreso");
+  };
 
   // Función para verificar si un día es el seleccionado
   const isSelectedDay = (day) => {
     return (
-      day.getFullYear() === date.getFullYear() && day.getMonth() === date.getMonth() && day.getDate() === date.getDate()
-    )
-  }
+      day.getFullYear() === date.getFullYear() &&
+      day.getMonth() === date.getMonth() &&
+      day.getDate() === date.getDate()
+    );
+  };
 
   // Función para verificar si un día es hoy
   const isDayToday = (day) => {
-    return isToday(day)
-  }
+    return isToday(day);
+  };
 
   // Función para manejar el clic en un día
   const handleDayClick = (day) => {
-    setDate(day)
-  }
+    setDate(day);
+  };
 
   // Personalización de DatePicker
   const CustomDatePickerInput = ({ value, onClick, label }) => (
@@ -555,7 +714,7 @@ export default function CalendarComponent() {
         {value}
       </Button>
     </div>
-  )
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-4">
@@ -566,8 +725,12 @@ export default function CalendarComponent() {
           transition={{ duration: 0.5 }}
           className="mb-8 text-center"
         >
-          <h1 className="text-4xl font-bold text-emerald-400 mb-2">Calendario de Eventos</h1>
-          <p className="text-gray-300">Organiza tus actividades y mantén un seguimiento de tus tareas</p>
+          <h1 className="text-4xl font-bold text-emerald-400 mb-2">
+            Calendario de Eventos
+          </h1>
+          <p className="text-gray-300">
+            Organiza tus actividades y mantén un seguimiento de tus tareas
+          </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -589,7 +752,9 @@ export default function CalendarComponent() {
                     >
                       <ChevronLeft className="h-5 w-5" />
                     </Button>
-                    <span className="text-lg font-medium">{format(currentMonth, "MMMM yyyy", { locale: es })}</span>
+                    <span className="text-lg font-medium">
+                      {format(currentMonth, "MMMM yyyy", { locale: es })}
+                    </span>
                     <Button
                       variant="ghost"
                       size="icon"
@@ -606,21 +771,26 @@ export default function CalendarComponent() {
                 <div className="mb-6">
                   {/* Días de la semana */}
                   <div className="grid grid-cols-7 mb-2 text-center">
-                    {["lu", "ma", "mi", "ju", "vi", "sá", "do"].map((day, index) => (
-                      <div key={index} className="text-sm font-medium text-emerald-400 py-2">
-                        {day}
-                      </div>
-                    ))}
+                    {["lu", "ma", "mi", "ju", "vi", "sá", "do"].map(
+                      (day, index) => (
+                        <div
+                          key={index}
+                          className="text-sm font-medium text-emerald-400 py-2"
+                        >
+                          {day}
+                        </div>
+                      ),
+                    )}
                   </div>
 
                   {/* Días del mes */}
                   <div className="grid grid-cols-7 gap-1">
                     {renderCalendarDays().map((dayInfo, index) => {
-                      const dayEvents = getDayEvents(dayInfo.date)
-                      const hasInProgress = hasInProgressEvents(dayInfo.date)
-                      const isSelected = isSelectedDay(dayInfo.date)
-                      const isToday = isDayToday(dayInfo.date)
-                      const allEventsCompleted = dayInfo.allEventsCompleted
+                      const dayEvents = getDayEvents(dayInfo.date);
+                      const hasInProgress = hasInProgressEvents(dayInfo.date);
+                      const isSelected = isSelectedDay(dayInfo.date);
+                      const isToday = isDayToday(dayInfo.date);
+                      const allEventsCompleted = dayInfo.allEventsCompleted;
 
                       return (
                         <button
@@ -629,7 +799,9 @@ export default function CalendarComponent() {
                           className={cn(
                             "h-10 w-full rounded-md flex flex-col items-center justify-center relative",
                             !dayInfo.isCurrentMonth && "text-gray-500",
-                            dayInfo.isCurrentMonth && allEventsCompleted && "text-gray-500 line-through",
+                            dayInfo.isCurrentMonth &&
+                              allEventsCompleted &&
+                              "text-gray-500 line-through",
                             dayInfo.isCurrentMonth &&
                               !allEventsCompleted &&
                               !isSelected &&
@@ -637,8 +809,12 @@ export default function CalendarComponent() {
                               !hasInProgress &&
                               "text-white",
                             isSelected && "bg-emerald-600 text-white",
-                            isToday && !isSelected && "bg-emerald-900/30 text-emerald-300 font-bold",
-                            hasInProgress && !isSelected && "bg-green-900/30 text-green-300",
+                            isToday &&
+                              !isSelected &&
+                              "bg-emerald-900/30 text-emerald-300 font-bold",
+                            hasInProgress &&
+                              !isSelected &&
+                              "bg-green-900/30 text-green-300",
                             "hover:bg-gray-700 transition-colors",
                           )}
                         >
@@ -662,12 +838,14 @@ export default function CalendarComponent() {
                                   ></span>
                                 ))
                               ) : (
-                                <span className="text-xs text-gray-400">{dayEvents.length}</span>
+                                <span className="text-xs text-gray-400">
+                                  {dayEvents.length}
+                                </span>
                               )}
                             </div>
                           )}
                         </button>
-                      )
+                      );
                     })}
                   </div>
                 </div>
@@ -687,7 +865,10 @@ export default function CalendarComponent() {
                     </div>
                     <div className="bg-green-900/30 p-3 rounded-lg">
                       <p className="text-2xl font-bold text-green-400">
-                        {events.filter((e) => e.status === "en progreso").length}
+                        {
+                          events.filter((e) => e.status === "en progreso")
+                            .length
+                        }
                       </p>
                       <p className="text-xs text-green-500">En progreso</p>
                     </div>
@@ -723,9 +904,9 @@ export default function CalendarComponent() {
                 <Dialog
                   open={isOpen}
                   onOpenChange={(open) => {
-                    setIsOpen(open)
+                    setIsOpen(open);
                     if (!open) {
-                      setEditingEvent(null)
+                      setEditingEvent(null);
                       setNewEvent({
                         userId: session?.user.id || "",
                         taskName: "Nueva Tarea",
@@ -735,7 +916,7 @@ export default function CalendarComponent() {
                         status: "pendiente",
                         startDate: new Date(),
                         endDate: addHours(new Date(), 1),
-                      })
+                      });
                     }
                   }}
                 >
@@ -750,7 +931,9 @@ export default function CalendarComponent() {
                   <DialogContent className="sm:max-w-[500px] bg-gray-900 border-gray-700 text-white">
                     <DialogHeader>
                       <DialogTitle className="text-xl text-emerald-400">
-                        {editingEvent ? "Editar Evento" : "Agregar Nuevo Evento"}
+                        {editingEvent
+                          ? "Editar Evento"
+                          : "Agregar Nuevo Evento"}
                       </DialogTitle>
                       <DialogDescription className="text-gray-400">
                         {editingEvent
@@ -767,12 +950,17 @@ export default function CalendarComponent() {
                           id="title"
                           placeholder="Título del evento"
                           value={newEvent.title}
-                          onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+                          onChange={(e) =>
+                            setNewEvent({ ...newEvent, title: e.target.value })
+                          }
                           className="bg-gray-800 border-gray-700 text-white"
                         />
                       </div>
                       <div className="grid grid-cols-1 gap-2">
-                        <Label htmlFor="description" className="text-emerald-400">
+                        <Label
+                          htmlFor="description"
+                          className="text-emerald-400"
+                        >
                           Descripción
                         </Label>
                         <Textarea
@@ -794,7 +982,9 @@ export default function CalendarComponent() {
                         </Label>
                         <Select
                           value={newEvent.status}
-                          onValueChange={(value) => setNewEvent({ ...newEvent, status: value })}
+                          onValueChange={(value) =>
+                            setNewEvent({ ...newEvent, status: value })
+                          }
                         >
                           <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
                             <SelectValue placeholder="Selecciona un estado" />
@@ -824,11 +1014,15 @@ export default function CalendarComponent() {
 
                       {/* Fecha y hora de inicio */}
                       <div className="grid grid-cols-1 gap-2">
-                        <Label className="text-emerald-400">Fecha y hora de inicio</Label>
+                        <Label className="text-emerald-400">
+                          Fecha y hora de inicio
+                        </Label>
                         <div className="grid grid-cols-2 gap-2">
                           <DatePicker
                             selected={newEvent.startDate}
-                            onChange={(date) => setNewEvent({ ...newEvent, startDate: date })}
+                            onChange={(date) =>
+                              setNewEvent({ ...newEvent, startDate: date })
+                            }
                             locale="es"
                             dateFormat="dd 'de' MMMM 'de' yyyy"
                             customInput={<CustomDatePickerInput />}
@@ -836,14 +1030,17 @@ export default function CalendarComponent() {
                             dayClassName={(date) =>
                               cn(
                                 "rounded hover:bg-gray-700",
-                                isToday(date) && "bg-emerald-900/30 text-emerald-300",
+                                isToday(date) &&
+                                  "bg-emerald-900/30 text-emerald-300",
                                 isPastDay(date) && "text-gray-500",
                               )
                             }
                           />
                           <DatePicker
                             selected={newEvent.startDate}
-                            onChange={(date) => setNewEvent({ ...newEvent, startDate: date })}
+                            onChange={(date) =>
+                              setNewEvent({ ...newEvent, startDate: date })
+                            }
                             showTimeSelect
                             showTimeSelectOnly
                             timeIntervals={15}
@@ -858,11 +1055,15 @@ export default function CalendarComponent() {
 
                       {/* Fecha y hora de fin */}
                       <div className="grid grid-cols-1 gap-2">
-                        <Label className="text-emerald-400">Fecha y hora de fin</Label>
+                        <Label className="text-emerald-400">
+                          Fecha y hora de fin
+                        </Label>
                         <div className="grid grid-cols-2 gap-2">
                           <DatePicker
                             selected={newEvent.endDate}
-                            onChange={(date) => setNewEvent({ ...newEvent, endDate: date })}
+                            onChange={(date) =>
+                              setNewEvent({ ...newEvent, endDate: date })
+                            }
                             locale="es"
                             dateFormat="dd 'de' MMMM 'de' yyyy"
                             customInput={<CustomDatePickerInput />}
@@ -870,14 +1071,17 @@ export default function CalendarComponent() {
                             dayClassName={(date) =>
                               cn(
                                 "rounded hover:bg-gray-700",
-                                isToday(date) && "bg-emerald-900/30 text-emerald-300",
+                                isToday(date) &&
+                                  "bg-emerald-900/30 text-emerald-300",
                                 isPastDay(date) && "text-gray-500",
                               )
                             }
                           />
                           <DatePicker
                             selected={newEvent.endDate}
-                            onChange={(date) => setNewEvent({ ...newEvent, endDate: date })}
+                            onChange={(date) =>
+                              setNewEvent({ ...newEvent, endDate: date })
+                            }
                             showTimeSelect
                             showTimeSelectOnly
                             timeIntervals={15}
@@ -892,7 +1096,9 @@ export default function CalendarComponent() {
                     </div>
                     <DialogFooter>
                       <Button
-                        onClick={editingEvent ? handleUpdateEvent : handleAddEvent}
+                        onClick={
+                          editingEvent ? handleUpdateEvent : handleAddEvent
+                        }
                         disabled={isSubmitting}
                         className="bg-emerald-600 hover:bg-emerald-700 text-white"
                       >
@@ -902,7 +1108,11 @@ export default function CalendarComponent() {
                             {editingEvent ? "Actualizando..." : "Guardando..."}
                           </>
                         ) : (
-                          <>{editingEvent ? "Actualizar Evento" : "Guardar Evento"}</>
+                          <>
+                            {editingEvent
+                              ? "Actualizar Evento"
+                              : "Guardar Evento"}
+                          </>
                         )}
                       </Button>
                     </DialogFooter>
@@ -946,23 +1156,35 @@ export default function CalendarComponent() {
                           <CardContent className="p-4">
                             <div className="flex justify-between items-start">
                               <div className="flex-1">
-                                <h3 className="font-bold text-lg text-white">{event.title}</h3>
-                                {event.description && <p className="text-gray-300 mt-1">{event.description}</p>}
+                                <h3 className="font-bold text-lg text-white">
+                                  {event.title}
+                                </h3>
+                                {event.description && (
+                                  <p className="text-gray-300 mt-1">
+                                    {event.description}
+                                  </p>
+                                )}
                                 <div className="flex items-center mt-2 text-sm text-gray-400">
                                   <Clock className="h-4 w-4 mr-1" />
-                                  {formatTime(event.startTime)} - {formatTime(event.endTime)}
+                                  {formatTime(event.startTime)} -{" "}
+                                  {formatTime(event.endTime)}
                                 </div>
                               </div>
                               <div className="flex items-center space-x-2">
                                 <Select
                                   value={event.status}
-                                  onValueChange={(value) => handleStatusChange(event.id, value)}
+                                  onValueChange={(value) =>
+                                    handleStatusChange(event.id, value)
+                                  }
                                 >
-                                  <SelectTrigger className={`w-32 ${getStatusColor(event.status)} text-white border-0`}>
+                                  <SelectTrigger
+                                    className={`w-32 ${getStatusColor(event.status)} text-white border-0`}
+                                  >
                                     <SelectValue>
                                       <div className="flex items-center">
                                         {getStatusIcon(event.status)}
-                                        {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
+                                        {event.status.charAt(0).toUpperCase() +
+                                          event.status.slice(1)}
                                       </div>
                                     </SelectValue>
                                   </SelectTrigger>
@@ -1015,7 +1237,9 @@ export default function CalendarComponent() {
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-900/30 text-emerald-400 mb-4">
                       <CalendarIcon className="h-8 w-8" />
                     </div>
-                    <p className="text-gray-400">No hay eventos programados para este día</p>
+                    <p className="text-gray-400">
+                      No hay eventos programados para este día
+                    </p>
                     <Button
                       onClick={() => setIsOpen(true)}
                       variant="outline"
@@ -1032,5 +1256,5 @@ export default function CalendarComponent() {
         </div>
       </div>
     </div>
-  )
+  );
 }

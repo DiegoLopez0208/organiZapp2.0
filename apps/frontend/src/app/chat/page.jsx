@@ -1,16 +1,26 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { useSession } from "next-auth/react"
-import { useTheme } from "next-themes"
-import { socket } from "@/app/lib/socket"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { toast } from "@/hooks/use-toast"
+import { useState, useEffect, useRef } from "react";
+import { useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
+import { socket } from "@/app/lib/socket";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { toast } from "@/hooks/use-toast";
 import {
   Send,
   Plus,
@@ -28,66 +38,65 @@ import {
   ArrowLeft,
   UserPlus,
   Bell,
-} from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Badge } from "@/components/ui/badge"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
-import { format } from "date-fns"
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { format } from "date-fns";
 
 export default function ModernChat() {
-  const { data: session } = useSession()
-  const { theme, setTheme } = useTheme()
-  const [groups, setGroups] = useState([])
-  const [currentChat, setCurrentChat] = useState(null)
-  const [messages, setMessages] = useState([])
-  const [newMessage, setNewMessage] = useState("")
-  const [newGroupName, setNewGroupName] = useState("")
-  const [searchTerm, setSearchTerm] = useState("")
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const chatContainerRef = useRef(null)
-  const messageInputRef = useRef(null)
-  const lastMessageRef = useRef(null)
-
+  const { data: session } = useSession();
+  const { theme, setTheme } = useTheme();
+  const [groups, setGroups] = useState([]);
+  const [currentChat, setCurrentChat] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [newGroupName, setNewGroupName] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const chatContainerRef = useRef(null);
+  const messageInputRef = useRef(null);
+  const lastMessageRef = useRef(null);
 
   useEffect(() => {
     if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({ behavior: "smooth" })
+      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages])
+  }, [messages]);
 
   useEffect(() => {
-
-    setIsLoading(true)
-    socket.emit("get_groups")
-
+    setIsLoading(true);
+    socket.emit("get_groups");
 
     socket.on("update_message", (information) => {
-      if (information?.messagesIndex && Array.isArray(information.messagesIndex)) {
-        const newMessages = information.messagesIndex.filter((msg) => msg.content?.trim() !== "")
-        console.log("Mensajes después de filtrar:", newMessages)
-        setMessages(newMessages)
+      if (
+        information?.messagesIndex &&
+        Array.isArray(information.messagesIndex)
+      ) {
+        const newMessages = information.messagesIndex.filter(
+          (msg) => msg.content?.trim() !== "",
+        );
+        console.log("Mensajes después de filtrar:", newMessages);
+        setMessages(newMessages);
       } else {
-        console.error("Error: 'messagesIndex' no es un arreglo válido.")
+        console.error("Error: 'messagesIndex' no es un arreglo válido.");
       }
-      setIsLoading(false)
-    })
-
+      setIsLoading(false);
+    });
 
     socket.on("groups_updated", (updatedGroups) => {
-      setGroups(updatedGroups)
-      setIsLoading(false)
-    })
-
+      setGroups(updatedGroups);
+      setIsLoading(false);
+    });
 
     return () => {
-      socket.off("groups_updated")
-      socket.off("new_message")
-      socket.off("update_message")
-      socket.off("get_groups")
-    }
-  }, [session])
-
+      socket.off("groups_updated");
+      socket.off("new_message");
+      socket.off("update_message");
+      socket.off("get_groups");
+    };
+  }, [session]);
 
   const handleSendMessage = () => {
     if (newMessage.trim() !== "") {
@@ -99,126 +108,131 @@ export default function ModernChat() {
           minute: "2-digit",
         }),
         groupId: currentChat?.id,
-      }
+      };
 
-      socket.emit("send_message", message)
+      socket.emit("send_message", message);
 
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { ...message, content: newMessage, isOptimistic: true },
+      ]);
 
-      setMessages((prevMessages) => [...prevMessages, { ...message, content: newMessage, isOptimistic: true }])
-
-      setNewMessage("")
-
+      setNewMessage("");
 
       if (messageInputRef.current) {
-        messageInputRef.current.focus()
+        messageInputRef.current.focus();
       }
     }
-  }
-
+  };
 
   const handleJoinGroup = (group) => {
-    setIsLoading(true)
-    socket.emit("join_group", group.id)
-    setCurrentChat({ ...group, isGroup: true })
-    setIsMobileMenuOpen(false) 
-  }
-
+    setIsLoading(true);
+    socket.emit("join_group", group.id);
+    setCurrentChat({ ...group, isGroup: true });
+    setIsMobileMenuOpen(false);
+  };
 
   const handleCreateGroup = () => {
     if (newGroupName.trim() !== "") {
-      const groupData = { name: newGroupName, creatorName: session.user.name }
-      socket.emit("create_group", groupData)
-      setNewGroupName("")
+      const groupData = { name: newGroupName, creatorName: session.user.name };
+      socket.emit("create_group", groupData);
+      setNewGroupName("");
       toast({
         title: "Group Created",
         description: `You've successfully created the group "${newGroupName}"`,
-      })
+      });
     }
-  }
+  };
 
   // Handle deleting a group
   const handleDeleteGroup = (groupId, e) => {
-    e.stopPropagation() // Prevent triggering the group selection
+    e.stopPropagation(); // Prevent triggering the group selection
 
     if (confirm("Are you sure you want to delete this group?")) {
-      socket.emit("delete_group", groupId)
+      socket.emit("delete_group", groupId);
 
       if (currentChat?.id === groupId) {
-        setCurrentChat(null)
+        setCurrentChat(null);
       }
 
-      setGroups(groups.filter((group) => group.id !== groupId))
+      setGroups(groups.filter((group) => group.id !== groupId));
 
       toast({
         title: "Group Deleted",
         description: "The group has been successfully deleted",
-      })
+      });
     }
-  }
+  };
 
   // Filter groups based on search term
-  const filteredGroups = groups.filter((group) => group.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredGroups = groups.filter((group) =>
+    group.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
   // Filter messages for current chat
-  const filteredMessages = messages.filter((msg) => msg.groupId === currentChat?.id)
+  const filteredMessages = messages.filter(
+    (msg) => msg.groupId === currentChat?.id,
+  );
 
   // Format time for messages
   const formatMessageTime = (time) => {
-    if (!time) return ""
+    if (!time) return "";
 
     // If it's already a formatted string, return it
     if (typeof time === "string" && time.includes(":")) {
-      return time
+      return time;
     }
 
     // If it's a timestamp, format it
     try {
-      return format(new Date(time), "HH:mm")
+      return format(new Date(time), "HH:mm");
     } catch (e) {
-      return ""
+      return "";
     }
-  }
+  };
 
   // Group messages by date
   const groupMessagesByDate = (messages) => {
-    const groups = {}
+    const groups = {};
 
     messages.forEach((message) => {
-      const date = new Date()
-      const dateKey = format(date, "yyyy-MM-dd")
+      const date = new Date();
+      const dateKey = format(date, "yyyy-MM-dd");
 
       if (!groups[dateKey]) {
-        groups[dateKey] = []
+        groups[dateKey] = [];
       }
 
-      groups[dateKey].push(message)
-    })
+      groups[dateKey].push(message);
+    });
 
     return Object.entries(groups).map(([date, messages]) => ({
       date,
       messages,
-    }))
-  }
+    }));
+  };
 
-  const messageGroups = groupMessagesByDate(filteredMessages)
+  const messageGroups = groupMessagesByDate(filteredMessages);
 
   // Get initials for avatar fallback
   const getInitials = (name) => {
-    if (!name) return "?"
+    if (!name) return "?";
     return name
       .split(" ")
       .map((n) => n[0])
       .join("")
       .toUpperCase()
-      .substring(0, 2)
-  }
+      .substring(0, 2);
+  };
 
   // Render the sidebar with groups
   const renderSidebar = () => (
     <div className="flex flex-col h-full">
       <div className="p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-bold text-green-600 dark:text-green-400">Chats</h1>
+          <h1 className="text-xl font-bold text-green-600 dark:text-green-400">
+            Chats
+          </h1>
           <div className="flex items-center space-x-1">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -269,15 +283,22 @@ export default function ModernChat() {
                 )}
               >
                 <Avatar className="h-12 w-12 border-2 border-gray-200 dark:border-gray-700">
-                  <AvatarImage src={group.avatar || "/placeholder.svg"} alt={group.name} />
+                  <AvatarImage
+                    src={group.avatar || "/placeholder.svg"}
+                    alt={group.name}
+                  />
                   <AvatarFallback className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300">
                     {getInitials(group.name)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="ml-3 flex-1 overflow-hidden">
                   <div className="flex justify-between items-center">
-                    <p className="font-medium text-gray-900 dark:text-gray-100">{group.name}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{group.lastMessageTime}</p>
+                    <p className="font-medium text-gray-900 dark:text-gray-100">
+                      {group.name}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {group.lastMessageTime}
+                    </p>
                   </div>
                 </div>
                 <TooltipProvider>
@@ -332,13 +353,18 @@ export default function ModernChat() {
         {session?.user && (
           <div className="flex items-center mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
             <Avatar className="h-8 w-8 mr-2">
-              <AvatarImage src={session.user.image || "/placeholder.svg"} alt={session.user.name} />
+              <AvatarImage
+                src={session.user.image || "/placeholder.svg"}
+                alt={session.user.name}
+              />
               <AvatarFallback className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300">
                 {getInitials(session.user.name)}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 overflow-hidden">
-              <p className="font-medium text-sm text-gray-900 dark:text-gray-100 truncate">{session.user.name}</p>
+              <p className="font-medium text-sm text-gray-900 dark:text-gray-100 truncate">
+                {session.user.name}
+              </p>
               <p className="text-xs text-gray-500 dark:text-gray-400">Online</p>
             </div>
             <Badge
@@ -351,7 +377,7 @@ export default function ModernChat() {
         )}
       </div>
     </div>
-  )
+  );
 
   // Render the chat area
   const renderChatArea = () => (
@@ -361,29 +387,35 @@ export default function ModernChat() {
           {/* Chat Header */}
           <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex items-center justify-between">
             <div className="flex items-center">
-              <Button variant="ghost" size="icon" className="mr-2 md:hidden" onClick={() => setCurrentChat(null)}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="mr-2 md:hidden"
+                onClick={() => setCurrentChat(null)}
+              >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
               <Avatar className="h-10 w-10 border-2 border-gray-200 dark:border-gray-700">
-                <AvatarImage src={currentChat.avatar || "/placeholder.svg"} alt={currentChat.name} />
+                <AvatarImage
+                  src={currentChat.avatar || "/placeholder.svg"}
+                  alt={currentChat.name}
+                />
                 <AvatarFallback className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300">
                   {getInitials(currentChat.name)}
                 </AvatarFallback>
               </Avatar>
               <div className="ml-3">
                 <div className="flex items-center">
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{currentChat.name}</h2>
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    {currentChat.name}
+                  </h2>
                   <Badge className="ml-2 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800">
                     Active
                   </Badge>
                 </div>
-            
               </div>
             </div>
             <div className="flex items-center space-x-1">
-
-
-          
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full">
@@ -403,30 +435,38 @@ export default function ModernChat() {
           </div>
 
           {/* Chat Messages */}
-          <ScrollArea ref={chatContainerRef} className="flex-1 p-4 bg-gray-50 dark:bg-gray-900 overflow-y-auto">
+          <ScrollArea
+            ref={chatContainerRef}
+            className="flex-1 p-4 bg-gray-50 dark:bg-gray-900 overflow-y-auto"
+          >
             {isLoading ? (
               <div className="flex flex-col items-center justify-center h-full">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mb-4"></div>
-                <p className="text-gray-500 dark:text-gray-400">Loading messages...</p>
+                <p className="text-gray-500 dark:text-gray-400">
+                  Loading messages...
+                </p>
               </div>
             ) : filteredMessages.length > 0 ? (
               <div className="space-y-6">
                 {messageGroups.map((group, groupIndex) => (
                   <div key={groupIndex} className="space-y-4">
-                    <div className="flex items-center justify-center">
-
-                    </div>
+                    <div className="flex items-center justify-center"></div>
 
                     {group.messages.map((message, index) => {
-                      const isCurrentUser = message.senderName === session?.user.name
+                      const isCurrentUser =
+                        message.senderName === session?.user.name;
                       const isLastMessage =
-                        index === group.messages.length - 1 && groupIndex === messageGroups.length - 1
+                        index === group.messages.length - 1 &&
+                        groupIndex === messageGroups.length - 1;
 
                       return (
                         <div
                           key={index}
                           ref={isLastMessage ? lastMessageRef : null}
-                          className={cn("flex", isCurrentUser ? "justify-end" : "justify-start")}
+                          className={cn(
+                            "flex",
+                            isCurrentUser ? "justify-end" : "justify-start",
+                          )}
                         >
                           {!isCurrentUser && (
                             <Avatar className="h-8 w-8 mr-2 mt-1 flex-shrink-0">
@@ -451,12 +491,16 @@ export default function ModernChat() {
                               </p>
                             )}
 
-                            <p className="text-sm whitespace-pre-wrap break-words">{message.content || message.text}</p>
+                            <p className="text-sm whitespace-pre-wrap break-words">
+                              {message.content || message.text}
+                            </p>
 
                             <p
                               className={cn(
                                 "text-xs text-right mt-1",
-                                isCurrentUser ? "text-green-100" : "text-gray-500 dark:text-gray-400",
+                                isCurrentUser
+                                  ? "text-green-100"
+                                  : "text-gray-500 dark:text-gray-400",
                               )}
                             >
                               {formatMessageTime(message.time)}
@@ -464,7 +508,7 @@ export default function ModernChat() {
                             </p>
                           </div>
                         </div>
-                      )
+                      );
                     })}
                   </div>
                 ))}
@@ -474,7 +518,9 @@ export default function ModernChat() {
                 <div className="bg-gray-100 dark:bg-gray-800 rounded-full p-6 mb-4">
                   <MessageIcon className="h-12 w-12 text-gray-400" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">No messages yet</h3>
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                  No messages yet
+                </h3>
                 <p className="text-gray-500 dark:text-gray-400 max-w-md">
                   Be the first to send a message in this group!
                 </p>
@@ -484,13 +530,7 @@ export default function ModernChat() {
 
           <div className="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
             <div className="flex items-center">
-              <div className="flex space-x-1 mr-2">
-
-
-
-
-
-              </div>
+              <div className="flex space-x-1 mr-2"></div>
 
               <Input
                 ref={messageInputRef}
@@ -518,12 +558,17 @@ export default function ModernChat() {
             <div className="bg-green-100 dark:bg-green-900/30 rounded-full p-6 inline-block mb-6">
               <MessageIcon className="h-12 w-12 text-green-600 dark:text-green-400" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">Welcome to ModernChat</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+              Welcome to ModernChat
+            </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Connect with friends and colleagues in real-time. Select a group from the sidebar or create a new one to
-              start messaging.
+              Connect with friends and colleagues in real-time. Select a group
+              from the sidebar or create a new one to start messaging.
             </p>
-            <Button className="bg-green-500 hover:bg-green-600 text-white" onClick={() => setIsMobileMenuOpen(true)}>
+            <Button
+              className="bg-green-500 hover:bg-green-600 text-white"
+              onClick={() => setIsMobileMenuOpen(true)}
+            >
               <Users className="mr-2 h-5 w-5" />
               View Groups
             </Button>
@@ -531,8 +576,7 @@ export default function ModernChat() {
         </div>
       )}
     </div>
-  )
-
+  );
 
   const MessageIcon = (props) => (
     <svg
@@ -550,7 +594,7 @@ export default function ModernChat() {
       <path d="M12 10h.01" />
       <path d="M16 10h.01" />
     </svg>
-  )
+  );
 
   return (
     <div className="flex h-screen bg-white dark:bg-gray-900">
@@ -569,8 +613,15 @@ export default function ModernChat() {
       {/* Mobile Header (only shown when no chat is selected) */}
       {!currentChat && (
         <div className="md:hidden fixed top-0 left-0 right-0 p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-10 flex items-center justify-between">
-          <h1 className="text-xl font-bold text-green-600 dark:text-green-400">ModernChat</h1>
-          <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)} className="rounded-full">
+          <h1 className="text-xl font-bold text-green-600 dark:text-green-400">
+            ModernChat
+          </h1>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="rounded-full"
+          >
             <Menu className="h-5 w-5" />
           </Button>
         </div>
@@ -579,5 +630,5 @@ export default function ModernChat() {
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">{renderChatArea()}</div>
     </div>
-  )
+  );
 }
