@@ -14,7 +14,9 @@ import { groupController } from "./controllers/groupController.js";
 import { messageController } from "./controllers/messageController.js";
 import prisma from "./database/prisma.js";
 import logger from "./helpers/winston.js";
-import path from "path";
+import { fileURLToPath } from 'url';
+import path from 'path';
+
 import chalk from "chalk";
 
 dotenv.config();
@@ -23,7 +25,7 @@ const corsOptions = {
   origin: "http://localhost:3000",
   optionsSuccessStatus: 200,
 };
-const fullPath = import.meta.filename;
+const fullPath = fileURLToPath(import.meta.url);
 const fileName = path.basename(fullPath);
 const nameYellow = chalk.yellow(fileName);
 

@@ -1,9 +1,12 @@
 import prisma from "../database/prisma.js";
 import logger from "../helpers/winston.js";
-import path from "path";
+
 import chalk from "chalk";
 
-const fullPath = import.meta.filename;
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+const fullPath = fileURLToPath(import.meta.url);  // Convierte URL a ruta de archivo
 const fileName = path.basename(fullPath);
 const nameYellow = chalk.yellow(fileName);
 
