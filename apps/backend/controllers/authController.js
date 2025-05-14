@@ -85,7 +85,7 @@ export const authController = () => {
     try {
       const { username, password, email, birthDate, name, image } = req.body;
 
-      // Validación básica de campos requeridos
+   
       if (!username || !password || !email) {
         return res.status(httpStatus.BAD_REQUEST).json({
           success: false,
@@ -108,7 +108,7 @@ export const authController = () => {
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Procesar la fecha de nacimiento
+    
       let parsedBirthDate = null;
       if (birthDate) {
         parsedBirthDate = new Date(birthDate);
@@ -129,7 +129,7 @@ export const authController = () => {
           name: name || null,
           image:
             image ||
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=" + username, // Avatar por defecto
+            "https://api.dicebear.com/7.x/avataaars/svg?seed=" + username, 
           provider: "credentials",
           emailVerified: null,
           createdAt: new Date(),

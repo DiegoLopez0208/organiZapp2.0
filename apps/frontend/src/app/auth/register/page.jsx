@@ -55,7 +55,7 @@ export default function Register() {
     }
 
     try {
-      // Preparar los datos para el registro
+
       const registrationData = {
         username: formData.username,
         email: formData.email,
@@ -64,7 +64,7 @@ export default function Register() {
         name: formData.name || null,
       };
 
-      // Enviar correo de registro
+ 
       const emailResponse = await fetch("/api/sendEmail/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -75,7 +75,7 @@ export default function Register() {
         throw new Error("Error al enviar el correo de registro");
       }
 
-      // Registrar usuario
+  
       const registerResponse = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/auth/register`,
         {

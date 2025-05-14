@@ -5,7 +5,7 @@ import chalk from "chalk";
 import { fileURLToPath } from "url";
 import path from "path";
 
-const fullPath = fileURLToPath(import.meta.url); // Convierte URL a ruta de archivo
+const fullPath = fileURLToPath(import.meta.url); 
 const fileName = path.basename(fullPath);
 const nameYellow = chalk.yellow(fileName);
 

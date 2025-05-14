@@ -52,7 +52,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-// Registrar el locale español para DatePicker
+
 registerLocale("es", es);
 
 export default function CalendarComponent() {
@@ -171,7 +171,7 @@ export default function CalendarComponent() {
     try {
       setIsSubmitting(true);
 
-      // Usar la fecha seleccionada en el calendario para la fecha base
+     
       const eventDate = new Date(date);
       eventDate.setHours(0, 0, 0, 0);
 
@@ -363,7 +363,7 @@ export default function CalendarComponent() {
   const handleEditEvent = (event) => {
     setEditingEvent(event);
 
-    // Extraer fecha y hora del startTime y endTime
+   
     const startDate = event.startTime
       ? new Date(event.startTime)
       : new Date(event.date);
