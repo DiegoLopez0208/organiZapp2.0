@@ -38,7 +38,13 @@ export default function Register() {
     e.preventDefault();
     setError(null);
 
-    if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword || !formData.birthDate) {
+    if (
+      !formData.username ||
+      !formData.email ||
+      !formData.password ||
+      !formData.confirmPassword ||
+      !formData.birthDate
+    ) {
       setError("Los campos marcados son obligatorios.");
       return;
     }
@@ -76,7 +82,7 @@ export default function Register() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(registrationData),
-        }
+        },
       );
 
       if (!registerResponse.ok) {
@@ -91,7 +97,10 @@ export default function Register() {
         setError(data.message || "Error en el registro");
       }
     } catch (err) {
-      setError(err.message || "Ocurrió un error durante el registro. Por favor, inténtalo de nuevo.");
+      setError(
+        err.message ||
+          "Ocurrió un error durante el registro. Por favor, inténtalo de nuevo.",
+      );
     }
   };
 

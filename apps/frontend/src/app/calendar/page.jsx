@@ -580,7 +580,7 @@ export default function CalendarComponent() {
                     ? "bg-emerald-400"
                     : event.status === "en progreso"
                       ? "bg-blue-400"
-                      : "bg-yellow-400"
+                      : "bg-yellow-400",
                 )}
               ></span>
             ))}
@@ -779,7 +779,8 @@ export default function CalendarComponent() {
                         onClick={() => handleDayClick(dayInfo.date)}
                         className={cn(
                           "h-10 w-full rounded-md flex flex-col items-center justify-center relative transition-all duration-200",
-                          !dayInfo.isCurrentMonth && "text-gray-400 dark:text-gray-600",
+                          !dayInfo.isCurrentMonth &&
+                            "text-gray-400 dark:text-gray-600",
                           dayInfo.isCurrentMonth &&
                             allEventsCompleted &&
                             "text-gray-400 dark:text-gray-600 line-through",
@@ -789,13 +790,14 @@ export default function CalendarComponent() {
                             !isToday &&
                             !hasInProgress &&
                             "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700",
-                          isSelected && "bg-green-500 dark:bg-green-600 text-white",
+                          isSelected &&
+                            "bg-green-500 dark:bg-green-600 text-white",
                           isToday &&
                             !isSelected &&
                             "bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 ring-1 ring-green-500 dark:ring-green-500",
                           hasInProgress &&
                             !isSelected &&
-                            "bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400"
+                            "bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400",
                         )}
                       >
                         <span className="text-sm">{dayInfo.day}</span>
@@ -811,7 +813,7 @@ export default function CalendarComponent() {
                                       ? "bg-emerald-400"
                                       : event.status === "en progreso"
                                         ? "bg-blue-400"
-                                        : "bg-yellow-400"
+                                        : "bg-yellow-400",
                                   )}
                                 ></span>
                               ))
@@ -838,19 +840,28 @@ export default function CalendarComponent() {
                       <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                         {events.filter((e) => e.status === "completado").length}
                       </p>
-                      <p className="text-xs text-emerald-600 dark:text-emerald-500">Completados</p>
+                      <p className="text-xs text-emerald-600 dark:text-emerald-500">
+                        Completados
+                      </p>
                     </div>
                     <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
                       <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                        {events.filter((e) => e.status === "en progreso").length}
+                        {
+                          events.filter((e) => e.status === "en progreso")
+                            .length
+                        }
                       </p>
-                      <p className="text-xs text-blue-600 dark:text-blue-500">En progreso</p>
+                      <p className="text-xs text-blue-600 dark:text-blue-500">
+                        En progreso
+                      </p>
                     </div>
                     <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
                       <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                         {events.filter((e) => e.status === "pendiente").length}
                       </p>
-                      <p className="text-xs text-yellow-600 dark:text-yellow-500">Pendientes</p>
+                      <p className="text-xs text-yellow-600 dark:text-yellow-500">
+                        Pendientes
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -902,21 +913,34 @@ export default function CalendarComponent() {
                   <DialogContent className="sm:max-w-[500px] bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                     <DialogHeader>
                       <DialogTitle className="text-xl text-gray-900 dark:text-white">
-                        {editingEvent ? "Editar Evento" : "Agregar Nuevo Evento"}
+                        {editingEvent
+                          ? "Editar Evento"
+                          : "Agregar Nuevo Evento"}
                       </DialogTitle>
                       <DialogDescription className="text-gray-600 dark:text-gray-400">
                         {editingEvent
-                          ? `Editando evento para el ${format(new Date(editingEvent.date), "PPP", {
-                              locale: es,
-                            })}`
-                          : `Ingresa los detalles del evento para el día ${format(date, "PPP", {
-                              locale: es,
-                            })}`}
+                          ? `Editando evento para el ${format(
+                              new Date(editingEvent.date),
+                              "PPP",
+                              {
+                                locale: es,
+                              },
+                            )}`
+                          : `Ingresa los detalles del evento para el día ${format(
+                              date,
+                              "PPP",
+                              {
+                                locale: es,
+                              },
+                            )}`}
                       </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                       <div className="grid grid-cols-1 gap-2">
-                        <Label htmlFor="title" className="text-green-600 dark:text-green-400">
+                        <Label
+                          htmlFor="title"
+                          className="text-green-600 dark:text-green-400"
+                        >
                           Título
                         </Label>
                         <Input
@@ -930,7 +954,10 @@ export default function CalendarComponent() {
                         />
                       </div>
                       <div className="grid grid-cols-1 gap-2">
-                        <Label htmlFor="description" className="text-green-600 dark:text-green-400">
+                        <Label
+                          htmlFor="description"
+                          className="text-green-600 dark:text-green-400"
+                        >
                           Descripción
                         </Label>
                         <Textarea
@@ -947,7 +974,10 @@ export default function CalendarComponent() {
                         />
                       </div>
                       <div className="grid grid-cols-1 gap-2">
-                        <Label htmlFor="status" className="text-green-600 dark:text-green-400">
+                        <Label
+                          htmlFor="status"
+                          className="text-green-600 dark:text-green-400"
+                        >
                           Estado
                         </Label>
                         <Select
@@ -1002,7 +1032,8 @@ export default function CalendarComponent() {
                                 "rounded hover:bg-gray-100 dark:hover:bg-gray-700",
                                 isToday(date) &&
                                   "bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400",
-                                isPastDay(date) && "text-gray-400 dark:text-gray-600"
+                                isPastDay(date) &&
+                                  "text-gray-400 dark:text-gray-600",
                               )
                             }
                           />
@@ -1043,7 +1074,8 @@ export default function CalendarComponent() {
                                 "rounded hover:bg-gray-100 dark:hover:bg-gray-700",
                                 isToday(date) &&
                                   "bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400",
-                                isPastDay(date) && "text-gray-400 dark:text-gray-600"
+                                isPastDay(date) &&
+                                  "text-gray-400 dark:text-gray-600",
                               )
                             }
                           />
@@ -1066,7 +1098,9 @@ export default function CalendarComponent() {
                     </div>
                     <DialogFooter>
                       <Button
-                        onClick={editingEvent ? handleUpdateEvent : handleAddEvent}
+                        onClick={
+                          editingEvent ? handleUpdateEvent : handleAddEvent
+                        }
                         disabled={isSubmitting}
                         className="bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white"
                       >
@@ -1076,7 +1110,11 @@ export default function CalendarComponent() {
                             {editingEvent ? "Actualizando..." : "Guardando..."}
                           </>
                         ) : (
-                          <>{editingEvent ? "Actualizar Evento" : "Guardar Evento"}</>
+                          <>
+                            {editingEvent
+                              ? "Actualizar Evento"
+                              : "Guardar Evento"}
+                          </>
                         )}
                       </Button>
                     </DialogFooter>
@@ -1106,7 +1144,8 @@ export default function CalendarComponent() {
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.3 }}
                       >
-                        <Card className="mb-4 border-l-4 hover:shadow-lg transition-all duration-200 hover:translate-x-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+                        <Card
+                          className="mb-4 border-l-4 hover:shadow-lg transition-all duration-200 hover:translate-x-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
                           style={{
                             borderLeftColor:
                               event.status === "completado"
@@ -1129,14 +1168,17 @@ export default function CalendarComponent() {
                                 )}
                                 <div className="flex items-center mt-2 text-sm text-gray-500 dark:text-gray-400">
                                   <Clock className="h-4 w-4 mr-1" />
-                                  {formatTime(event.startTime)} - {formatTime(event.endTime)}
+                                  {formatTime(event.startTime)} -{" "}
+                                  {formatTime(event.endTime)}
                                 </div>
                               </div>
                               <div className="flex items-center space-x-2">
                                 <Select
                                   className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white"
                                   value={event.status}
-                                  onValueChange={(value) => handleStatusChange(event.id, value)}
+                                  onValueChange={(value) =>
+                                    handleStatusChange(event.id, value)
+                                  }
                                 >
                                   <SelectTrigger
                                     className={cn(
@@ -1145,7 +1187,7 @@ export default function CalendarComponent() {
                                         ? "bg-emerald-400 hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-600"
                                         : event.status === "en progreso"
                                           ? "bg-blue-400 hover:bg-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600"
-                                          : "bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600"
+                                          : "bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600",
                                     )}
                                   >
                                     <SelectValue>
@@ -1157,24 +1199,34 @@ export default function CalendarComponent() {
                                         ) : (
                                           <AlertCircle className="h-4 w-4 mr-1 text-white" />
                                         )}
-                                        {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
+                                        {event.status.charAt(0).toUpperCase() +
+                                          event.status.slice(1)}
                                       </div>
                                     </SelectValue>
                                   </SelectTrigger>
                                   <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-                                    <SelectItem value="pendiente" className="text-gray-900 dark:text-white">
+                                    <SelectItem
+                                      value="pendiente"
+                                      className="text-gray-900 dark:text-white"
+                                    >
                                       <div className="flex items-center">
                                         <AlertCircle className="h-4 w-4 mr-2 text-yellow-400 dark:text-yellow-400" />
                                         Pendiente
                                       </div>
                                     </SelectItem>
-                                    <SelectItem value="en progreso" className="text-gray-900 dark:text-white">
+                                    <SelectItem
+                                      value="en progreso"
+                                      className="text-gray-900 dark:text-white"
+                                    >
                                       <div className="flex items-center">
                                         <Clock3 className="h-4 w-4 mr-2 text-blue-400 dark:text-blue-400" />
                                         En Progreso
                                       </div>
                                     </SelectItem>
-                                    <SelectItem value="completado" className="text-gray-900 dark:text-white">
+                                    <SelectItem
+                                      value="completado"
+                                      className="text-gray-900 dark:text-white"
+                                    >
                                       <div className="flex items-center">
                                         <CheckCircle2 className="h-4 w-4 mr-2 text-emerald-400 dark:text-emerald-400" />
                                         Completado

@@ -127,12 +127,14 @@ export const authController = () => {
           email,
           birthDate: parsedBirthDate,
           name: name || null,
-          image: image || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + username, // Avatar por defecto
+          image:
+            image ||
+            "https://api.dicebear.com/7.x/avataaars/svg?seed=" + username, // Avatar por defecto
           provider: "credentials",
           emailVerified: null,
           createdAt: new Date(),
           updatedAt: new Date(),
-          deletedAt: null
+          deletedAt: null,
         },
         select: {
           id: true,
@@ -141,7 +143,7 @@ export const authController = () => {
           birthDate: true,
           name: true,
           image: true,
-          createdAt: true
+          createdAt: true,
         },
       });
 
@@ -155,7 +157,7 @@ export const authController = () => {
       return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
         success: false,
         message: "Error al registrar usuario",
-        error: error.message
+        error: error.message,
       });
     }
   };

@@ -105,7 +105,10 @@ export default function NavBar() {
                       {session.user.name}
                     </span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => signOut()} className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <DropdownMenuItem
+                    onSelect={() => signOut()}
+                    className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
                     Cerrar sesión
                   </DropdownMenuItem>
                 </DropdownMenuContent>

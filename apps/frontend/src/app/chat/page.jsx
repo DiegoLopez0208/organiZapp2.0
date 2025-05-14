@@ -383,7 +383,7 @@ export default function ModernChat() {
                         "flex items-center p-3 rounded-lg cursor-pointer transition-all duration-200",
                         currentChat?.id === group.id
                           ? "bg-emerald-50 dark:bg-emerald-900/20 border-l-4 border-emerald-500"
-                          : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                          : "hover:bg-gray-100 dark:hover:bg-gray-800",
                       )}
                     >
                       <Avatar className="h-10 w-10 border border-gray-200 dark:border-gray-700">
@@ -416,7 +416,9 @@ export default function ModernChat() {
                     <MessageIcon className="h-8 w-8 text-gray-400" />
                   </div>
                   <p className="text-gray-500 dark:text-gray-400 mb-2">
-                    {searchTerm ? `No se encontraron grupos con "${searchTerm}"` : "No hay grupos disponibles"}
+                    {searchTerm
+                      ? `No se encontraron grupos con "${searchTerm}"`
+                      : "No hay grupos disponibles"}
                   </p>
                   <p className="text-sm text-gray-400 dark:text-gray-500">
                     Crea un nuevo grupo para comenzar
@@ -465,10 +467,11 @@ export default function ModernChat() {
 
           {/* Mobile Sidebar */}
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-            <SheetContent side="left" className="p-0 w-full sm:w-[400px] bg-white dark:bg-gray-800">
-              <div className="flex flex-col h-full">
-                {renderSidebar()}
-              </div>
+            <SheetContent
+              side="left"
+              className="p-0 w-full sm:w-[400px] bg-white dark:bg-gray-800"
+            >
+              <div className="flex flex-col h-full">{renderSidebar()}</div>
             </SheetContent>
           </Sheet>
 
@@ -523,11 +526,17 @@ export default function ModernChat() {
                         {messageGroups.map((group, groupIndex) => (
                           <div key={groupIndex} className="space-y-4">
                             {group.messages.map((message, index) => {
-                              const isCurrentUser = message.senderName === session?.user.name;
+                              const isCurrentUser =
+                                message.senderName === session?.user.name;
                               return (
                                 <div
                                   key={index}
-                                  className={cn("flex", isCurrentUser ? "justify-end" : "justify-start")}
+                                  className={cn(
+                                    "flex",
+                                    isCurrentUser
+                                      ? "justify-end"
+                                      : "justify-start",
+                                  )}
                                 >
                                   {!isCurrentUser && (
                                     <Avatar className="h-8 w-8 mr-2 flex-shrink-0">
@@ -541,7 +550,7 @@ export default function ModernChat() {
                                       "max-w-[70%] rounded-2xl px-4 py-2 shadow-sm",
                                       isCurrentUser
                                         ? "bg-emerald-500 text-white"
-                                        : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                                        : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100",
                                     )}
                                   >
                                     {!isCurrentUser && (
@@ -549,11 +558,17 @@ export default function ModernChat() {
                                         {message.senderName}
                                       </p>
                                     )}
-                                    <p className="text-sm">{message.content || message.text}</p>
-                                    <p className={cn(
-                                      "text-xs text-right mt-1",
-                                      isCurrentUser ? "text-emerald-100" : "text-gray-400"
-                                    )}>
+                                    <p className="text-sm">
+                                      {message.content || message.text}
+                                    </p>
+                                    <p
+                                      className={cn(
+                                        "text-xs text-right mt-1",
+                                        isCurrentUser
+                                          ? "text-emerald-100"
+                                          : "text-gray-400",
+                                      )}
+                                    >
                                       {formatMessageTime(message.time)}
                                     </p>
                                   </div>
@@ -597,7 +612,8 @@ export default function ModernChat() {
                     Bienvenido al Chat
                   </h2>
                   <p className="text-gray-500 dark:text-gray-400 mb-6">
-                    Selecciona un grupo del menú para comenzar a chatear o crea uno nuevo
+                    Selecciona un grupo del menú para comenzar a chatear o crea
+                    uno nuevo
                   </p>
                   <Button
                     className="bg-emerald-500 hover:bg-emerald-600 text-white"
