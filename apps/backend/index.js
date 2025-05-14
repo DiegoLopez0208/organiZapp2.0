@@ -22,7 +22,7 @@ import chalk from "chalk";
 dotenv.config();
 const PORT = process.env.PORT || 4000;
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: process.env.FRONTEND_URL,
   optionsSuccessStatus: 200,
 };
 const fullPath = fileURLToPath(import.meta.url);

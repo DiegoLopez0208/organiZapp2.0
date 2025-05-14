@@ -7,7 +7,6 @@ import { defaultAvatar } from "@/app/lib/image";
 
 export const authOptions = {
   providers: [
-    // Provider de Credenciales (para login tradicional)
     CredentialsProvider({
       name: "Credentials",
       credentials: {
