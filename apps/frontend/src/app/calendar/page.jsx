@@ -52,7 +52,6 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-
 registerLocale("es", es);
 
 export default function CalendarComponent() {
@@ -171,7 +170,6 @@ export default function CalendarComponent() {
     try {
       setIsSubmitting(true);
 
-     
       const eventDate = new Date(date);
       eventDate.setHours(0, 0, 0, 0);
 
@@ -363,7 +361,6 @@ export default function CalendarComponent() {
   const handleEditEvent = (event) => {
     setEditingEvent(event);
 
-   
     const startDate = event.startTime
       ? new Date(event.startTime)
       : new Date(event.date);
