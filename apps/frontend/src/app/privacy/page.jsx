@@ -91,10 +91,10 @@ export default function Privacy() {
                 <strong>Sitio Web</strong> se refiere a OrganiZapp, accesible
                 desde{" "}
                 <a
-                  href="http://localhost:3000"
+                  href="https://organizapp-alpha.vercel.app/"
                   className="text-green-400 hover:underline"
                 >
-                  http://localhost:3000
+                  https://organizapp-alpha.vercel.app/
                 </a>
               </li>
               <li>
@@ -144,10 +144,10 @@ export default function Privacy() {
               <li>
                 Visitando esta página en nuestro sitio web:{" "}
                 <a
-                  href="https://localhost:3000"
+                  href="https://organizapp-alpha.vercel.app/"
                   className="text-green-400 hover:underline"
                 >
-                  https://localhost:3000
+                  https://organizapp-alpha.vercel.app/
                 </a>
               </li>
             </ul>

@@ -521,21 +521,18 @@ export default function CalendarComponent() {
     return format(new Date(date), "HH:mm");
   };
 
-  // Función para navegar al mes anterior
   const goToPreviousMonth = () => {
     const newDate = new Date(currentMonth);
     newDate.setMonth(newDate.getMonth() - 1);
     setCurrentMonth(newDate);
   };
 
-  // Función para navegar al mes siguiente
   const goToNextMonth = () => {
     const newDate = new Date(currentMonth);
     newDate.setMonth(newDate.getMonth() + 1);
     setCurrentMonth(newDate);
   };
 
-  // Función para renderizar los días del calendario
   const getDayEvents = (day) => {
     return events.filter((event) => {
       if (!event.date || isNaN(new Date(event.date).getTime())) return false;
@@ -549,22 +546,19 @@ export default function CalendarComponent() {
     });
   };
 
-  // Modificar la función isPastDay para que solo considere días pasados si todos los eventos están completados
+
   const isPastDay = (day) => {
-    // Si es un día anterior a hoy, verificamos si todos los eventos están completados
+ 
     if (isBefore(day, startOfDay(new Date())) && !isToday(day)) {
       const dayEvents = getDayEvents(day);
 
-      // Si no hay eventos, no lo marcamos como pasado
       if (dayEvents.length === 0) return false;
 
-      // Solo marcamos como pasado si TODOS los eventos están completados
       return dayEvents.every((event) => event.status === "completado");
     }
     return false;
   };
 
-  // Actualizar la función renderCalendarDays para mostrar correctamente los días
   const renderDayContent = (day) => {
     const dayEvents = getDayEvents(day);
     const isPast = isPastDay(day);
@@ -573,12 +567,12 @@ export default function CalendarComponent() {
     );
 
     return (
-      <div className="relative w-full h-full flex items-center justify-center">
+      <div className="relative w-full bg-gray-50 dark:bg-gray-900 h-full flex items-center justify-center">
         <span className={isPast ? "text-gray-400 line-through" : ""}>
           {day.getDate()}
         </span>
         {dayEvents.length > 0 && (
-          <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-0.5">
+          <div className="absolute  bg-gray-50 dark:bg-gray-900 bottom-0 left-0 right-0 flex justify-center gap-0.5">
             {dayEvents.map((event, index) => (
               <span
                 key={index}
@@ -597,7 +591,6 @@ export default function CalendarComponent() {
     );
   };
 
-  // Actualizar la función renderCalendarDays para aplicar el estilo correcto
   const renderCalendarDays = () => {
     const daysInMonth = new Date(
       currentMonth.getFullYear(),
@@ -609,11 +602,10 @@ export default function CalendarComponent() {
       currentMonth.getMonth(),
       1,
     ).getDay();
-    const daysFromPrevMonth = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1; // Ajuste para que la semana comience en lunes (0 = domingo)
+    const daysFromPrevMonth = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1; 
 
     const days = [];
 
-    // Días del mes anterior
     const prevMonth = new Date(currentMonth);
     prevMonth.setMonth(prevMonth.getMonth() - 1);
     const daysInPrevMonth = new Date(
@@ -635,7 +627,6 @@ export default function CalendarComponent() {
       days.push({ day: i, date: dayDate, isCurrentMonth: false });
     }
 
-    // Modificar la parte donde se renderizan los días
     for (let i = 1; i <= daysInMonth; i++) {
       const dayDate = new Date(
         currentMonth.getFullYear(),
@@ -655,7 +646,6 @@ export default function CalendarComponent() {
       });
     }
 
-    // Días del mes siguiente para completar la última semana
     const totalDaysDisplayed =
       Math.ceil((daysFromPrevMonth + daysInMonth) / 7) * 7;
     const daysFromNextMonth =
@@ -676,13 +666,13 @@ export default function CalendarComponent() {
     return days;
   };
 
-  // Función para verificar si un día tiene eventos en progreso
+
   const hasInProgressEvents = (day) => {
     const dayEvents = getDayEvents(day);
     return dayEvents.some((event) => event.status === "en progreso");
   };
 
-  // Función para verificar si un día es el seleccionado
+
   const isSelectedDay = (day) => {
     return (
       day.getFullYear() === date.getFullYear() &&
@@ -691,24 +681,22 @@ export default function CalendarComponent() {
     );
   };
 
-  // Función para verificar si un día es hoy
+
   const isDayToday = (day) => {
     return isToday(day);
   };
 
-  // Función para manejar el clic en un día
   const handleDayClick = (day) => {
     setDate(day);
   };
 
-  // Personalización de DatePicker
-  const CustomDatePickerInput = ({ value, onClick, label }) => (
+  const CustomDatePickerInput = ({ value, onClick }) => (
     <div className="relative">
       <Button
         type="button"
         onClick={onClick}
         variant="outline"
-        className="w-full justify-start text-left font-normal bg-gray-900 border-gray-700 hover:bg-gray-800 text-white"
+        className="w-full justify-start text-left font-normal bg-gray-50 dark:bg-gray-900 border-gray-700 hover:bg-gray-800 text-white"
       >
         <CalendarIcon className="mr-2 h-4 w-4" />
         {value}
@@ -717,8 +705,8 @@ export default function CalendarComponent() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 p-4">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen dark:bg-gradient-to-b bg-gray-50 dark:from-gray-900 dark:to-gray-800 ">
+      <div className=" bg-gray-50 dark:bg-gray-900 max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -734,10 +722,9 @@ export default function CalendarComponent() {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Sección del Calendario */}
           <motion.div className="lg:col-span-5">
             <Card className="overflow-hidden border-0 shadow-xl bg-gray-800/60 backdrop-blur-sm">
-              <CardHeader className="bg-gradient-to-r from-emerald-600 to-green-500 text-white">
+              <CardHeader className="bg-gradient-to-r dark:from-emerald-600 dark:to-green-500 bg-gray-50 dark:bg-gray-900 text-white">
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center text-xl">
                     <CalendarIcon className="mr-2" />

@@ -4,7 +4,7 @@ import {
   Github,
   Linkedin,
   Twitter,
-  Facebook,
+
   MessageCircle,
 } from "lucide-react";
 
@@ -12,17 +12,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 import manpng from "../../../../public/assets/man.png";
-import womanpng from "../../../../public/assets/woman.png";
+
 
 const teamMembers = [
-  {
-    name: "Agustin Gercek",
-    role: "Desarrollador Web",
-    image: manpng,
-    github: "https://github.com/AgustinGercek",
-    linkedin: "https://linkedin.com/in/agustingercek",
-    twitter: "https://twitter.com/agustingercek",
-  },
+
   {
     name: "Diego Lopez",
     role: "Desarrollador Web",
@@ -31,22 +24,7 @@ const teamMembers = [
     linkedin: "https://linkedin.com/in/diegolopez",
     twitter: "https://twitter.com/diegolopez",
   },
-  {
-    name: "Facundo Burgos",
-    role: "Desarrollador Web",
-    image: manpng,
-    github: "https://github.com/FacundoBurgos",
-    linkedin: "https://linkedin.com/in/facundoburgos",
-    twitter: "https://twitter.com/facundoburgos",
-  },
-  {
-    name: "Gricelda Canaza",
-    role: "Desarrolladora Web",
-    image: womanpng,
-    github: "https://github.com/GriceldaCanaza",
-    linkedin: "https://linkedin.com/in/griceldacanaza",
-    twitter: "https://twitter.com/griceldacanaza",
-  },
+
 ];
 
 export default function Socials() {
@@ -56,7 +34,7 @@ export default function Socials() {
         <h1 className="text-4xl font-bold text-center text-green-500 mb-12">
           Nuestro Equipo
         </h1>
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="flex justify-center gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {teamMembers.map((member) => (
             <Card
               key={member.name}
@@ -89,16 +67,9 @@ export default function Socials() {
                       icon={Linkedin}
                       label="LinkedIn"
                     />
-                    <SocialLink
-                      href={member.twitter}
-                      icon={Twitter}
-                      label="Twitter"
-                    />
+                
                   </div>
-                  <Button variant="outline" className="w-full">
-                    <MessageCircle className="mr-2 h-4 w-4 " />
-                    Contactar
-                  </Button>
+
                 </div>
               </CardContent>
             </Card>

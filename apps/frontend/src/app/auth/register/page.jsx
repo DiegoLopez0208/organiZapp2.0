@@ -68,7 +68,7 @@ export default function Register() {
 
       if (!registerResponse.ok) throw new Error("Error en el registro");
 
-      router.push("/auth/register/succesful");
+      router.push("/auth/register/succesfull");
     } catch (err) {
       setError(
         "Ocurrió un error durante el registro. Por favor, inténtalo de nuevo.",

@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { signIn } from "next-auth/react";
 import { Man, callendary, ChatImage } from "@/app/lib/image";
+import Link from "next/link";
 
 export default function Home() {
   const FeatureItem = ({ icon: Icon, children }) => (
@@ -119,7 +120,7 @@ export default function Home() {
                 Hecho con Socket.io para comunicación en tiempo real
               </FeatureItem>
             </ul>
-            <Button className="bg-green-500 hover:bg-green-600 text-white">
+            <Button href="/chat" className="bg-green-500 hover:bg-green-600 text-white">
               Explorar chat
             </Button>
           </div>
@@ -145,7 +146,7 @@ export default function Home() {
                 Establece límites de tiempo para completar tus tareas
               </FeatureItem>
             </ul>
-            <Button className="bg-green-500 hover:bg-green-600 text-white">
+            <Button href="/calendar" className="bg-green-500 hover:bg-green-600 text-white">
               Explorar calendario
             </Button>
           </div>
@@ -171,8 +172,8 @@ export default function Home() {
               role="Desarrollador Web"
               image={Man}
               links={{
-                github: "https://github.com/diegolopez",
-                email: "diego.lopez@example.com",
+                github: "https://github.com/DiegoLopez0208/",
+                email: "lopezdiegog26@gmail.com",
               }}
             />
           </div>

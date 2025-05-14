@@ -10,7 +10,7 @@ import { LogoOrganiZapp } from "@/app/lib/image";
 
 function Footer() {
   return (
-    <footer className="bg-gray-800 text-gray-100">
+    <footer className="bg-gray-900 text-gray-100">
       <div className="container mx-auto  md:py-12">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
           <Link href="/" className="flex items-center space-x-3">
@@ -54,7 +54,7 @@ function Footer() {
               </li>
               <li>
                 <Link
-                  href="/contact"
+                  href="contact/socials/"
                   className="hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 rounded"
                 >
                   Nuestro Equipo
