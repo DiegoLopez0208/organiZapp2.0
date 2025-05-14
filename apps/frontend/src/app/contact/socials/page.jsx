@@ -1,21 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Github,
-  Linkedin,
-  Twitter,
-
-  MessageCircle,
-} from "lucide-react";
+import { Github, Linkedin, Twitter, MessageCircle } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 import manpng from "../../../../public/assets/man.png";
 
-
 const teamMembers = [
-
   {
     name: "Diego Lopez",
     role: "Desarrollador Web",
@@ -24,14 +16,13 @@ const teamMembers = [
     linkedin: "https://linkedin.com/in/diegolopez",
     twitter: "https://twitter.com/diegolopez",
   },
-
 ];
 
 export default function Socials() {
   return (
     <div className="dark:bg-gray-900 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-center text-green-500 mb-12">
+        <h1 className="text-4xl font-bold text-center p-10 text-green-500 mb-12">
           Nuestro Equipo
         </h1>
         <div className="flex justify-center gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -67,9 +58,7 @@ export default function Socials() {
                       icon={Linkedin}
                       label="LinkedIn"
                     />
-                
                   </div>
-
                 </div>
               </CardContent>
             </Card>

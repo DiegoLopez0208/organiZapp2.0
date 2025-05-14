@@ -83,7 +83,15 @@ export const authController = () => {
 
   const register = async (req, res, next) => {
     try {
-      const { username, password, email, birthDate } = req.body;
+      const { username, password, email, birthDate, name, image } = req.body;
+
+      // Validación básica de campos requeridos
+      if (!username || !password || !email) {
+        return res.status(httpStatus.BAD_REQUEST).json({
+          success: false,
+          message: "Todos los campos son obligatorios",
+        });
+      }
 
       const existingUser = await prisma.user.findFirst({
         where: {
@@ -100,30 +108,55 @@ export const authController = () => {
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
+      // Procesar la fecha de nacimiento
+      let parsedBirthDate = null;
+      if (birthDate) {
+        parsedBirthDate = new Date(birthDate);
+        if (isNaN(parsedBirthDate.getTime())) {
+          return res.status(httpStatus.BAD_REQUEST).json({
+            success: false,
+            message: "Formato de fecha inválido",
+          });
+        }
+      }
+
       const newUser = await prisma.user.create({
         data: {
           username,
           password: hashedPassword,
           email,
-          birthDate: birthDate ? new Date(birthDate) : null,
+          birthDate: parsedBirthDate,
+          name: name || null,
+          image: image || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + username, // Avatar por defecto
           provider: "credentials",
+          emailVerified: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null
         },
         select: {
           id: true,
           username: true,
           email: true,
           birthDate: true,
-          createdAt: true,
+          name: true,
+          image: true,
+          createdAt: true
         },
       });
 
-      res.status(httpStatus.CREATED).json({
+      return res.status(httpStatus.CREATED).json({
         success: true,
         message: "Usuario registrado exitosamente",
         user: newUser,
       });
     } catch (error) {
-      next(error);
+      console.error("Error en registro:", error);
+      return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Error al registrar usuario",
+        error: error.message
+      });
     }
   };
 

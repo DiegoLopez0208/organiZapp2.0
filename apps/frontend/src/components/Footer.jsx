@@ -54,7 +54,7 @@ function Footer() {
               </li>
               <li>
                 <Link
-                  href="contact/socials/"
+                  href="/contact/socials/"
                   className="hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 rounded"
                 >
                   Nuestro Equipo

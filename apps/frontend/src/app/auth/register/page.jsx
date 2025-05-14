@@ -19,6 +19,7 @@ export default function Register() {
     password: "",
     confirmPassword: "",
     birthDate: "",
+    name: "",
   });
   const [error, setError] = useState(null);
   const router = useRouter();
@@ -37,8 +38,8 @@ export default function Register() {
     e.preventDefault();
     setError(null);
 
-    if (Object.values(formData).some((field) => field === "")) {
-      setError("Todos los campos son obligatorios.");
+    if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword || !formData.birthDate) {
+      setError("Los campos marcados son obligatorios.");
       return;
     }
 
@@ -48,31 +49,49 @@ export default function Register() {
     }
 
     try {
+      // Preparar los datos para el registro
+      const registrationData = {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        birthDate: formData.birthDate,
+        name: formData.name || null,
+      };
+
+      // Enviar correo de registro
       const emailResponse = await fetch("/api/sendEmail/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(registrationData),
       });
 
-      if (!emailResponse.ok)
+      if (!emailResponse.ok) {
         throw new Error("Error al enviar el correo de registro");
+      }
 
+      // Registrar usuario
       const registerResponse = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}api/auth/register`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        },
+          body: JSON.stringify(registrationData),
+        }
       );
 
-      if (!registerResponse.ok) throw new Error("Error en el registro");
+      if (!registerResponse.ok) {
+        const errorData = await registerResponse.json();
+        throw new Error(errorData.message || "Error en el registro");
+      }
 
-      router.push("/auth/register/succesfull");
+      const data = await registerResponse.json();
+      if (data.success) {
+        router.push("/auth/register/succesfull");
+      } else {
+        setError(data.message || "Error en el registro");
+      }
     } catch (err) {
-      setError(
-        "Ocurrió un error durante el registro. Por favor, inténtalo de nuevo.",
-      );
+      setError(err.message || "Ocurrió un error durante el registro. Por favor, inténtalo de nuevo.");
     }
   };
 
@@ -133,8 +152,21 @@ export default function Register() {
               </Alert>
             )}
             <div>
+              <Label className="text-white" htmlFor="name">
+                Nombre completo (opcional)
+              </Label>
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                value={formData.name}
+                onChange={handleInputChange}
+                className="mt-1 text-white"
+              />
+            </div>
+            <div>
               <Label className="text-white" htmlFor="username">
-                Nombre de usuario
+                Nombre de usuario *
               </Label>
               <Input
                 id="username"
@@ -144,11 +176,12 @@ export default function Register() {
                 value={formData.username}
                 onChange={handleInputChange}
                 className="mt-1 text-white"
+                placeholder="Ingresa tu nombre de usuario"
               />
             </div>
             <div>
               <Label className="text-white" htmlFor="email">
-                Correo electrónico
+                Correo electrónico *
               </Label>
               <Input
                 id="email"
@@ -157,12 +190,13 @@ export default function Register() {
                 required
                 value={formData.email}
                 onChange={handleInputChange}
-                className="mt-1 text-white "
+                className="mt-1 text-white"
+                placeholder="ejemplo@correo.com"
               />
             </div>
             <div>
               <Label className="text-white" htmlFor="birthDate">
-                Fecha de nacimiento
+                Fecha de nacimiento *
               </Label>
               <Input
                 id="birthDate"
@@ -171,12 +205,12 @@ export default function Register() {
                 required
                 value={formData.birthDate}
                 onChange={handleInputChange}
-                className="mt-1 text-white "
+                className="mt-1 text-white"
               />
             </div>
             <div>
               <Label className="text-white" htmlFor="password">
-                Contraseña
+                Contraseña *
               </Label>
               <Input
                 id="password"
@@ -186,11 +220,12 @@ export default function Register() {
                 value={formData.password}
                 onChange={handleInputChange}
                 className="mt-1 text-white"
+                placeholder="Ingresa tu contraseña"
               />
             </div>
             <div>
               <Label className="text-white" htmlFor="confirmPassword">
-                Confirmar contraseña
+                Confirmar contraseña *
               </Label>
               <Input
                 id="confirmPassword"
@@ -199,7 +234,8 @@ export default function Register() {
                 required
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
-                className="mt-1 text-white "
+                className="mt-1 text-white"
+                placeholder="Confirma tu contraseña"
               />
             </div>
             <div>

@@ -175,9 +175,20 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Asegurarse de que el html y body ocupen toda la altura */
+  html,
+  body {
+    @apply h-full w-full overflow-hidden;
+  }
+}
+
+/* Estilos para ScrollArea */
+.scrollarea-viewport {
+  height: 100% !important;
 }

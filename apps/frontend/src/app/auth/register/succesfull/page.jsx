@@ -1,10 +1,13 @@
-"use client"
+"use client";
 
-import { CheckCircle } from "lucide-react"
+import { CheckCircle } from "lucide-react";
 
-
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 
 export default function RegisterSuccess() {
   return (
@@ -14,18 +17,21 @@ export default function RegisterSuccess() {
           <div className="mb-4 flex justify-center">
             <CheckCircle className="h-16 w-16 text-green-500" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">¡Registro exitoso!</h1>
+          <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+            ¡Registro exitoso!
+          </h1>
         </CardHeader>
         <CardContent className="space-y-4 pb-6">
-          <p className="text-gray-700">Gracias por registrarte en nuestra plataforma.</p>
           <p className="text-gray-700">
-            Ahora puedes iniciar sesión y disfrutar de todas las funcionalidades disponibles.
+            Gracias por registrarte en nuestra plataforma.
+          </p>
+          <p className="text-gray-700">
+            Ahora puedes iniciar sesión y disfrutar de todas las funcionalidades
+            disponibles.
           </p>
         </CardContent>
-        <CardFooter className="flex justify-center pb-8">
-
-        </CardFooter>
+        <CardFooter className="flex justify-center pb-8"></CardFooter>
       </Card>
     </div>
-  )
+  );
 }

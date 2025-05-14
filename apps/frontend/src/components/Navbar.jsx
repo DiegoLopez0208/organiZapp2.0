@@ -1,38 +1,43 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { signIn, signOut, useSession } from "next-auth/react"
-import { Menu, X, ChevronDown, Sun, Moon } from "lucide-react"
-import { useTheme } from "next-themes"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
 
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { LogoOrganiZapp } from "@/app/lib/image"
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LogoOrganiZapp } from "@/app/lib/image";
 
 export default function NavBar() {
-  const { data: session } = useSession()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { theme, setTheme } = useTheme()
+  const { data: session } = useSession();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
-    const closeMenu = () => setIsMenuOpen(false)
-    window.addEventListener("resize", closeMenu)
-    return () => window.removeEventListener("resize", closeMenu)
-  }, [])
+    const closeMenu = () => setIsMenuOpen(false);
+    window.addEventListener("resize", closeMenu);
+    return () => window.removeEventListener("resize", closeMenu);
+  }, []);
 
   const navItems = [
     { name: "Inicio", href: "/" },
     { name: "Chat", href: "/chat" },
     { name: "Calendario", href: "/calendar" },
     { name: "Contacto", href: "/contact" },
-  ]
+  ];
 
   return (
-    <nav className="bg-green-500 shadow-md z-50 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
+    <nav className="bg-green-500 dark:bg-green-600 shadow-md z-50 fixed top-0 left-0 right-0 h-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+        <div className="flex justify-between h-full items-center">
           <Link href="/" className="flex items-center space-x-2">
             <Image
               src={LogoOrganiZapp || "/placeholder.svg"}
@@ -53,7 +58,7 @@ export default function NavBar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-white text-base font-medium hover:text-gray-200 hover:border-b-2 border-transparent hover:border-white"
+                className="text-white text-base font-medium hover:text-gray-100 hover:border-b-2 border-transparent hover:border-white transition-all duration-200"
               >
                 {item.name}
               </Link>
@@ -65,15 +70,22 @@ export default function NavBar() {
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-green-600"
+              className="text-white hover:bg-green-400/20"
             >
-              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
             </Button>
 
             {session?.user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center text-white hover:bg-green-600">
+                  <Button
+                    variant="ghost"
+                    className="flex items-center text-white hover:bg-green-400/20"
+                  >
                     <Image
                       src={session.user.image || "/placeholder.svg"}
                       alt={session.user.name || "Usuario"}
@@ -84,20 +96,33 @@ export default function NavBar() {
                     <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900">
+                <DropdownMenuContent
+                  align="end"
+                  className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+                >
                   <DropdownMenuItem className="cursor-default">
-                    <span className="font-medium text-green-600 dark:text-green-400">{session.user.name}</span>
+                    <span className="font-medium text-green-600 dark:text-green-400">
+                      {session.user.name}
+                    </span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => signOut()}>Cerrar sesión</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => signOut()} className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    Cerrar sesión
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <div className="space-x-2">
-                <Button variant="ghost" onClick={() => signIn()} className="text-white hover:bg-green-600">
+                <Button
+                  variant="ghost"
+                  onClick={() => signIn()}
+                  className="text-white hover:bg-green-400/20"
+                >
                   Iniciar sesión
                 </Button>
                 <Link href="/auth/register">
-                  <Button className="bg-white text-green-500 hover:bg-gray-200">Registrarse</Button>
+                  <Button className="bg-white text-green-600 hover:bg-gray-100 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700">
+                    Registrarse
+                  </Button>
                 </Link>
               </div>
             )}
@@ -108,37 +133,45 @@ export default function NavBar() {
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-green-600"
+              className="text-white hover:bg-green-400/20"
             >
-              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {theme === "dark" ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
             </Button>
 
             <Button
               variant="ghost"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white hover:bg-green-600 p-2 rounded-md"
+              className="text-white hover:bg-green-400/20"
             >
-              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
             </Button>
           </div>
         </div>
       </div>
 
       {isMenuOpen && (
-        <div className="sm:hidden bg-green-500 border-t border-green-600 absolute w-full z-50">
+        <div className="sm:hidden bg-green-500 dark:bg-green-600 border-t border-green-400/20 absolute w-full z-50">
           <div className="pt-2 pb-3 space-y-1">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="block pl-3 pr-4 py-2 text-white hover:bg-green-600"
+                className="block pl-3 pr-4 py-2 text-white hover:bg-green-400/20"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.name}
               </Link>
             ))}
           </div>
-          <div className="pt-2 pb-3 border-t border-green-600">
+          <div className="pt-2 pb-3 border-t border-green-400/20">
             {session?.user ? (
               <>
                 <div className="flex items-center px-4 py-2">
@@ -150,16 +183,20 @@ export default function NavBar() {
                     className="rounded-full"
                   />
                   <div className="ml-3">
-                    <div className="text-sm font-medium text-white">{session.user.name}</div>
-                    <div className="text-xs font-medium text-gray-200">{session.user.email}</div>
+                    <div className="text-sm font-medium text-white">
+                      {session.user.name}
+                    </div>
+                    <div className="text-xs font-medium text-gray-100">
+                      {session.user.email}
+                    </div>
                   </div>
                 </div>
                 <Button
                   variant="ghost"
-                  className="block w-full text-left px-4 py-2 text-white hover:bg-green-600"
+                  className="block w-full text-left px-4 py-2 text-white hover:bg-green-400/20"
                   onClick={() => {
-                    signOut()
-                    setIsMenuOpen(false)
+                    signOut();
+                    setIsMenuOpen(false);
                   }}
                 >
                   Cerrar sesión
@@ -169,16 +206,19 @@ export default function NavBar() {
               <div className="px-4 py-2 space-y-1">
                 <Button
                   variant="ghost"
-                  className="block w-full text-left px-4 py-2 text-white hover:bg-green-600"
+                  className="block w-full text-left px-4 py-2 text-white hover:bg-green-400/20"
                   onClick={() => {
-                    signIn()
-                    setIsMenuOpen(false)
+                    signIn();
+                    setIsMenuOpen(false);
                   }}
                 >
                   Iniciar sesión
                 </Button>
-                <Link href="/auth/register" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="block w-full text-left px-4 py-2 bg-white text-green-500 hover:bg-gray-200">
+                <Link
+                  href="/auth/register"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <Button className="block w-full text-left px-4 py-2 bg-white text-green-600 hover:bg-gray-100 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700">
                     Registrarse
                   </Button>
                 </Link>
@@ -188,5 +228,5 @@ export default function NavBar() {
         </div>
       )}
     </nav>
-  )
+  );
 }

@@ -6,7 +6,7 @@ export default function Privacy() {
       <ScrollArea className="h-[calc(100vh-5rem)]">
         <div className="max-w-4xl mx-auto space-y-8">
           <header>
-            <h1 className="text-4xl font-bold text-center text-green-500 mb-2">
+            <h1 className="text-4xl  p-10 font-bold text-center text-green-500 mb-2">
               Política de Privacidad
             </h1>
             <p className="text-center text-gray-400">

@@ -495,12 +495,12 @@ export default function CalendarComponent() {
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
       case "completado":
-        return "bg-emerald-500 hover:bg-emerald-600";
+        return "bg-emerald-400 hover:bg-emerald-500";
       case "en progreso":
-        return "bg-green-500 hover:bg-green-600";
+        return "bg-blue-400 hover:bg-blue-500";
       case "pendiente":
       default:
-        return "bg-amber-500 hover:bg-amber-600";
+        return "bg-yellow-400 hover:bg-yellow-500";
     }
   };
 
@@ -546,9 +546,7 @@ export default function CalendarComponent() {
     });
   };
 
-
   const isPastDay = (day) => {
- 
     if (isBefore(day, startOfDay(new Date())) && !isToday(day)) {
       const dayEvents = getDayEvents(day);
 
@@ -576,13 +574,14 @@ export default function CalendarComponent() {
             {dayEvents.map((event, index) => (
               <span
                 key={index}
-                className={`h-1.5 w-1.5 rounded-full ${
+                className={cn(
+                  "h-1.5 w-1.5 rounded-full",
                   event.status === "completado"
-                    ? "bg-emerald-500"
+                    ? "bg-emerald-400"
                     : event.status === "en progreso"
-                      ? "bg-green-500"
-                      : "bg-amber-500"
-                }`}
+                      ? "bg-blue-400"
+                      : "bg-yellow-400"
+                )}
               ></span>
             ))}
           </div>
@@ -602,7 +601,7 @@ export default function CalendarComponent() {
       currentMonth.getMonth(),
       1,
     ).getDay();
-    const daysFromPrevMonth = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1; 
+    const daysFromPrevMonth = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
 
     const days = [];
 
@@ -666,12 +665,10 @@ export default function CalendarComponent() {
     return days;
   };
 
-
   const hasInProgressEvents = (day) => {
     const dayEvents = getDayEvents(day);
     return dayEvents.some((event) => event.status === "en progreso");
   };
-
 
   const isSelectedDay = (day) => {
     return (
@@ -680,7 +677,6 @@ export default function CalendarComponent() {
       day.getDate() === date.getDate()
     );
   };
-
 
   const isDayToday = (day) => {
     return isToday(day);
@@ -705,48 +701,48 @@ export default function CalendarComponent() {
   );
 
   return (
-    <div className="min-h-screen dark:bg-gradient-to-b bg-gray-50 dark:from-gray-900 dark:to-gray-800 ">
-      <div className=" bg-gray-50 dark:bg-gray-900 max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white pt-20">
+      <div className="container max-w-7xl mx-auto px-4 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="mb-8 text-center"
         >
-          <h1 className="text-4xl font-bold text-emerald-400 mb-2">
+          <h1 className="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">
             Calendario de Eventos
           </h1>
-          <p className="text-gray-300">
+          <p className="text-gray-600 dark:text-gray-300">
             Organiza tus actividades y mantén un seguimiento de tus tareas
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <motion.div className="lg:col-span-5">
-            <Card className="overflow-hidden border-0 shadow-xl bg-gray-800/60 backdrop-blur-sm">
-              <CardHeader className="bg-gradient-to-r dark:from-emerald-600 dark:to-green-500 bg-gray-50 dark:bg-gray-900 text-white">
+            <Card className="overflow-hidden border border-gray-200 dark:border-gray-700 shadow-lg bg-white dark:bg-gray-800">
+              <CardHeader className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center text-xl">
-                    <CalendarIcon className="mr-2" />
+                  <CardTitle className="flex items-center text-xl text-gray-900 dark:text-white">
+                    <CalendarIcon className="mr-2 text-green-600 dark:text-green-400" />
                     Calendario
                   </CardTitle>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-4">
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={goToPreviousMonth}
-                      className="text-white hover:bg-white/20"
+                      className="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       <ChevronLeft className="h-5 w-5" />
                     </Button>
-                    <span className="text-lg font-medium">
+                    <span className="text-lg font-medium text-gray-900 dark:text-white">
                       {format(currentMonth, "MMMM yyyy", { locale: es })}
                     </span>
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={goToNextMonth}
-                      className="text-white hover:bg-white/20"
+                      className="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       <ChevronRight className="h-5 w-5" />
                     </Button>
@@ -754,116 +750,107 @@ export default function CalendarComponent() {
                 </div>
               </CardHeader>
               <CardContent className="p-6">
-                {/* Calendario personalizado */}
-                <div className="mb-6">
-                  {/* Días de la semana */}
-                  <div className="grid grid-cols-7 mb-2 text-center">
-                    {["lu", "ma", "mi", "ju", "vi", "sá", "do"].map(
-                      (day, index) => (
-                        <div
-                          key={index}
-                          className="text-sm font-medium text-emerald-400 py-2"
-                        >
-                          {day}
-                        </div>
-                      ),
-                    )}
-                  </div>
-
-                  {/* Días del mes */}
-                  <div className="grid grid-cols-7 gap-1">
-                    {renderCalendarDays().map((dayInfo, index) => {
-                      const dayEvents = getDayEvents(dayInfo.date);
-                      const hasInProgress = hasInProgressEvents(dayInfo.date);
-                      const isSelected = isSelectedDay(dayInfo.date);
-                      const isToday = isDayToday(dayInfo.date);
-                      const allEventsCompleted = dayInfo.allEventsCompleted;
-
-                      return (
-                        <button
-                          key={index}
-                          onClick={() => handleDayClick(dayInfo.date)}
-                          className={cn(
-                            "h-10 w-full rounded-md flex flex-col items-center justify-center relative",
-                            !dayInfo.isCurrentMonth && "text-gray-500",
-                            dayInfo.isCurrentMonth &&
-                              allEventsCompleted &&
-                              "text-gray-500 line-through",
-                            dayInfo.isCurrentMonth &&
-                              !allEventsCompleted &&
-                              !isSelected &&
-                              !isToday &&
-                              !hasInProgress &&
-                              "text-white",
-                            isSelected && "bg-emerald-600 text-white",
-                            isToday &&
-                              !isSelected &&
-                              "bg-emerald-900/30 text-emerald-300 font-bold",
-                            hasInProgress &&
-                              !isSelected &&
-                              "bg-green-900/30 text-green-300",
-                            "hover:bg-gray-700 transition-colors",
-                          )}
-                        >
-                          <span className="text-sm">{dayInfo.day}</span>
-
-                          {/* Indicadores de eventos */}
-                          {dayEvents.length > 0 && (
-                            <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-0.5">
-                              {dayEvents.length <= 3 ? (
-                                dayEvents.map((event, i) => (
-                                  <span
-                                    key={i}
-                                    className={cn(
-                                      "h-1 w-1 rounded-full",
-                                      event.status === "completado"
-                                        ? "bg-emerald-500"
-                                        : event.status === "en progreso"
-                                          ? "bg-green-500"
-                                          : "bg-amber-500",
-                                    )}
-                                  ></span>
-                                ))
-                              ) : (
-                                <span className="text-xs text-gray-400">
-                                  {dayEvents.length}
-                                </span>
-                              )}
-                            </div>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
+                {/* Días de la semana */}
+                <div className="grid grid-cols-7 mb-2 text-center">
+                  {["lu", "ma", "mi", "ju", "vi", "sá", "do"].map(
+                    (day, index) => (
+                      <div
+                        key={index}
+                        className="text-sm font-medium text-green-600 dark:text-green-400 py-2"
+                      >
+                        {day}
+                      </div>
+                    ),
+                  )}
                 </div>
 
-                {/* Resumen de eventos */}
-                <div className="mt-6 space-y-4">
-                  <h3 className="font-medium text-emerald-400 flex items-center">
+                {/* Días del mes */}
+                <div className="grid grid-cols-7 gap-1">
+                  {renderCalendarDays().map((dayInfo, index) => {
+                    const dayEvents = getDayEvents(dayInfo.date);
+                    const hasInProgress = hasInProgressEvents(dayInfo.date);
+                    const isSelected = isSelectedDay(dayInfo.date);
+                    const isToday = isDayToday(dayInfo.date);
+                    const allEventsCompleted = dayInfo.allEventsCompleted;
+
+                    return (
+                      <button
+                        key={index}
+                        onClick={() => handleDayClick(dayInfo.date)}
+                        className={cn(
+                          "h-10 w-full rounded-md flex flex-col items-center justify-center relative transition-all duration-200",
+                          !dayInfo.isCurrentMonth && "text-gray-400 dark:text-gray-600",
+                          dayInfo.isCurrentMonth &&
+                            allEventsCompleted &&
+                            "text-gray-400 dark:text-gray-600 line-through",
+                          dayInfo.isCurrentMonth &&
+                            !allEventsCompleted &&
+                            !isSelected &&
+                            !isToday &&
+                            !hasInProgress &&
+                            "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700",
+                          isSelected && "bg-green-500 dark:bg-green-600 text-white",
+                          isToday &&
+                            !isSelected &&
+                            "bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 ring-1 ring-green-500 dark:ring-green-500",
+                          hasInProgress &&
+                            !isSelected &&
+                            "bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400"
+                        )}
+                      >
+                        <span className="text-sm">{dayInfo.day}</span>
+                        {dayEvents.length > 0 && (
+                          <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-0.5">
+                            {dayEvents.length <= 3 ? (
+                              dayEvents.map((event, i) => (
+                                <span
+                                  key={i}
+                                  className={cn(
+                                    "h-1 w-1 rounded-full",
+                                    event.status === "completado"
+                                      ? "bg-emerald-400"
+                                      : event.status === "en progreso"
+                                        ? "bg-blue-400"
+                                        : "bg-yellow-400"
+                                  )}
+                                ></span>
+                              ))
+                            ) : (
+                              <span className="text-xs text-gray-500 dark:text-gray-400">
+                                {dayEvents.length}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Resumen del mes */}
+                <div className="mt-8 space-y-4">
+                  <h3 className="font-medium text-green-600 dark:text-green-400 flex items-center">
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     Resumen del mes
                   </h3>
-                  <div className="grid grid-cols-3 gap-2 text-center">
-                    <div className="bg-emerald-900/30 p-3 rounded-lg">
-                      <p className="text-2xl font-bold text-emerald-400">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-lg border border-emerald-200 dark:border-emerald-800">
+                      <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                         {events.filter((e) => e.status === "completado").length}
                       </p>
-                      <p className="text-xs text-emerald-500">Completados</p>
+                      <p className="text-xs text-emerald-600 dark:text-emerald-500">Completados</p>
                     </div>
-                    <div className="bg-green-900/30 p-3 rounded-lg">
-                      <p className="text-2xl font-bold text-green-400">
-                        {
-                          events.filter((e) => e.status === "en progreso")
-                            .length
-                        }
+                    <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+                      <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                        {events.filter((e) => e.status === "en progreso").length}
                       </p>
-                      <p className="text-xs text-green-500">En progreso</p>
+                      <p className="text-xs text-blue-600 dark:text-blue-500">En progreso</p>
                     </div>
-                    <div className="bg-amber-900/30 p-3 rounded-lg">
-                      <p className="text-2xl font-bold text-amber-400">
+                    <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                      <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                         {events.filter((e) => e.status === "pendiente").length}
                       </p>
-                      <p className="text-xs text-amber-500">Pendientes</p>
+                      <p className="text-xs text-yellow-600 dark:text-yellow-500">Pendientes</p>
                     </div>
                   </div>
                 </div>
@@ -873,18 +860,18 @@ export default function CalendarComponent() {
 
           {/* Lista de Eventos */}
           <motion.div className="lg:col-span-7">
-            <Card className="border-0 shadow-xl h-full bg-gray-800/60 backdrop-blur-sm">
-              <CardHeader className="bg-gradient-to-r from-emerald-600 to-green-500 text-white flex flex-row justify-between items-center">
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-lg h-full bg-white dark:bg-gray-800">
+              <CardHeader className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-row justify-between items-center">
                 <div>
-                  <CardTitle className="flex items-center">
+                  <CardTitle className="flex items-center text-gray-900 dark:text-white">
                     {isToday(date) && (
-                      <span className="bg-white text-emerald-600 text-xs font-bold px-2 py-0.5 rounded-full mr-2">
+                      <span className="bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 text-xs font-bold px-2 py-0.5 rounded-full mr-2">
                         HOY
                       </span>
                     )}
                     Eventos para {format(date, "PPPP", { locale: es })}
                   </CardTitle>
-                  <CardDescription className="text-emerald-100">
+                  <CardDescription className="text-gray-600 dark:text-gray-300">
                     {filteredEvents.length} evento(s) programado(s)
                   </CardDescription>
                 </div>
@@ -908,29 +895,28 @@ export default function CalendarComponent() {
                   }}
                 >
                   <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="bg-white text-emerald-600 hover:bg-emerald-50 dark:bg-emerald-950 dark:text-emerald-300 dark:hover:bg-emerald-900"
-                    >
+                    <Button className="bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white">
                       <Plus className="mr-2 h-5 w-5" /> Agregar Evento
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[500px] bg-gray-900 border-gray-700 text-white">
+                  <DialogContent className="sm:max-w-[500px] bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                     <DialogHeader>
-                      <DialogTitle className="text-xl text-emerald-400">
-                        {editingEvent
-                          ? "Editar Evento"
-                          : "Agregar Nuevo Evento"}
+                      <DialogTitle className="text-xl text-gray-900 dark:text-white">
+                        {editingEvent ? "Editar Evento" : "Agregar Nuevo Evento"}
                       </DialogTitle>
-                      <DialogDescription className="text-gray-400">
+                      <DialogDescription className="text-gray-600 dark:text-gray-400">
                         {editingEvent
-                          ? `Editando evento para el ${format(new Date(editingEvent.date), "PPP", { locale: es })}`
-                          : `Ingresa los detalles del evento para el día ${format(date, "PPP", { locale: es })}`}
+                          ? `Editando evento para el ${format(new Date(editingEvent.date), "PPP", {
+                              locale: es,
+                            })}`
+                          : `Ingresa los detalles del evento para el día ${format(date, "PPP", {
+                              locale: es,
+                            })}`}
                       </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                       <div className="grid grid-cols-1 gap-2">
-                        <Label htmlFor="title" className="text-emerald-400">
+                        <Label htmlFor="title" className="text-green-600 dark:text-green-400">
                           Título
                         </Label>
                         <Input
@@ -940,14 +926,11 @@ export default function CalendarComponent() {
                           onChange={(e) =>
                             setNewEvent({ ...newEvent, title: e.target.value })
                           }
-                          className="bg-gray-800 border-gray-700 text-white"
+                          className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-500"
                         />
                       </div>
                       <div className="grid grid-cols-1 gap-2">
-                        <Label
-                          htmlFor="description"
-                          className="text-emerald-400"
-                        >
+                        <Label htmlFor="description" className="text-green-600 dark:text-green-400">
                           Descripción
                         </Label>
                         <Textarea
@@ -960,11 +943,11 @@ export default function CalendarComponent() {
                               description: e.target.value,
                             })
                           }
-                          className="bg-gray-800 border-gray-700 text-white"
+                          className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-500"
                         />
                       </div>
                       <div className="grid grid-cols-1 gap-2">
-                        <Label htmlFor="status" className="text-emerald-400">
+                        <Label htmlFor="status" className="text-green-600 dark:text-green-400">
                           Estado
                         </Label>
                         <Select
@@ -973,25 +956,25 @@ export default function CalendarComponent() {
                             setNewEvent({ ...newEvent, status: value })
                           }
                         >
-                          <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
+                          <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                             <SelectValue placeholder="Selecciona un estado" />
                           </SelectTrigger>
-                          <SelectContent className="bg-gray-800 border-gray-700 text-white">
+                          <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                             <SelectItem value="pendiente">
                               <div className="flex items-center">
-                                <AlertCircle className="h-4 w-4 mr-2 text-amber-500" />
+                                <AlertCircle className="h-4 w-4 mr-2 text-yellow-400" />
                                 Pendiente
                               </div>
                             </SelectItem>
                             <SelectItem value="en progreso">
                               <div className="flex items-center">
-                                <Clock3 className="h-4 w-4 mr-2 text-green-500" />
+                                <Clock3 className="h-4 w-4 mr-2 text-blue-400" />
                                 En Progreso
                               </div>
                             </SelectItem>
                             <SelectItem value="completado">
                               <div className="flex items-center">
-                                <CheckCircle2 className="h-4 w-4 mr-2 text-emerald-500" />
+                                <CheckCircle2 className="h-4 w-4 mr-2 text-emerald-400" />
                                 Completado
                               </div>
                             </SelectItem>
@@ -1001,7 +984,7 @@ export default function CalendarComponent() {
 
                       {/* Fecha y hora de inicio */}
                       <div className="grid grid-cols-1 gap-2">
-                        <Label className="text-emerald-400">
+                        <Label className="text-green-600 dark:text-green-400">
                           Fecha y hora de inicio
                         </Label>
                         <div className="grid grid-cols-2 gap-2">
@@ -1013,13 +996,13 @@ export default function CalendarComponent() {
                             locale="es"
                             dateFormat="dd 'de' MMMM 'de' yyyy"
                             customInput={<CustomDatePickerInput />}
-                            calendarClassName="bg-gray-800 border border-gray-700 text-white shadow-lg rounded-md"
+                            calendarClassName="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white shadow-lg rounded-md"
                             dayClassName={(date) =>
                               cn(
-                                "rounded hover:bg-gray-700",
+                                "rounded hover:bg-gray-100 dark:hover:bg-gray-700",
                                 isToday(date) &&
-                                  "bg-emerald-900/30 text-emerald-300",
-                                isPastDay(date) && "text-gray-500",
+                                  "bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400",
+                                isPastDay(date) && "text-gray-400 dark:text-gray-600"
                               )
                             }
                           />
@@ -1035,14 +1018,14 @@ export default function CalendarComponent() {
                             dateFormat="HH:mm"
                             locale="es"
                             customInput={<CustomDatePickerInput />}
-                            calendarClassName="bg-gray-800 border border-gray-700 text-white shadow-lg rounded-md"
+                            calendarClassName="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white shadow-lg rounded-md"
                           />
                         </div>
                       </div>
 
                       {/* Fecha y hora de fin */}
                       <div className="grid grid-cols-1 gap-2">
-                        <Label className="text-emerald-400">
+                        <Label className="text-green-600 dark:text-green-400">
                           Fecha y hora de fin
                         </Label>
                         <div className="grid grid-cols-2 gap-2">
@@ -1054,13 +1037,13 @@ export default function CalendarComponent() {
                             locale="es"
                             dateFormat="dd 'de' MMMM 'de' yyyy"
                             customInput={<CustomDatePickerInput />}
-                            calendarClassName="bg-gray-800 border border-gray-700 text-white shadow-lg rounded-md"
+                            calendarClassName="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white shadow-lg rounded-md"
                             dayClassName={(date) =>
                               cn(
-                                "rounded hover:bg-gray-700",
+                                "rounded hover:bg-gray-100 dark:hover:bg-gray-700",
                                 isToday(date) &&
-                                  "bg-emerald-900/30 text-emerald-300",
-                                isPastDay(date) && "text-gray-500",
+                                  "bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400",
+                                isPastDay(date) && "text-gray-400 dark:text-gray-600"
                               )
                             }
                           />
@@ -1076,18 +1059,16 @@ export default function CalendarComponent() {
                             dateFormat="HH:mm"
                             locale="es"
                             customInput={<CustomDatePickerInput />}
-                            calendarClassName="bg-gray-800 border border-gray-700 text-white shadow-lg rounded-md"
+                            calendarClassName="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white shadow-lg rounded-md"
                           />
                         </div>
                       </div>
                     </div>
                     <DialogFooter>
                       <Button
-                        onClick={
-                          editingEvent ? handleUpdateEvent : handleAddEvent
-                        }
+                        onClick={editingEvent ? handleUpdateEvent : handleAddEvent}
                         disabled={isSubmitting}
-                        className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                        className="bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white"
                       >
                         {isSubmitting ? (
                           <>
@@ -1095,26 +1076,22 @@ export default function CalendarComponent() {
                             {editingEvent ? "Actualizando..." : "Guardando..."}
                           </>
                         ) : (
-                          <>
-                            {editingEvent
-                              ? "Actualizar Evento"
-                              : "Guardar Evento"}
-                          </>
+                          <>{editingEvent ? "Actualizar Evento" : "Guardar Evento"}</>
                         )}
                       </Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
               </CardHeader>
-              <CardContent className="p-6 overflow-auto max-h-[500px]">
+              <CardContent className="p-6 overflow-auto max-h-[600px] scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
                 {isLoading ? (
                   <div className="space-y-4">
                     {[1, 2, 3].map((i) => (
                       <div key={i} className="flex items-start space-x-4">
-                        <Skeleton className="h-12 w-12 rounded-md bg-gray-700" />
+                        <Skeleton className="h-12 w-12 rounded-md bg-gray-200 dark:bg-gray-700" />
                         <div className="space-y-2 flex-1">
-                          <Skeleton className="h-4 w-3/4 bg-gray-700" />
-                          <Skeleton className="h-4 w-1/2 bg-gray-700" />
+                          <Skeleton className="h-4 w-3/4 bg-gray-200 dark:bg-gray-700" />
+                          <Skeleton className="h-4 w-1/2 bg-gray-200 dark:bg-gray-700" />
                         </div>
                       </div>
                     ))}
@@ -1129,68 +1106,77 @@ export default function CalendarComponent() {
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.3 }}
                       >
-                        <Card
-                          className="mb-4 border-l-4 hover:shadow-md transition-all duration-200 hover:translate-x-1 bg-gray-800/60"
+                        <Card className="mb-4 border-l-4 hover:shadow-lg transition-all duration-200 hover:translate-x-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
                           style={{
                             borderLeftColor:
                               event.status === "completado"
-                                ? "#10B981"
+                                ? "#34D399"
                                 : event.status === "en progreso"
-                                  ? "#22C55E"
-                                  : "#F59E0B",
+                                  ? "#60A5FA"
+                                  : "#FBBF24",
                           }}
                         >
                           <CardContent className="p-4">
                             <div className="flex justify-between items-start">
                               <div className="flex-1">
-                                <h3 className="font-bold text-lg text-white">
+                                <h3 className="font-bold text-lg text-gray-900 dark:text-white">
                                   {event.title}
                                 </h3>
                                 {event.description && (
-                                  <p className="text-gray-300 mt-1">
+                                  <p className="text-gray-600 dark:text-gray-300 mt-1">
                                     {event.description}
                                   </p>
                                 )}
-                                <div className="flex items-center mt-2 text-sm text-gray-400">
+                                <div className="flex items-center mt-2 text-sm text-gray-500 dark:text-gray-400">
                                   <Clock className="h-4 w-4 mr-1" />
-                                  {formatTime(event.startTime)} -{" "}
-                                  {formatTime(event.endTime)}
+                                  {formatTime(event.startTime)} - {formatTime(event.endTime)}
                                 </div>
                               </div>
                               <div className="flex items-center space-x-2">
                                 <Select
+                                  className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white"
                                   value={event.status}
-                                  onValueChange={(value) =>
-                                    handleStatusChange(event.id, value)
-                                  }
+                                  onValueChange={(value) => handleStatusChange(event.id, value)}
                                 >
                                   <SelectTrigger
-                                    className={`w-32 ${getStatusColor(event.status)} text-white border-0`}
+                                    className={cn(
+                                      "w-32 text-white border-0 [&>svg]:text-white",
+                                      event.status === "completado"
+                                        ? "bg-emerald-400 hover:bg-emerald-500 dark:bg-emerald-500 dark:hover:bg-emerald-600"
+                                        : event.status === "en progreso"
+                                          ? "bg-blue-400 hover:bg-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600"
+                                          : "bg-yellow-400 hover:bg-yellow-500 dark:bg-yellow-500 dark:hover:bg-yellow-600"
+                                    )}
                                   >
                                     <SelectValue>
                                       <div className="flex items-center">
-                                        {getStatusIcon(event.status)}
-                                        {event.status.charAt(0).toUpperCase() +
-                                          event.status.slice(1)}
+                                        {event.status === "completado" ? (
+                                          <CheckCircle2 className="h-4 w-4 mr-1 text-white" />
+                                        ) : event.status === "en progreso" ? (
+                                          <Clock3 className="h-4 w-4 mr-1 text-white" />
+                                        ) : (
+                                          <AlertCircle className="h-4 w-4 mr-1 text-white" />
+                                        )}
+                                        {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
                                       </div>
                                     </SelectValue>
                                   </SelectTrigger>
-                                  <SelectContent className="bg-gray-800 border-gray-700 text-white">
-                                    <SelectItem value="pendiente">
+                                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                                    <SelectItem value="pendiente" className="text-gray-900 dark:text-white">
                                       <div className="flex items-center">
-                                        <AlertCircle className="h-4 w-4 mr-2 text-amber-500" />
+                                        <AlertCircle className="h-4 w-4 mr-2 text-yellow-400 dark:text-yellow-400" />
                                         Pendiente
                                       </div>
                                     </SelectItem>
-                                    <SelectItem value="en progreso">
+                                    <SelectItem value="en progreso" className="text-gray-900 dark:text-white">
                                       <div className="flex items-center">
-                                        <Clock3 className="h-4 w-4 mr-2 text-green-500" />
+                                        <Clock3 className="h-4 w-4 mr-2 text-blue-400 dark:text-blue-400" />
                                         En Progreso
                                       </div>
                                     </SelectItem>
-                                    <SelectItem value="completado">
+                                    <SelectItem value="completado" className="text-gray-900 dark:text-white">
                                       <div className="flex items-center">
-                                        <CheckCircle2 className="h-4 w-4 mr-2 text-emerald-500" />
+                                        <CheckCircle2 className="h-4 w-4 mr-2 text-emerald-400 dark:text-emerald-400" />
                                         Completado
                                       </div>
                                     </SelectItem>
@@ -1200,7 +1186,7 @@ export default function CalendarComponent() {
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => handleEditEvent(event)}
-                                  className="text-gray-400 hover:text-blue-400"
+                                  className="text-gray-500 hover:text-blue-400 dark:text-gray-400 dark:hover:text-blue-400"
                                 >
                                   <Pencil className="h-4 w-4" />
                                 </Button>
@@ -1208,7 +1194,7 @@ export default function CalendarComponent() {
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => handleDeleteEvent(event.id)}
-                                  className="text-gray-400 hover:text-red-400"
+                                  className="text-gray-500 hover:text-red-400 dark:text-gray-400 dark:hover:text-red-400"
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
@@ -1221,16 +1207,16 @@ export default function CalendarComponent() {
                   </AnimatePresence>
                 ) : (
                   <div className="text-center py-10">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-900/30 text-emerald-400 mb-4">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-50 dark:bg-green-900/30 text-green-500 dark:text-green-400 mb-4">
                       <CalendarIcon className="h-8 w-8" />
                     </div>
-                    <p className="text-gray-400">
+                    <p className="text-gray-600 dark:text-gray-400">
                       No hay eventos programados para este día
                     </p>
                     <Button
                       onClick={() => setIsOpen(true)}
                       variant="outline"
-                      className="mt-4 border-emerald-800 text-emerald-400 hover:bg-emerald-900/50"
+                      className="mt-4 border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/50"
                     >
                       <Plus className="mr-2 h-4 w-4" />
                       Agregar el primer evento
