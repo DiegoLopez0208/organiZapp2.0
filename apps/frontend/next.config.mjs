@@ -35,10 +35,7 @@ const nextConfig = {
         pathname: "**",
       },
     ],
-    domains: [
-      'api.dicebear.com',
-      'platform-lookaside.fbsbx.com',
-    ],
+    domains: ["api.dicebear.com", "platform-lookaside.fbsbx.com"],
   },
 };
 

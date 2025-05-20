@@ -845,7 +845,10 @@ export default function CalendarComponent() {
                     <div className="grid grid-cols-3 gap-4">
                       <div className="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-lg border border-emerald-200 dark:border-emerald-800">
                         <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-                          {events.filter((e) => e.status === "completado").length}
+                          {
+                            events.filter((e) => e.status === "completado")
+                              .length
+                          }
                         </p>
                         <p className="text-xs text-emerald-600 dark:text-emerald-500">
                           Completados
@@ -864,7 +867,10 @@ export default function CalendarComponent() {
                       </div>
                       <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
                         <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-                          {events.filter((e) => e.status === "pendiente").length}
+                          {
+                            events.filter((e) => e.status === "pendiente")
+                              .length
+                          }
                         </p>
                         <p className="text-xs text-yellow-600 dark:text-yellow-500">
                           Pendientes
@@ -954,7 +960,10 @@ export default function CalendarComponent() {
                             placeholder="Título del evento"
                             value={newEvent.title}
                             onChange={(e) =>
-                              setNewEvent({ ...newEvent, title: e.target.value })
+                              setNewEvent({
+                                ...newEvent,
+                                title: e.target.value,
+                              })
                             }
                             className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-500"
                           />
@@ -1113,7 +1122,9 @@ export default function CalendarComponent() {
                           {isSubmitting ? (
                             <>
                               <div className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
-                              {editingEvent ? "Actualizando..." : "Guardando..."}
+                              {editingEvent
+                                ? "Actualizando..."
+                                : "Guardando..."}
                             </>
                           ) : (
                             <>
@@ -1205,7 +1216,9 @@ export default function CalendarComponent() {
                                           ) : (
                                             <AlertCircle className="h-4 w-4 mr-1 text-white" />
                                           )}
-                                          {event.status.charAt(0).toUpperCase() +
+                                          {event.status
+                                            .charAt(0)
+                                            .toUpperCase() +
                                             event.status.slice(1)}
                                         </div>
                                       </SelectValue>

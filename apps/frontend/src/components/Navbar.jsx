@@ -30,7 +30,10 @@ export default function NavBar() {
   }, []);
 
   const handleNavigation = (href) => {
-    if (status === "unauthenticated" && (href === "/chat" || href === "/calendar")) {
+    if (
+      status === "unauthenticated" &&
+      (href === "/chat" || href === "/calendar")
+    ) {
       router.push("/auth/login");
       return;
     }

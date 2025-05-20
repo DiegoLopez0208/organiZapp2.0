@@ -62,10 +62,13 @@ export default function ModernChat() {
             (msg) => msg.content?.trim() !== "",
           );
           setMessages(newMessages);
-          
+
           const lastMsgs = {};
           newMessages.forEach((msg) => {
-            if (!lastMsgs[msg.groupId] || new Date(msg.time) > new Date(lastMsgs[msg.groupId]?.time)) {
+            if (
+              !lastMsgs[msg.groupId] ||
+              new Date(msg.time) > new Date(lastMsgs[msg.groupId]?.time)
+            ) {
               lastMsgs[msg.groupId] = msg;
             }
           });
@@ -279,7 +282,7 @@ export default function ModernChat() {
                     {group.name}
                   </p>
                   <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                    {lastMessages[group.id] 
+                    {lastMessages[group.id]
                       ? `${lastMessages[group.id].senderName}: ${lastMessages[group.id].content || lastMessages[group.id].text}`
                       : "No hay mensajes"}
                   </p>
@@ -413,7 +416,7 @@ export default function ModernChat() {
                             {group.name}
                           </p>
                           <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                            {lastMessages[group.id] 
+                            {lastMessages[group.id]
                               ? `${lastMessages[group.id].senderName}: ${lastMessages[group.id].content || lastMessages[group.id].text}`
                               : "No hay mensajes"}
                           </p>
@@ -559,7 +562,13 @@ export default function ModernChat() {
                                   >
                                     {!isCurrentUser && (
                                       <Avatar className="h-8 w-8 mr-2 flex-shrink-0">
-                                        <AvatarImage src={message.senderImage || "/placeholder.svg"} alt={message.senderName} />
+                                        <AvatarImage
+                                          src={
+                                            message.senderImage ||
+                                            "/placeholder.svg"
+                                          }
+                                          alt={message.senderName}
+                                        />
                                         <AvatarFallback className="bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
                                           {getInitials(message.senderName)}
                                         </AvatarFallback>
@@ -609,7 +618,9 @@ export default function ModernChat() {
                       placeholder="Escribe un mensaje..."
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+                      onKeyPress={(e) =>
+                        e.key === "Enter" && handleSendMessage()
+                      }
                       className="flex-1 mr-4 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700"
                     />
                     <Button
@@ -632,8 +643,8 @@ export default function ModernChat() {
                       Bienvenido al Chat
                     </h2>
                     <p className="text-gray-500 dark:text-gray-400 mb-6">
-                      Selecciona un grupo del menú para comenzar a chatear o crea
-                      uno nuevo
+                      Selecciona un grupo del menú para comenzar a chatear o
+                      crea uno nuevo
                     </p>
                     <Button
                       className="bg-emerald-500 hover:bg-emerald-600 text-white"

@@ -66,7 +66,9 @@ export const messageController = () => {
 
       const messageWithSenderInfo = {
         ...newMessage,
-        senderName: newMessage.sender ? newMessage.sender.username : "Desconocido",
+        senderName: newMessage.sender
+          ? newMessage.sender.username
+          : "Desconocido",
         senderImage: newMessage.sender ? newMessage.sender.image : null,
       };
 

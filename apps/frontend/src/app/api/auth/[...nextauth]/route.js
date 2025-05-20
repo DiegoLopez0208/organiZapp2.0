@@ -28,12 +28,10 @@ export const authOptions = {
                 username: credentials.username,
                 password: credentials.password,
               }),
-            }
+            },
           );
 
-
           const loginData = await res.json();
-  
 
           if (!res.ok) {
             throw new Error(loginData.message || "Invalid credentials");
@@ -46,7 +44,8 @@ export const authOptions = {
           return {
             id: loginData.user?.id || "",
             name: loginData.user?.username || credentials.username,
-            email: loginData.user?.email || `${credentials.username}@example.com`,
+            email:
+              loginData.user?.email || `${credentials.username}@example.com`,
             image: loginData.user?.image || defaultAvatar,
             accessToken: loginData.token,
             refreshToken: loginData.refreshToken,
