@@ -84,7 +84,7 @@ export default function Login() {
               <div className="w-full border-t border-gray-700" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 text-gray-400 bg-gray-800">
+              <span className="px-2 text-gray-400 bg-white dark:bg-gray-800">
                 O continuar con
               </span>
             </div>
