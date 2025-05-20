@@ -111,6 +111,38 @@ export const groupController = () => {
       await prisma.$disconnect();
     }
   };
+  const getGroupsWithLastMessage = async () => {
+    try {
+      const groups = await prisma.group.findMany({
+        include: {
+          messages: {
+            orderBy: { id: "desc" },
+            take: 1,
+            include: {
+              sender: { select: { username: true, image: true } },
+            },
+          },
+        },
+      });
+  
+      return groups.map((group) => ({
+        ...group,
+        lastMessage: group.messages[0]
+          ? {
+              content: group.messages[0].content,
+              senderName: group.messages[0].sender?.username || "Desconocido",
+              senderImage: group.messages[0].sender?.image || null,
+              time: group.messages[0].sentAt,
+            }
+          : null,
+      }));
+    } catch (error) {
+      logger.error(error);
+      return [];
+    } finally {
+      await prisma.$disconnect();
+    }
+  };
 
   return {
     updateGroup,
@@ -118,5 +150,6 @@ export const groupController = () => {
     getGroups,
     getGroupById,
     createGroup,
+    getGroupsWithLastMessage,
   };
 };
