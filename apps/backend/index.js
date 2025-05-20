@@ -98,7 +98,7 @@ io.on("connection", (socket) => {
   socket.emit("get_groups", groups);
   socket.on("get_groups", async () => {
     try {
-      const dbGroups = await prisma.group.findMany();
+      const dbGroups = await groupController().getGroupsWithLastMessage();
       groups = [...dbGroups];
       socket.emit("groups_updated", groups);
     } catch (error) {
