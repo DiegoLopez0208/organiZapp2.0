@@ -180,12 +180,6 @@
   body {
     @apply bg-background text-foreground;
   }
-
-  /* Asegurarse de que el html y body ocupen toda la altura */
-  html,
-  body {
-    @apply h-full w-full overflow-hidden;
-  }
 }
 
 /* Estilos para ScrollArea */

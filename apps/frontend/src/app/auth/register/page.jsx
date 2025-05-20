@@ -54,6 +54,11 @@ export default function Register() {
       return;
     }
 
+    if (formData.birthDate < 1900) {
+      setError("La fecha de nacimiento no puede ser anterior al año 1900.");
+      return;
+    }
+
     try {
       const registrationData = {
         username: formData.username,

@@ -7,7 +7,8 @@ export const userParamsSchema = Joi.object({
 });
 
 export const userSchema = Joi.object({
-  username: Joi.string().min(3).required,
+  username: Joi.string().min(3).required(),
+  name: Joi.string().min(3).required(),
 
   password: Joi.string().pattern(/^[a-zA-Z0-9]{3,30}$/),
 
