@@ -107,14 +107,14 @@ export default function Register() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900">
-      <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-lg shadow-lg">
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
         <h2 className="text-3xl font-extrabold text-green-500 text-center">
           Crear una cuenta
         </h2>
 
         <div className="mt-4">
-          <p className="text-sm font-medium text-center text-gray-400">
+          <p className="text-sm font-medium text-center text-gray-500 dark:text-gray-400">
             Registrarse con
           </p>
 
@@ -163,7 +163,7 @@ export default function Register() {
               </Alert>
             )}
             <div>
-              <Label className="text-white" htmlFor="name">
+              <Label className="text-gray-700 dark:text-white" htmlFor="name">
                 Nombre completo (opcional)
               </Label>
               <Input
@@ -172,11 +172,11 @@ export default function Register() {
                 type="text"
                 value={formData.name}
                 onChange={handleInputChange}
-                className="mt-1 text-white"
+                className="mt-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
               />
             </div>
             <div>
-              <Label className="text-white" htmlFor="username">
+              <Label className="text-gray-700 dark:text-white" htmlFor="username">
                 Nombre de usuario *
               </Label>
               <Input
@@ -186,12 +186,12 @@ export default function Register() {
                 required
                 value={formData.username}
                 onChange={handleInputChange}
-                className="mt-1 text-white"
+                className="mt-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
                 placeholder="Ingresa tu nombre de usuario"
               />
             </div>
             <div>
-              <Label className="text-white" htmlFor="email">
+              <Label className="text-gray-700 dark:text-white" htmlFor="email">
                 Correo electrónico *
               </Label>
               <Input
@@ -201,12 +201,12 @@ export default function Register() {
                 required
                 value={formData.email}
                 onChange={handleInputChange}
-                className="mt-1 text-white"
+                className="mt-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
                 placeholder="ejemplo@correo.com"
               />
             </div>
             <div>
-              <Label className="text-white" htmlFor="birthDate">
+              <Label className="text-gray-700 dark:text-white" htmlFor="birthDate">
                 Fecha de nacimiento *
               </Label>
               <Input
@@ -216,11 +216,11 @@ export default function Register() {
                 required
                 value={formData.birthDate}
                 onChange={handleInputChange}
-                className="mt-1 text-white"
+                className="mt-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
               />
             </div>
             <div>
-              <Label className="text-white" htmlFor="password">
+              <Label className="text-gray-700 dark:text-white" htmlFor="password">
                 Contraseña *
               </Label>
               <Input
@@ -230,12 +230,12 @@ export default function Register() {
                 required
                 value={formData.password}
                 onChange={handleInputChange}
-                className="mt-1 text-white"
+                className="mt-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
                 placeholder="Ingresa tu contraseña"
               />
             </div>
             <div>
-              <Label className="text-white" htmlFor="confirmPassword">
+              <Label className="text-gray-700 dark:text-white" htmlFor="confirmPassword">
                 Confirmar contraseña *
               </Label>
               <Input
@@ -245,7 +245,7 @@ export default function Register() {
                 required
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
-                className="mt-1 text-white"
+                className="mt-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600"
                 placeholder="Confirma tu contraseña"
               />
             </div>
