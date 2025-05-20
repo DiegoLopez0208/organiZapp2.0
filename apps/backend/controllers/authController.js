@@ -83,6 +83,16 @@ export const authController = () => {
 
   const register = async (req, res, next) => {
     try {
+  
+      const { error } = userSchema.validate(req.body);
+      if (error) {
+        return res.status(httpStatus.BAD_REQUEST).json({
+          success: false,
+          message: "Datos inválidos",
+          error: error.details[0].message,
+        });
+      }
+
       const { username, password, email, birthDate, name, image } = req.body;
 
       if (!username || !password || !email) {
