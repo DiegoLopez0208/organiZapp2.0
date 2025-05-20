@@ -769,7 +769,7 @@ export default function CalendarComponent() {
   );
 
   const filteredMessages = messages.filter(
-    (msg) => Number(msg.groupId) === Number(currentChat?.id)
+    (msg) => Number(msg.groupId) === Number(currentChat?.id),
   );
 
   return (

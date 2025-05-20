@@ -88,22 +88,21 @@ export const messageController = () => {
       const groups = await prisma.group.findMany({
         include: {
           messages: {
-            orderBy: { id: 'desc' },
+            orderBy: { id: "desc" },
             take: 1,
             include: {
-              sender: { select: { username: true, image: true } }
-            }
-          }
-        }
+              sender: { select: { username: true, image: true } },
+            },
+          },
+        },
       });
 
-    
-      return groups.map(group => ({
+      return groups.map((group) => ({
         ...group,
         lastMessage: group.messages[0]
           ? {
               content: group.messages[0].content,
-              senderName: group.messages[0].sender?.username || 'Desconocido',
+              senderName: group.messages[0].sender?.username || "Desconocido",
               senderImage: group.messages[0].sender?.image || null,
               time: group.messages[0].sentAt,
             }
