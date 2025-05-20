@@ -33,7 +33,7 @@ const app = express();
 let groups = [];
 
 const fetchGroups = async () => {
-  groups = await prisma.group.findMany();
+  const groups = await groupController().getGroupsWithLastMessage();
   io.emit("groups_updated", groups);
 };
 

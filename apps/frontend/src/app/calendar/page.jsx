@@ -475,9 +475,70 @@ export default function CalendarComponent() {
 
   useEffect(() => {
     if (session) {
-      fetchEvents();
+      setIsLoading(true);
+      socket.emit("get_groups");
+
+      // Actualiza todos los mensajes del grupo cuando entras
+      socket.on("update_message", (information) => {
+        if (
+          information?.messagesIndex &&
+          Array.isArray(information.messagesIndex)
+        ) {
+          const newMessages = information.messagesIndex.filter(
+            (msg) => msg.content?.trim() !== "",
+          );
+          setMessages(newMessages);
+
+          // Actualiza el último mensaje de cada grupo
+          const lastMsgs = {};
+          newMessages.forEach((msg) => {
+            const groupId = Number(msg.groupId);
+            if (
+              !lastMsgs[groupId] ||
+              new Date(msg.time) > new Date(lastMsgs[groupId]?.time)
+            ) {
+              lastMsgs[groupId] = msg;
+            }
+          });
+          setLastMessages((prev) => ({ ...prev, ...lastMsgs }));
+        } else {
+          console.error("Error: 'messagesIndex' no es un arreglo válido.");
+        }
+        setIsLoading(false);
+      });
+
+      // Actualiza la lista de grupos
+      socket.on("groups_updated", (updatedGroups) => {
+        setGroups(updatedGroups);
+        setIsLoading(false);
+      });
+
+      // Escucha mensajes en tiempo real
+      socket.on("chat_message", (newMessage) => {
+        setMessages((prevMessages) => {
+          // Solo agrega el mensaje si es del grupo actual
+          if (Number(newMessage.groupId) === Number(currentChat?.id)) {
+            return [...prevMessages, newMessage];
+          }
+          return prevMessages;
+        });
+
+        // Actualiza el último mensaje del grupo correspondiente
+        setLastMessages((prev) => ({
+          ...prev,
+          [Number(newMessage.groupId)]: newMessage,
+        }));
+      });
+
+      return () => {
+        socket.off("groups_updated");
+        socket.off("new_message");
+        socket.off("update_message");
+        socket.off("get_groups");
+        socket.off("chat_message");
+      };
     }
-  }, [session, fetchEvents]);
+  }, [session, currentChat]);
 
   useEffect(() => {
     if (date && Array.isArray(events)) {
@@ -705,6 +766,10 @@ export default function CalendarComponent() {
         {value}
       </Button>
     </div>
+  );
+
+  const filteredMessages = messages.filter(
+    (msg) => Number(msg.groupId) === Number(currentChat?.id)
   );
 
   return (

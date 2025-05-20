@@ -154,6 +154,7 @@ export default function ModernChat() {
       toast({
         title: "Grupo Eliminado",
         description: "El grupo ha sido eliminado exitosamente",
+        variant: "success",
       });
     }
   };
@@ -282,8 +283,8 @@ export default function ModernChat() {
                     {group.name}
                   </p>
                   <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                    {lastMessages[group.id]
-                      ? `${lastMessages[group.id].senderName}: ${lastMessages[group.id].content || lastMessages[group.id].text}`
+                    {group.lastMessage
+                      ? `${group.lastMessage.senderName}: ${group.lastMessage.content}`
                       : "No hay mensajes"}
                   </p>
                 </div>
@@ -416,8 +417,8 @@ export default function ModernChat() {
                             {group.name}
                           </p>
                           <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                            {lastMessages[group.id]
-                              ? `${lastMessages[group.id].senderName}: ${lastMessages[group.id].content || lastMessages[group.id].text}`
+                            {group.lastMessage
+                              ? `${group.lastMessage.senderName}: ${group.lastMessage.content}`
                               : "No hay mensajes"}
                           </p>
                         </div>
