@@ -2,6 +2,7 @@ import httpStatus from "../helpers/httpStatus.js";
 import prisma from "../database/prisma.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { userSchema } from "../schemas/userSchema.js";
 
 export const authController = () => {
   const login = async (req, res, next) => {
@@ -93,13 +94,6 @@ export const authController = () => {
       }
 
       const { username, password, email, birthDate, name, image } = req.body;
-
-      if (!username || !password || !email) {
-        return res.status(httpStatus.BAD_REQUEST).json({
-          success: false,
-          message: "Todos los campos son obligatorios",
-        });
-      }
 
       const existingUser = await prisma.user.findFirst({
         where: {
