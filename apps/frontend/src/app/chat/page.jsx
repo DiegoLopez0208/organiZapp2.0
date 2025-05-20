@@ -32,6 +32,13 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { format } from "date-fns";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 export default function ModernChat() {
   const { data: session } = useSession();
@@ -47,6 +54,8 @@ export default function ModernChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [lastMessages, setLastMessages] = useState({});
   const messageInputRef = useRef(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [groupToDelete, setGroupToDelete] = useState(null);
 
   useEffect(() => {
     if (session) {

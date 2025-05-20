@@ -124,7 +124,7 @@ export const groupController = () => {
           },
         },
       });
-  
+
       return groups.map((group) => ({
         ...group,
         lastMessage: group.messages[0]
