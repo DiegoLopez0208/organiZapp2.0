@@ -176,7 +176,10 @@ export default function Register() {
               />
             </div>
             <div>
-              <Label className="text-gray-700 dark:text-white" htmlFor="username">
+              <Label
+                className="text-gray-700 dark:text-white"
+                htmlFor="username"
+              >
                 Nombre de usuario *
               </Label>
               <Input
@@ -206,7 +209,10 @@ export default function Register() {
               />
             </div>
             <div>
-              <Label className="text-gray-700 dark:text-white" htmlFor="birthDate">
+              <Label
+                className="text-gray-700 dark:text-white"
+                htmlFor="birthDate"
+              >
                 Fecha de nacimiento *
               </Label>
               <Input
@@ -220,7 +226,10 @@ export default function Register() {
               />
             </div>
             <div>
-              <Label className="text-gray-700 dark:text-white" htmlFor="password">
+              <Label
+                className="text-gray-700 dark:text-white"
+                htmlFor="password"
+              >
                 Contraseña *
               </Label>
               <Input
@@ -235,7 +244,10 @@ export default function Register() {
               />
             </div>
             <div>
-              <Label className="text-gray-700 dark:text-white" htmlFor="confirmPassword">
+              <Label
+                className="text-gray-700 dark:text-white"
+                htmlFor="confirmPassword"
+              >
                 Confirmar contraseña *
               </Label>
               <Input

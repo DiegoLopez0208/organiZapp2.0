@@ -687,14 +687,12 @@ export default function ModernChat() {
           <DialogHeader>
             <DialogTitle>¿Eliminar grupo?</DialogTitle>
             <DialogDescription>
-              ¿Estás seguro de que deseas eliminar el grupo <b>{groupToDelete?.name}</b>? Esta acción no se puede deshacer.
+              ¿Estás seguro de que deseas eliminar el grupo{" "}
+              <b>{groupToDelete?.name}</b>? Esta acción no se puede deshacer.
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-end gap-2 mt-4">
-            <Button
-              variant="outline"
-              onClick={() => setDeleteModalOpen(false)}
-            >
+            <Button variant="outline" onClick={() => setDeleteModalOpen(false)}>
               Cancelar
             </Button>
             <Button
@@ -702,7 +700,8 @@ export default function ModernChat() {
               onClick={() => {
                 if (groupToDelete) {
                   socket.emit("delete_group", groupToDelete.id);
-                  if (currentChat?.id === groupToDelete.id) setCurrentChat(null);
+                  if (currentChat?.id === groupToDelete.id)
+                    setCurrentChat(null);
                   setGroups(groups.filter((g) => g.id !== groupToDelete.id));
                   setDeleteModalOpen(false);
                   setGroupToDelete(null);

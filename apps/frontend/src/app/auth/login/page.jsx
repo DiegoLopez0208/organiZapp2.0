@@ -97,7 +97,10 @@ export default function Login() {
               </Alert>
             )}
             <div>
-              <Label className="text-gray-700 dark:text-white" htmlFor="username">
+              <Label
+                className="text-gray-700 dark:text-white"
+                htmlFor="username"
+              >
                 Nombre de usuario
               </Label>
               <Input
@@ -110,7 +113,10 @@ export default function Login() {
               />
             </div>
             <div>
-              <Label className="text-gray-700 dark:text-white" htmlFor="password">
+              <Label
+                className="text-gray-700 dark:text-white"
+                htmlFor="password"
+              >
                 Contraseña
               </Label>
               <Input
