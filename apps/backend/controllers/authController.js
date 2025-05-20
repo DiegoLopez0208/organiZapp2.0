@@ -83,7 +83,6 @@ export const authController = () => {
 
   const register = async (req, res, next) => {
     try {
-  
       const { error } = userSchema.validate(req.body);
       if (error) {
         return res.status(httpStatus.BAD_REQUEST).json({
