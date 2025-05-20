@@ -6,6 +6,7 @@ import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,15 +18,24 @@ import {
 import { LogoOrganiZapp } from "@/app/lib/image";
 
 export default function NavBar() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
 
   useEffect(() => {
     const closeMenu = () => setIsMenuOpen(false);
     window.addEventListener("resize", closeMenu);
     return () => window.removeEventListener("resize", closeMenu);
   }, []);
+
+  const handleNavigation = (href) => {
+    if (status === "unauthenticated" && (href === "/chat" || href === "/calendar")) {
+      router.push("/auth/login");
+      return;
+    }
+    router.push(href);
+  };
 
   const navItems = [
     { name: "Inicio", href: "/" },
@@ -55,13 +65,13 @@ export default function NavBar() {
 
           <div className="hidden sm:flex space-x-6">
             {navItems.map((item) => (
-              <Link
+              <button
                 key={item.name}
-                href={item.href}
+                onClick={() => handleNavigation(item.href)}
                 className="text-white text-base font-medium hover:text-gray-100 hover:border-b-2 border-transparent hover:border-white transition-all duration-200"
               >
                 {item.name}
-              </Link>
+              </button>
             ))}
           </div>
 
@@ -86,13 +96,23 @@ export default function NavBar() {
                     variant="ghost"
                     className="flex items-center text-white hover:bg-green-400/20"
                   >
-                    <Image
-                      src={session.user.image || "/placeholder.svg"}
-                      alt={session.user.name || "Usuario"}
-                      width={32}
-                      height={32}
-                      className="rounded-full"
-                    />
+                    {session.user.image?.includes("dicebear.com") ? (
+                      <img
+                        src={session.user.image}
+                        alt={session.user.name || "Usuario"}
+                        width={32}
+                        height={32}
+                        className="rounded-full"
+                      />
+                    ) : (
+                      <Image
+                        src={session.user.image || "/placeholder.svg"}
+                        alt={session.user.name || "Usuario"}
+                        width={32}
+                        height={32}
+                        className="rounded-full"
+                      />
+                    )}
                     <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -164,27 +184,39 @@ export default function NavBar() {
         <div className="sm:hidden bg-green-500 dark:bg-green-600 border-t border-green-400/20 absolute w-full z-50">
           <div className="pt-2 pb-3 space-y-1">
             {navItems.map((item) => (
-              <Link
+              <button
                 key={item.name}
-                href={item.href}
-                className="block pl-3 pr-4 py-2 text-white hover:bg-green-400/20"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  handleNavigation(item.href);
+                  setIsMenuOpen(false);
+                }}
+                className="block w-full text-left pl-3 pr-4 py-2 text-white hover:bg-green-400/20"
               >
                 {item.name}
-              </Link>
+              </button>
             ))}
           </div>
           <div className="pt-2 pb-3 border-t border-green-400/20">
             {session?.user ? (
               <>
                 <div className="flex items-center px-4 py-2">
-                  <Image
-                    src={session.user.image || "/placeholder.svg"}
-                    alt={session.user.name || "Usuario"}
-                    width={32}
-                    height={32}
-                    className="rounded-full"
-                  />
+                  {session.user.image?.includes("dicebear.com") ? (
+                    <img
+                      src={session.user.image}
+                      alt={session.user.name || "Usuario"}
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <Image
+                      src={session.user.image || "/placeholder.svg"}
+                      alt={session.user.name || "Usuario"}
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                    />
+                  )}
                   <div className="ml-3">
                     <div className="text-sm font-medium text-white">
                       {session.user.name}

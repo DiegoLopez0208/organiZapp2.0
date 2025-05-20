@@ -22,6 +22,22 @@ const nextConfig = {
         port: "",
         pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "platform-lookaside.fbsbx.com",
+        port: "",
+        pathname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "api.dicebear.com",
+        port: "",
+        pathname: "**",
+      },
+    ],
+    domains: [
+      'api.dicebear.com',
+      'platform-lookaside.fbsbx.com',
     ],
   },
 };

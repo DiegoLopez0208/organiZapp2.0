@@ -20,25 +20,24 @@ export const authOptions = {
           }
 
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`,
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/auth/login`,
             {
               method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
+              headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 username: credentials.username,
                 password: credentials.password,
               }),
-            },
+            }
           );
 
-          if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.message || "Invalid credentials");
-          }
 
           const loginData = await res.json();
+  
+
+          if (!res.ok) {
+            throw new Error(loginData.message || "Invalid credentials");
+          }
 
           if (!loginData.token) {
             throw new Error("Authentication failed: No token provided");
@@ -47,8 +46,7 @@ export const authOptions = {
           return {
             id: loginData.user?.id || "",
             name: loginData.user?.username || credentials.username,
-            email:
-              loginData.user?.email || `${credentials.username}@example.com`,
+            email: loginData.user?.email || `${credentials.username}@example.com`,
             image: loginData.user?.image || defaultAvatar,
             accessToken: loginData.token,
             refreshToken: loginData.refreshToken,
@@ -67,7 +65,7 @@ export const authOptions = {
       async profile(profile) {
         try {
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/oauth-login`,
+            `${process.env.NEXT_PUBLIC_BASE_URL}api/auth/oauth-login`,
             {
               method: "POST",
               headers: {
@@ -195,6 +193,9 @@ export const authOptions = {
         token.refreshToken = user.refreshToken;
         token.provider = user.provider;
         token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.image = user.image;
       }
       return token;
     },
@@ -203,6 +204,9 @@ export const authOptions = {
       session.refreshToken = token.refreshToken;
       session.provider = token.provider;
       session.user.id = token.id;
+      session.user.email = token.email;
+      session.user.name = token.name;
+      session.user.image = token.image;
       return session;
     },
   },
