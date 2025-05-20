@@ -301,7 +301,11 @@ export default function ModernChat() {
                   variant="ghost"
                   size="sm"
                   className="ml-2 hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-600 rounded-full"
-                  onClick={(e) => handleDeleteGroup(group.id, e)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setGroupToDelete(group);
+                    setDeleteModalOpen(true);
+                  }}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -435,7 +439,11 @@ export default function ModernChat() {
                           variant="ghost"
                           size="sm"
                           className="ml-2 hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-600 rounded-full"
-                          onClick={(e) => handleDeleteGroup(group.id, e)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setGroupToDelete(group);
+                            setDeleteModalOpen(true);
+                          }}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -539,7 +547,11 @@ export default function ModernChat() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={(e) => handleDeleteGroup(currentChat.id, e)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setGroupToDelete(currentChat);
+                        setDeleteModalOpen(true);
+                      }}
                       className="text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -670,6 +682,42 @@ export default function ModernChat() {
           </div>
         </div>
       </main>
+      <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>¿Eliminar grupo?</DialogTitle>
+            <DialogDescription>
+              ¿Estás seguro de que deseas eliminar el grupo{" "}
+              <b>{groupToDelete?.name}</b>? Esta acción no se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-2 mt-4">
+            <Button variant="outline" onClick={() => setDeleteModalOpen(false)}>
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                if (groupToDelete) {
+                  socket.emit("delete_group", groupToDelete.id);
+                  if (currentChat?.id === groupToDelete.id)
+                    setCurrentChat(null);
+                  setGroups(groups.filter((g) => g.id !== groupToDelete.id));
+                  setDeleteModalOpen(false);
+                  setGroupToDelete(null);
+                  toast({
+                    title: "Grupo Eliminado",
+                    description: "El grupo ha sido eliminado exitosamente",
+                    variant: "success",
+                  });
+                }
+              }}
+            >
+              Eliminar
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </ProtectedRoute>
   );
 }
