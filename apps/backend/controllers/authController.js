@@ -2,7 +2,7 @@ import httpStatus from "../helpers/httpStatus.js";
 import prisma from "../database/prisma.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { userSchema } from "../schemas/userSchema.js";
+import { userSchema } from "../validations/userSchema.js";
 
 export const authController = () => {
   const login = async (req, res, next) => {
