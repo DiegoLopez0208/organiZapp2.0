@@ -51,7 +51,7 @@ export default function ModernChat() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [ setLastMessages] = useState({});
+  const [setLastMessages] = useState({});
   const messageInputRef = useRef(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [groupToDelete, setGroupToDelete] = useState(null);
@@ -283,7 +283,9 @@ export default function ModernChat() {
             ))
           ) : (
             <div className="text-center py-6 text-sm text-gray-500 dark:text-gray-400">
-              {searchTerm ? `No se encontraron grupos con "${searchTerm}"` : "No hay grupos disponibles"}
+              {searchTerm
+                ? `No se encontraron grupos con "${searchTerm}"`
+                : "No hay grupos disponibles"}
             </div>
           )}
         </div>
@@ -405,7 +407,9 @@ export default function ModernChat() {
                                 key={index}
                                 className={cn(
                                   "flex",
-                                  isCurrentUser ? "justify-end" : "justify-start",
+                                  isCurrentUser
+                                    ? "justify-end"
+                                    : "justify-start",
                                 )}
                               >
                                 {!isCurrentUser && (

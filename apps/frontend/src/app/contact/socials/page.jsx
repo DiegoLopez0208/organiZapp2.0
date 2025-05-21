@@ -14,7 +14,6 @@ const teamMembers = [
     image: manpng,
     github: "https://github.com/DiegoLopez0208",
     linkedin: "https://www.linkedin.com/in/diego-lopez0208/ ",
- 
   },
 ];
 

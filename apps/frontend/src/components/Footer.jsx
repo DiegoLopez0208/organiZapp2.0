@@ -68,7 +68,6 @@ function Footer() {
           <p className="text-sm text-gray-400 text-center md:text-left">
             © 2025 OrganiZapp. Todos los derechos reservados.
           </p>
-
         </div>
       </div>
     </footer>

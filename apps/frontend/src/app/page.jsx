@@ -150,7 +150,7 @@ export default function Home() {
               </FeatureItem>
             </ul>
             <Link
-             href="/calendar"
+              href="/calendar"
               className="bg-green-500 border-2 border-green-500 px-4 py-2 rounded-lg hover:bg-green-600 text-white"
             >
               Explorar calendario
