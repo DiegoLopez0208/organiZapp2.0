@@ -1,29 +1,46 @@
-# organiZapp V 1.0.0
+# organiZapp V 2.0
 
-Spanish :
-Consiste en una aplicación de gestión de información, en el cual vas a poder comunicarte con tus compañeros de trabajos y organizar la informacion y los archivos mediante un calendario y un chat. Tambien cuenta con un sistema de login / register, con el cual vas a poder identificarte en la base de datos y poder gestionar tus propia informacion.
-Este es un proyecto hecho con Next.js (React) en el cual se utiliza:
-Node.js (Postgresql (DB) - Backend)
-Next.js (React - Frontend)
+---
 
-Y las siguientes librerias:
+## About the Project
 
-PRISMA - JWT - JOI - BCRYPT - DOTENV - EXPRESSJWT - CORS - ESLINT (Backend)
+Hey everyone! Excited to share my latest project, **OrganiZapp**, an information management application designed to streamline communication and organization within teams, groups, or even with friends. In today's fast-paced world, staying connected and coordinated can be a real challenge. I created OrganiZapp to simplify just that!
 
-DOTENV - TAILWINDCSS - AUTOPREFIXER - ESLINT - NEXTAUTH - REACTDOM (Frontend)
+OrganiZapp offers an intuitive platform where you can:
 
-Los integrantes de este proyecto son: Agustin Gercek - Diego Lopez - Gricelda Canaza Vasquez - Facundo Burgos
+* **Create and participate in group chats** for seamless, real-time communication.
+* **Manage a personal calendar** to organize important events, meetings, and activities with your group.
 
-English :
-It consists of an information management application, in which you will be able to communicate with your coworkers and organize information and files through a calendar and a chat. It also has a login/register system, with which you will be able to identify yourself in the database and be able to manage your own information.
-This is a project made with Next.js (React) in which it is used:
-Node.js (Postgresql (DB) - Backend)
-Next.js (React - Frontend)
+My goal was to provide a practical solution for any group to communicate effectively and centralize their activities. It's been an incredible journey of learning and development, and I'm super proud of the result. I invite you to explore it and give me your feedback!
 
-And the following libraries:
+---
 
-PRISMA - JWT - JOI - BCRYPT - DOTENV - EXPRESSJWT - CORS - ESLINT (Backend)
+## Technical Stack
 
-DOTENV - TAILWINDCSS - AUTOPREFIXER - ESLINT - NEXTAUTH - REACTDOM - SHARP - NODEMAILLER (Frontend)
+OrganiZapp is built with **Next.js (React)** and utilizes a robust backend powered by **Node.js**.
 
-The members of this project are: Agustin Gercek - Diego Lopez - Gricelda Canaza Vasquez - Facundo Burgos
+* **Backend**: Node.js (PostgreSQL for the database)
+* **Frontend**: Next.js (React)
+
+### Key Libraries Used:
+
+* **Backend**: `PRISMA`, `JWT`, `JOI`, `BCRYPT`, `DOTENV`, `EXPRESSJWT`, `CORS`, `ESLINT`
+* **Frontend**: `DOTENV`, `TAILWINDCSS`, `AUTOPREFIXER`, `ESLINT`, `NEXTAUTH`, `REACTDOM`, `SHARP`, `NODEMAILLER`
+
+---
+
+## Installation and Setup
+
+Getting OrganiZapp up and running is straightforward. Follow these steps:
+
+1.  **Prisma Setup**: Navigate to the `apps/backend` directory and run `npm install`. This will install all backend dependencies, including Prisma.
+2.  **Frontend Installation**: Go to the `apps/frontend` directory and run `npm install`. This will install all frontend dependencies.
+3.  **General Installation**: From the root directory of the project, run `npm install`. This ensures all necessary packages are installed across the entire project.
+4.  **Environment Variables**: You'll need to fill in the required environment variables in the `.env` files for both the backend and frontend. Look for `.env.example` files in their respective directories for guidance.
+5.  **Start the Application**: Once all installations are complete and your environment variables are set, run `npm run dev` from the root directory to start the application.
+
+---
+
+## Project Member
+
+* Diego Lopez
