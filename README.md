@@ -32,12 +32,12 @@ OrganiZapp is built with **Next.js (React)** and utilizes a robust backend power
 ## Installation and Setup
 
 Getting OrganiZapp up and running is straightforward. Follow these steps:
-
-1.  **Prisma Setup**: Navigate to the `apps/backend` directory and run `npm install`. This will install all backend dependencies, including Prisma.
-2.  **Frontend Installation**: Go to the `apps/frontend` directory and run `npm install`. This will install all frontend dependencies.
-3.  **General Installation**: From the root directory of the project, run `npm install`. This ensures all necessary packages are installed across the entire project.
-4.  **Environment Variables**: You'll need to fill in the required environment variables in the `.env` files for both the backend and frontend. Look for `.env.example` files in their respective directories for guidance.
-5.  **Start the Application**: Once all installations are complete and your environment variables are set, run `npm run dev` from the root directory to start the application.
+1.  **Environment Variables**: You'll need to fill in the required environment variables in the `.env` files for both the backend and frontend. Look for `.env.example` files in their respective directories for guidance.
+2.  **Prisma Setup**: Navigate to the `apps/backend` directory and run `npx primsa generate`. This will install the database, but you need first the enviroment variables in backend.
+3.  **Backend Installation**: Navigate to the `apps/backend` directory and run `npm install`. This will install all backend dependencies, including Prisma.
+4.  **Frontend Installation**: Go to the `apps/frontend` directory and run `npm install`. This will install all frontend dependencies.
+5.  **General Installation**: From the root directory of the project, run `npm install`. This ensures all necessary packages are installed across the entire project.
+6.  **Start the Application**: Once all installations are complete and your environment variables are set, run `npm run dev` from the root directory to start the application.
 
 ---
 
