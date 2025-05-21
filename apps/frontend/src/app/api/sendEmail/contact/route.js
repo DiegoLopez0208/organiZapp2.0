@@ -26,7 +26,7 @@ export async function POST(request) {
     `;
 
     if (process.env.NODE_ENV === "development") {
-      // 👨‍💻 Local - ETHEREAL
+
       const testAccount = await nodemailer.createTestAccount();
       const transporter = nodemailer.createTransport({
         host: testAccount.smtp.host,
@@ -56,7 +56,7 @@ export async function POST(request) {
         message: "Correo enviado en desarrollo (Ethereal)",
       });
     } else {
-      // 🚀 Producción - RESEND
+
       const resend = new Resend(process.env.RESEND_API_KEY);
       const from = process.env.RESEND_FROM;
 

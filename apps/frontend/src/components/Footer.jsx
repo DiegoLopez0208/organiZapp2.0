@@ -66,34 +66,9 @@ function Footer() {
         <hr className="my-8 border-gray-700" />
         <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
           <p className="text-sm text-gray-400 text-center md:text-left">
-            © 2024 OrganiZapp. Todos los derechos reservados.
+            © 2025 OrganiZapp. Todos los derechos reservados.
           </p>
-          <div className="flex justify-center md:justify-end space-x-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-blue-400 hover:bg-green-500 hover:text-white"
-              aria-label="Facebook"
-            >
-              <Facebook className="h-5 w-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-blue-500 hover:bg-green-500 hover:text-white"
-              aria-label="Twitter"
-            >
-              <Twitter className="h-5 w-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-red-500 hover:bg-green-500 hover:text-white"
-              aria-label="Instagram"
-            >
-              <Instagram className="h-5 w-5" />
-            </Button>
-          </div>
+
         </div>
       </div>
     </footer>

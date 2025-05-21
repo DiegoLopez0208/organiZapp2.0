@@ -129,7 +129,7 @@ export default function Privacy() {
               Los Datos de Uso se recopilan automáticamente cuando se utiliza el
               Servicio.
             </p>
-            {/* Aquí continuarían las demás secciones de la política de privacidad */}
+            
           </section>
 
           <section>

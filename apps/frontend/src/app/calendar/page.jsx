@@ -499,30 +499,6 @@ export default function CalendarComponent() {
     }
   }, [date, events]);
 
-  const getStatusColor = (status) => {
-    switch (status.toLowerCase()) {
-      case "completado":
-        return "bg-emerald-400 hover:bg-emerald-500";
-      case "en progreso":
-        return "bg-blue-400 hover:bg-blue-500";
-      case "pendiente":
-      default:
-        return "bg-yellow-400 hover:bg-yellow-500";
-    }
-  };
-
-  const getStatusIcon = (status) => {
-    switch (status.toLowerCase()) {
-      case "completado":
-        return <CheckCircle2 className="h-4 w-4 mr-1" />;
-      case "en progreso":
-        return <Clock3 className="h-4 w-4 mr-1" />;
-      case "pendiente":
-      default:
-        return <AlertCircle className="h-4 w-4 mr-1" />;
-    }
-  };
-
   const formatTime = (date) => {
     if (!date || isNaN(new Date(date).getTime())) return "--:--";
     return format(new Date(date), "HH:mm");
@@ -556,45 +532,10 @@ export default function CalendarComponent() {
   const isPastDay = (day) => {
     if (isBefore(day, startOfDay(new Date())) && !isToday(day)) {
       const dayEvents = getDayEvents(day);
-
       if (dayEvents.length === 0) return false;
-
       return dayEvents.every((event) => event.status === "completado");
     }
     return false;
-  };
-
-  const renderDayContent = (day) => {
-    const dayEvents = getDayEvents(day);
-    const isPast = isPastDay(day);
-    const hasInProgressEvent = dayEvents.some(
-      (event) => event.status === "en progreso",
-    );
-
-    return (
-      <div className="relative w-full bg-gray-50 dark:bg-gray-900 h-full flex items-center justify-center">
-        <span className={isPast ? "text-gray-400 line-through" : ""}>
-          {day.getDate()}
-        </span>
-        {dayEvents.length > 0 && (
-          <div className="absolute  bg-gray-50 dark:bg-gray-900 bottom-0 left-0 right-0 flex justify-center gap-0.5">
-            {dayEvents.map((event, index) => (
-              <span
-                key={index}
-                className={cn(
-                  "h-1.5 w-1.5 rounded-full",
-                  event.status === "completado"
-                    ? "bg-emerald-400"
-                    : event.status === "en progreso"
-                      ? "bg-blue-400"
-                      : "bg-yellow-400",
-                )}
-              ></span>
-            ))}
-          </div>
-        )}
-      </div>
-    );
   };
 
   const renderCalendarDays = () => {
@@ -758,7 +699,6 @@ export default function CalendarComponent() {
                   </div>
                 </CardHeader>
                 <CardContent className="p-6">
-                  {/* Días de la semana */}
                   <div className="grid grid-cols-7 mb-2 text-center">
                     {["lu", "ma", "mi", "ju", "vi", "sá", "do"].map(
                       (day, index) => (
@@ -772,7 +712,6 @@ export default function CalendarComponent() {
                     )}
                   </div>
 
-                  {/* Días del mes */}
                   <div className="grid grid-cols-7 gap-1">
                     {renderCalendarDays().map((dayInfo, index) => {
                       const dayEvents = getDayEvents(dayInfo.date);
@@ -845,10 +784,7 @@ export default function CalendarComponent() {
                     <div className="grid grid-cols-3 gap-4">
                       <div className="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-lg border border-emerald-200 dark:border-emerald-800">
                         <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-                          {
-                            events.filter((e) => e.status === "completado")
-                              .length
-                          }
+                          {events.filter((e) => e.status === "completado").length}
                         </p>
                         <p className="text-xs text-emerald-600 dark:text-emerald-500">
                           Completados
@@ -856,10 +792,7 @@ export default function CalendarComponent() {
                       </div>
                       <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
                         <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                          {
-                            events.filter((e) => e.status === "en progreso")
-                              .length
-                          }
+                          {events.filter((e) => e.status === "en progreso").length}
                         </p>
                         <p className="text-xs text-blue-600 dark:text-blue-500">
                           En progreso
@@ -867,10 +800,7 @@ export default function CalendarComponent() {
                       </div>
                       <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
                         <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-                          {
-                            events.filter((e) => e.status === "pendiente")
-                              .length
-                          }
+                          {events.filter((e) => e.status === "pendiente").length}
                         </p>
                         <p className="text-xs text-yellow-600 dark:text-yellow-500">
                           Pendientes
@@ -925,25 +855,19 @@ export default function CalendarComponent() {
                     <DialogContent className="sm:max-w-[500px] bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                       <DialogHeader>
                         <DialogTitle className="text-xl text-gray-900 dark:text-white">
-                          {editingEvent
-                            ? "Editar Evento"
-                            : "Agregar Nuevo Evento"}
+                          {editingEvent ? "Editar Evento" : "Agregar Nuevo Evento"}
                         </DialogTitle>
                         <DialogDescription className="text-gray-600 dark:text-gray-400">
                           {editingEvent
                             ? `Editando evento para el ${format(
                                 new Date(editingEvent.date),
                                 "PPP",
-                                {
-                                  locale: es,
-                                },
+                                { locale: es },
                               )}`
                             : `Ingresa los detalles del evento para el día ${format(
                                 date,
                                 "PPP",
-                                {
-                                  locale: es,
-                                },
+                                { locale: es },
                               )}`}
                         </DialogDescription>
                       </DialogHeader>
@@ -1027,7 +951,6 @@ export default function CalendarComponent() {
                           </Select>
                         </div>
 
-                        {/* Fecha y hora de inicio */}
                         <div className="grid grid-cols-1 gap-2">
                           <Label className="text-green-600 dark:text-green-400">
                             Fecha y hora de inicio
@@ -1069,7 +992,6 @@ export default function CalendarComponent() {
                           </div>
                         </div>
 
-                        {/* Fecha y hora de fin */}
                         <div className="grid grid-cols-1 gap-2">
                           <Label className="text-green-600 dark:text-green-400">
                             Fecha y hora de fin
@@ -1113,25 +1035,17 @@ export default function CalendarComponent() {
                       </div>
                       <DialogFooter>
                         <Button
-                          onClick={
-                            editingEvent ? handleUpdateEvent : handleAddEvent
-                          }
+                          onClick={editingEvent ? handleUpdateEvent : handleAddEvent}
                           disabled={isSubmitting}
                           className="bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white"
                         >
                           {isSubmitting ? (
                             <>
                               <div className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
-                              {editingEvent
-                                ? "Actualizando..."
-                                : "Guardando..."}
+                              {editingEvent ? "Actualizando..." : "Guardando..."}
                             </>
                           ) : (
-                            <>
-                              {editingEvent
-                                ? "Actualizar Evento"
-                                : "Guardar Evento"}
-                            </>
+                            <>{editingEvent ? "Actualizar Evento" : "Guardar Evento"}</>
                           )}
                         </Button>
                       </DialogFooter>
@@ -1216,9 +1130,7 @@ export default function CalendarComponent() {
                                           ) : (
                                             <AlertCircle className="h-4 w-4 mr-1 text-white" />
                                           )}
-                                          {event.status
-                                            .charAt(0)
-                                            .toUpperCase() +
+                                          {event.status.charAt(0).toUpperCase() +
                                             event.status.slice(1)}
                                         </div>
                                       </SelectValue>

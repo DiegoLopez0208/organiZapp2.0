@@ -120,12 +120,12 @@ export default function Home() {
                 Hecho con Socket.io para comunicación en tiempo real
               </FeatureItem>
             </ul>
-            <Button
+            <Link
               href="/chat"
-              className="bg-green-500 hover:bg-green-600 text-white"
+              className="bg-green-500 border-2 border-green-500 px-4 py-2 rounded-lg hover:bg-green-600 text-white"
             >
               Explorar chat
-            </Button>
+            </Link>
           </div>
         </section>
 
@@ -149,12 +149,12 @@ export default function Home() {
                 Establece límites de tiempo para completar tus tareas
               </FeatureItem>
             </ul>
-            <Button
-              href="/calendar"
-              className="bg-green-500 hover:bg-green-600 text-white"
+            <Link
+             href="/calendar"
+              className="bg-green-500 border-2 border-green-500 px-4 py-2 rounded-lg hover:bg-green-600 text-white"
             >
               Explorar calendario
-            </Button>
+            </Link>
           </div>
           <div className="order-1 md:order-2 relative">
             <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-green-600 rounded-lg blur opacity-25"></div>

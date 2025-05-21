@@ -12,9 +12,9 @@ const teamMembers = [
     name: "Diego Lopez",
     role: "Desarrollador Web",
     image: manpng,
-    github: "https://github.com/DiegoLopez",
-    linkedin: "https://linkedin.com/in/diegolopez",
-    twitter: "https://twitter.com/diegolopez",
+    github: "https://github.com/DiegoLopez0208",
+    linkedin: "https://www.linkedin.com/in/diego-lopez0208/ ",
+ 
   },
 ];
 
