@@ -289,12 +289,20 @@ export const authController = () => {
         process.env.JWT_SECRET,
         { expiresIn: "1h" },
       );
+
+      const refreshToken = jwt.sign(
+        { userId: user.id },
+        process.env.JWT_REFRESH_SECRET,
+        { expiresIn: "7d" },
+      );
+
       console.log("Generated token:", token);
 
       return res.status(httpStatus.OK).json({
         success: true,
         message: "OAuth login exitoso",
         token,
+        refreshToken,
         user: {
           id: user.id,
           username: user.username,
