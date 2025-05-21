@@ -10,8 +10,8 @@ export const userSchema = Joi.object({
   username: Joi.string().min(3).required(),
   name: Joi.string().min(3),
   password: Joi.string()
-    .pattern(/^[a-zA-Z0-9]{3,30}$/)
-    .required(),
+  .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,30}$/)
+  .required(),
   email: Joi.string()
     .email({
       minDomainSegments: 2,
