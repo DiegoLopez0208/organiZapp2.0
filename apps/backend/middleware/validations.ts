@@ -19,7 +19,7 @@ export const taskValidation = (req, _res, next) => {
   next();
 };
 export const createTaskValidation = (req, _res, next) => {
-  const { error } = createTaskSchema.validate(req.body);
+  const { error } = taskSchema.validate(req.body);
   if (error) return next(error);
   next();
 };

@@ -1,11 +1,68 @@
-import NextAuth from "next-auth";
+import NextAuth, { type NextAuthOptions, type User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import GitHubProvider from "next-auth/providers/github";
 import { defaultAvatar } from "@/app/lib/image";
 
-export const authOptions = {
+interface AuthUser extends User {
+  id: string;
+  accessToken: string;
+  refreshToken?: string;
+  provider: string;
+}
+
+interface LoginResponse {
+  token?: string;
+  refreshToken?: string;
+  user?: {
+    id?: string;
+    username?: string;
+    email?: string;
+    image?: string | null;
+  };
+  message?: string;
+}
+
+interface OAuthResponse {
+  token: string;
+  refreshToken?: string;
+  user?: {
+    id?: string;
+    username?: string;
+    email?: string;
+    image?: string | null;
+  };
+  message?: string;
+}
+
+interface GoogleProfile {
+  sub: string;
+  name: string;
+  email: string;
+  picture: string;
+}
+
+interface FacebookProfile {
+  id: string;
+  name: string;
+  email: string;
+  picture?: {
+    data?: {
+      url?: string;
+    };
+  };
+}
+
+interface GitHubProfile {
+  id: number;
+  login: string;
+  name?: string;
+  email?: string;
+  avatar_url: string;
+}
+
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -13,7 +70,7 @@ export const authOptions = {
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials): Promise<AuthUser | null> {
         try {
           if (!credentials?.username || !credentials?.password) {
             throw new Error("Missing username or password");
@@ -31,7 +88,7 @@ export const authOptions = {
             },
           );
 
-          const loginData = await res.json();
+          const loginData: LoginResponse = await res.json();
 
           if (!res.ok) {
             throw new Error(loginData.message || "Invalid credentials");
@@ -41,7 +98,7 @@ export const authOptions = {
             throw new Error("Authentication failed: No token provided");
           }
 
-          return {
+          const user: AuthUser = {
             id: loginData.user?.id || "",
             name: loginData.user?.username || credentials.username,
             email:
@@ -51,17 +108,21 @@ export const authOptions = {
             refreshToken: loginData.refreshToken,
             provider: "credentials",
           };
+          return user;
         } catch (error) {
-          console.error("Authentication error:", error.message);
+          console.error(
+            "Authentication error:",
+            error instanceof Error ? error.message : error,
+          );
           return null;
         }
       },
     }),
 
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      async profile(profile) {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      async profile(profile: GoogleProfile): Promise<AuthUser> {
         try {
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL}api/auth/oauth-login`,
@@ -80,19 +141,22 @@ export const authOptions = {
           );
 
           if (!res.ok) {
-            const errorData = await res.json();
+            const errorData: LoginResponse = await res.json();
             throw new Error(errorData.message || "Google OAuth failed");
           }
 
-          const data = await res.json();
+          const data: OAuthResponse = await res.json();
 
-          return {
+          const user: AuthUser = {
             id: data.user?.id || profile.sub,
             email: data.user?.email || profile.email,
             name: data.user?.username || profile.name,
             image: data.user?.image || profile.picture,
             accessToken: data.token,
+            refreshToken: data.refreshToken,
+            provider: "google",
           };
+          return user;
         } catch (error) {
           console.error("Google OAuth error:", error);
           throw error;
@@ -101,9 +165,9 @@ export const authOptions = {
     }),
 
     FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-      async profile(profile) {
+      clientId: process.env.FACEBOOK_CLIENT_ID!,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+      async profile(profile: FacebookProfile): Promise<AuthUser> {
         try {
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL}api/auth/oauth-login`,
@@ -122,19 +186,22 @@ export const authOptions = {
           );
 
           if (!res.ok) {
-            const errorData = await res.json();
+            const errorData: LoginResponse = await res.json();
             throw new Error(errorData.message || "Facebook OAuth failed");
           }
 
-          const data = await res.json();
+          const data: OAuthResponse = await res.json();
 
-          return {
+          const user: AuthUser = {
             id: data.user?.id || profile.id,
             email: data.user?.email || profile.email,
             name: data.user?.username || profile.name,
             image: data.user?.image || profile.picture?.data?.url || null,
             accessToken: data.token,
+            refreshToken: data.refreshToken,
+            provider: "facebook",
           };
+          return user;
         } catch (error) {
           console.error("Facebook OAuth error:", error);
           throw error;
@@ -143,9 +210,9 @@ export const authOptions = {
     }),
 
     GitHubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-      async profile(profile) {
+      clientId: process.env.GITHUB_ID!,
+      clientSecret: process.env.GITHUB_SECRET!,
+      async profile(profile: GitHubProfile): Promise<AuthUser> {
         try {
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_BASE_URL}api/auth/oauth-login`,
@@ -164,19 +231,22 @@ export const authOptions = {
           );
 
           if (!res.ok) {
-            const errorData = await res.json();
+            const errorData: LoginResponse = await res.json();
             throw new Error(errorData.message || "GitHub OAuth failed");
           }
 
-          const data = await res.json();
+          const data: OAuthResponse = await res.json();
 
-          return {
+          const user: AuthUser = {
             id: data.user?.id || profile.id.toString(),
             email: data.user?.email || profile.email,
             name: data.user?.username || profile.name || profile.login,
             image: data.user?.image || profile.avatar_url,
             accessToken: data.token,
+            refreshToken: data.refreshToken,
+            provider: "github",
           };
+          return user;
         } catch (error) {
           console.error("GitHub OAuth error:", error);
           throw error;
@@ -188,13 +258,14 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.accessToken = user.accessToken;
-        token.refreshToken = user.refreshToken;
-        token.provider = user.provider;
-        token.id = user.id;
-        token.email = user.email;
-        token.name = user.name;
-        token.image = user.image;
+        const u = user as AuthUser;
+        token.accessToken = u.accessToken;
+        token.refreshToken = u.refreshToken;
+        token.provider = u.provider;
+        token.id = u.id;
+        token.email = u.email ?? undefined;
+        token.name = u.name ?? undefined;
+        token.image = u.image ?? undefined;
       }
       return token;
     },
@@ -202,10 +273,12 @@ export const authOptions = {
       session.accessToken = token.accessToken;
       session.refreshToken = token.refreshToken;
       session.provider = token.provider;
-      session.user.id = token.id;
-      session.user.email = token.email;
-      session.user.name = token.name;
-      session.user.image = token.image;
+      if (session.user) {
+        session.user.id = token.id;
+        session.user.email = token.email ?? null;
+        session.user.name = token.name ?? null;
+        session.user.image = token.image ?? null;
+      }
       return session;
     },
   },

@@ -1,6 +1,27 @@
 import prisma from "../database/prisma.js";
 import httpStatus from "../helpers/httpStatus.js";
 
+interface TaskData {
+  userId: number;
+  taskName: string;
+  title: string;
+  description: string;
+  date: Date;
+  status: string;
+  startTime?: Date;
+  endTime?: Date;
+}
+
+interface TaskUpdateData {
+  taskName: string;
+  title: string;
+  description: string;
+  status: string;
+  date?: Date;
+  startTime?: Date;
+  endTime?: Date;
+}
+
 export const taskController = () => {
   const createTask = async (req, res, next) => {
     try {
@@ -22,7 +43,7 @@ export const taskController = () => {
         });
       }
 
-      const taskData = {
+      const taskData: TaskData = {
         userId: Number(userId),
         taskName,
         title,
@@ -42,7 +63,8 @@ export const taskController = () => {
         data: task,
       });
     } catch (error) {
-      if (error.code === "P2003") {
+      const err = error as { code?: string };
+      if (err.code === "P2003") {
         return res.status(httpStatus.BAD_REQUEST).json({
           success: false,
           message: "Invalid user ID",
@@ -65,7 +87,7 @@ export const taskController = () => {
         });
       }
 
-      const updateData = {
+      const updateData: TaskUpdateData = {
         taskName,
         title,
         description: description || "",
@@ -87,7 +109,8 @@ export const taskController = () => {
         data: taskUpdated,
       });
     } catch (error) {
-      if (error.code === "P2025") {
+      const err = error as { code?: string };
+      if (err.code === "P2025") {
         return res.status(httpStatus.NOT_FOUND).json({
           success: false,
           message: "Task not found",
@@ -113,7 +136,8 @@ export const taskController = () => {
         data: task,
       });
     } catch (error) {
-      if (error.code === "P2025") {
+      const err = error as { code?: string };
+      if (err.code === "P2025") {
         return res.status(httpStatus.NOT_FOUND).json({
           success: false,
           message: "Task not found",
