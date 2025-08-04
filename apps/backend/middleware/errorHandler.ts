@@ -1,5 +1,6 @@
 import httpStatus from "../helpers/httpStatus.js";
 import { Prisma } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 const ERROR_HANDLERS = {
   P2002: ({ error, response }) => {
@@ -21,7 +22,7 @@ const ERROR_HANDLERS = {
 const errorHandler = (error, _request, response, _next) => {
   let option = error.name;
 
-  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+  if (error instanceof PrismaClientKnownRequestError) {
     option = error.code;
   }
   const handler = ERROR_HANDLERS[option] ?? ERROR_HANDLERS.defaultError;

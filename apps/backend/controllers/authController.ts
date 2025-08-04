@@ -1,7 +1,7 @@
 import httpStatus from "../helpers/httpStatus.js";
 import prisma from "../database/prisma.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 import { userSchema } from "../validations/userSchema.js";
 
 export const authController = () => {
@@ -167,7 +167,10 @@ export const authController = () => {
     try {
       const { refreshToken } = req.body;
 
-      const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+      const decoded = jwt.verify(
+        refreshToken,
+        process.env.JWT_REFRESH_SECRET,
+      ) as JwtPayload & { userId: number };
 
       const user = await prisma.user.findUnique({
         where: {

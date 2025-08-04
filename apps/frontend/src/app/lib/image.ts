@@ -5,6 +5,7 @@ import LogoOrganiZapp from "../../../public/assets/organizapplogo.webp";
 import Woman from "../../../public/assets/woman.png";
 import ChatImage from "../../../public/assets/ChatImage.webp";
 import callendary from "../../../public/assets/callendary.webp";
+
 export {
   defaultAvatar,
   ChatImage,

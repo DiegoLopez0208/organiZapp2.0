@@ -1,11 +1,10 @@
-"use strict";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 const mainMail = "tucorreo@ejemplo.com";
 const currentDate = new Date().toString();
 
-export async function POST(request) {
+export async function POST(request: NextRequest) {
   try {
     const { username, email, password, birthDate } = await request.json();
 
@@ -26,7 +25,7 @@ export async function POST(request) {
       subject: `Email sent by: ${username}`,
       html: `
         <div style="background-color: #f5f5f5; padding: 20px;">
-          <div style="max-width: 600px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.2);">
+          <div style="max-width: 600px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 10px; box-shadow:0px 0px 10px rgba(0,0,0,0.2);">
             <h1>Details of Mail</h1>
             <table>
               <tr><td><strong>Name: ${username}</strong></td></tr>
@@ -48,7 +47,7 @@ export async function POST(request) {
       subject: `Welcome to OrganiZapp: ${username} !🙂¡`,
       html: `
         <div style="background-color: #f5f5f5; padding: 20px;">
-          <div style="max-width: 600px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.2);">
+          <div style="max-width: 600px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 10px; box-shadow:0px 0px 10px rgba(0,0,0,0.2);">
             <h1>Details of Register</h1>
             <table>
               <tr><td><strong>Hello: ${username}!</strong></td></tr>
@@ -76,10 +75,7 @@ export async function POST(request) {
       console.error("Error sending user email:", error);
     }
 
-    return NextResponse.json(
-      { message: "Email Sent Successfully" },
-      { status: 200 },
-    );
+    return NextResponse.json({ message: "Email Sent Successfully" }, { status: 200 });
   } catch (error) {
     console.error("Error processing request:", error);
     return NextResponse.json(

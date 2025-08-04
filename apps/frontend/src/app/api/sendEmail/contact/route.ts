@@ -1,13 +1,12 @@
-"use strict";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { Resend } from "resend";
 
-export async function POST(request) {
+export async function POST(request: NextRequest) {
   try {
     const { name, email, subject, message } = await request.json();
 
-    const htmlTemplate = (toName, toEmail) => `
+    const htmlTemplate = (toName: string, toEmail: string) => `
       <div style="background-color: #f5f5f5; padding: 20px;">
         <div style="max-width: 600px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.2);">
             <h1 >Details of Mail</h1>
@@ -56,7 +55,7 @@ export async function POST(request) {
       });
     } else {
       const resend = new Resend(process.env.RESEND_API_KEY);
-      const from = process.env.RESEND_FROM;
+      const from = process.env.RESEND_FROM!;
 
       await resend.emails.send({
         from,
